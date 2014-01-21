@@ -19,5 +19,8 @@ static void move_cursor();
 
 static void scroll();
 
+void monitor_write_dec(u32int n);
+
+void monitor_write_hex(u32int n);
 
 #endif // MONITOR_H
