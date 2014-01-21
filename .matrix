@@ -1,0 +1,17 @@
+#!/bin/bash
+echo "Matrix Build tools loaded..."
+M_HOME=~/MatrixOS
+
+cd $M_HOME
+
+export PATH="$HOME/opt/cross/bin:$PATH"
+
+alias matrix="cd $M_HOME
+			  . ./.matrix"
+alias run="qemu-system-i386 -monitor stdio -cdrom  $M_HOME/MatrixOS.iso"
+alias kern="qemu-system-i386 -monitor stdio -kernel"
+alias build="sh $M_HOME/kernel.sh"
+alias mm="cd $M_HOME
+	  mount tmp-loop"
+alias um="cd $M_HOME
+	  sudo umount tmp-loop"
