@@ -12,7 +12,10 @@ isr_t interrupt_handlers[256];
 
 void register_interrupt_handler(u8int n, isr_t handler)
 {
+	monitor_write("Registering interupt No.");
+	monitor_write_dec(n);
     interrupt_handlers[n] = handler;
+    monitor_write("\n");
 }
 
 // This gets called from our ASM interrupt handler stub.

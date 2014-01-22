@@ -24,6 +24,8 @@
 #define IRQ14 46
 #define IRQ15 47
 
+#ifndef _REGISTERS_T
+#define _REGISTERS_T
 typedef struct registers
 {
     u32int ds;                  // Data segment selector
@@ -31,6 +33,7 @@ typedef struct registers
     u32int int_no, err_code;    // Interrupt number and error code (if applicable)
     u32int eip, cs, eflags, useresp, ss; // Pushed by the processor automatically.
 } registers_t;
+#endif
 
 // Enables registration of callbacks for interrupts or IRQs.
 // For IRQs, to ease confusion, use the #defines above as the
