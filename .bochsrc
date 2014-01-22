@@ -1,0 +1,11 @@
+romimage: file=../Desktop/bochs-2.6.2/bios/BIOS-bochs-latest, address=0xe0000
+vgaromimage: file=../Desktop/bochs-2.6.2/bios/VGABIOS-lgpl-latest
+display_library: x
+boot: cdrom
+ata0-master: type=cdrom, path=MatrixOS.iso, status=inserted
+memory: guest=512, host=256
+log: bochsout.txt
+info: action=report
+error: action=report
+panic: action=ask
+debugger_log: debugger.out

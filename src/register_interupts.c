@@ -1,6 +1,9 @@
 #include "register_interupts.h"
 #include "monitor.h"
 #include "isr.h"
+#include "common.h"
+
+extern void page_fault(registers_t regs);
 
 void dec(u32int i);
 void dec(u32int i) {
@@ -73,8 +76,34 @@ monitor_write("Stack Exception\n");
 void irq_General_Protection_Exception(registers_t regs) {
 	monitor_write("Triple Fault !!!\n");
 	dump(regs);
+	asm volatile("cli");
 asm volatile("hlt");
 }
+
+void irq_Page_Fault(registers_t regs) {
+monitor_write("Page Fault\n");
+dump(regs);
+}
+
+void irq_Intel_Reserved2(registers_t regs) {
+monitor_write("Only Intel can do this!\n");
+	dump(regs);
+}
+
+void irq_Coprocessor_Error(registers_t regs) {
+monitor_write("coprocessor error!\n");
+	dump(regs);
+}
+
+void dump_obj(char *c, u32int i) {
+	str(c);
+	str(": ");
+	dec(i);
+	str("     ");
+	hex(i);
+	str("  ");
+}
+
 void dump(registers_t regs) {
 	str("\n");
 	dump_obj("ds", regs.ds);
@@ -99,30 +128,6 @@ void dump(registers_t regs) {
 	dump_obj("user esp", regs.useresp);
 	dump_obj("ss", regs.ss);
 }
-void dump_obj(char *c, u32int i) {
-	str(c);
-	str(": ");
-	dec(i);
-	str("     ");
-	hex(i);
-	str("  ");
-}
-
-void irq_Page_Fault(registers_t regs) {
-monitor_write("Page Fault\n");
-	dump(regs);
-}
-
-void irq_Intel_Reserved2(registers_t regs) {
-monitor_write("Only Intel can do this!\n");
-	dump(regs);
-}
-
-void irq_Coprocessor_Error(registers_t regs) {
-monitor_write("coprocessor error!\n");
-	dump(regs);
-}
-
 
 
 void init_interupts() {
@@ -140,7 +145,6 @@ void init_interupts() {
 	register_interrupt_handler(11, irq_Segment_Not_Present);
 	register_interrupt_handler(12, irq_Stack_Exception);
 	register_interrupt_handler(13, irq_General_Protection_Exception);
-	register_interrupt_handler(14, irq_Page_Fault);
 	register_interrupt_handler(15, irq_Intel_Reserved2);
 	register_interrupt_handler(16, irq_Coprocessor_Error);
 

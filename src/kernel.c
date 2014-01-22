@@ -6,12 +6,17 @@ int kernel_main(struct multiboot *mboot_ptr) {
 	init_descriptor_tables();
 	init_interupts();
 	monitor_clear();
+
+//initialise_paging();
+   monitor_write("Hello, paging world!\n");	
+	
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("| Welcome To MatrixOS                                                          |");
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("> ");
-	asm volatile("cli");
-	init_timer(1193180); // Initialise timer to 50Hz
-	asm volatile("sti");
+
+	 u32int *ptr = (u32int*)0xA0000000;
+   u32int do_page_fault = *ptr;
+
 	return 0;
 }

@@ -2,6 +2,9 @@
 
 MATRIX="/home/grant/MatrixOS/"
 
+#for bochs...
+BXSHARE=$MATRIX/../bios_bochs/
+
 cd $MATRIX
 cd src
 
