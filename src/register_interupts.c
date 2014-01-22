@@ -2,6 +2,18 @@
 #include "monitor.h"
 #include "isr.h"
 
+void dec(u32int i);
+void dec(u32int i) {
+	monitor_write_dec(i);
+}
+void hex(u32int i) {
+	monitor_write_hex(i);
+}
+void str(char *c);
+void str(char *c) {
+	monitor_write(c);
+}
+
 void irq_Divide_Error(registers_t regs) {
 monitor_write("Divide Error!\n");
 
@@ -60,7 +72,41 @@ monitor_write("Stack Exception\n");
 
 void irq_General_Protection_Exception(registers_t regs) {
 monitor_write("Triple Fault !!!\n");
+	str("\n");
+	dump("ds", regs.ds);
+	str("\n");
+	dump("edi", regs.edi);
+	dump("ebp", regs.ebp);
+	dump("esp", regs.esp);
+	str("\n");
+	dump("ebx", regs.ebx);
+	dump("edx", regs.edx);
+	dump("ecx", regs.ecx);
+	str("\n");
+	dump("eax", regs.eax);
+	str("\n");
+	dump("int_no", regs.int_no);
+	dump("err_code", regs.err_code);
+	str("\n");
+	dump("eip", regs.eip);
+	dump("cs", regs.cs);
+	dump("eflags", regs.eflags);
+	str("\n");
+	dump("user esp", regs.useresp);
+	dump("ss", regs.ss);
+    //edi, esi, ebp, esp, ebx, edx, ecx, eax; // Pushed by pusha.
+    //u32int int_no, err_code;    // Interrupt number and error code (if applicable)
+    //u32int eip, cs, eflags, useresp, ss; // Pushed by the processor automatically.
 asm volatile("hlt");
+}
+
+void dump(char *c, u32int i) {
+	str(c);
+	str(": ");
+	dec(i);
+	str("     ");
+	hex(i);
+	str("  ");
 }
 
 void irq_Page_Fault(registers_t regs) {
