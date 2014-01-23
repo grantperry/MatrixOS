@@ -1,5 +1,6 @@
 #include "monitor.h"
 #include "common.h"
+#include "timer.h"
 
 int kernel_main(struct multiboot *mboot_ptr) {
 	monitor_clear();
@@ -7,9 +8,10 @@ int kernel_main(struct multiboot *mboot_ptr) {
 	init_interupts();
 	monitor_clear();
 
-//initialise_paging();
-   monitor_write("Hello, paging world!\n");	
-	
+   //initialise_paging();
+   monitor_write("sleeping for 5 seconds :)");
+	sleep(500);
+   
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("| Welcome To MatrixOS                                                          |");
 	monitor_write("#------------------------------------------------------------------------------#");

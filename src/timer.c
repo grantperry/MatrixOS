@@ -5,14 +5,25 @@
 #include "isr.h"
 #include "monitor.h"
 
-u32int tick = 0;
+// time to go
+static s32int ttg = 0;
+
+void sleep(u32int t) {
+	ttg = t;
+	asm volatile("sti");
+	init_timer(100);
+	asm volatile("sti");
+	while(ttg > 0) {}
+	init_timer(1);
+	return;
+}
 
 static void timer_callback(registers_t regs)
 {
-   tick++;
-   monitor_write("Tick: ");
-   monitor_write_dec(tick);
-   monitor_write("\n");
+	ttg = ttg - 1;
+	if(ttg <= 0) {ttg = 0;}
+	
+	//monitor_write_dec(ttg);
 }
 
 void init_timer(u32int frequency)
