@@ -9,7 +9,7 @@ int kernel_main(struct multiboot *mboot_ptr) {
 	monitor_clear();
 
    //initialise_paging();
-   monitor_write("sleeping for 5 seconds :)");
+   monitor_write("sleeping for 5 seconds :)\n");
 	sleep(500);
    
 	monitor_write("#------------------------------------------------------------------------------#");

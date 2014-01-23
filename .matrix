@@ -6,6 +6,10 @@ cd $M_HOME
 
 export PATH="$HOME/opt/cross/bin:$PATH"
 
+alias push="git push MatrixOS master"
+alias commit="git commit"
+alias add="git add"
+
 alias matrix="cd $M_HOME
 			  . ./.matrix"
 alias run="qemu-system-i386 -monitor stdio -cdrom  $M_HOME/MatrixOS.iso"
