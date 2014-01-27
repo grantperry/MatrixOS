@@ -9,32 +9,25 @@
 #include "monitor.h"
 
 isr_t interrupt_handlers[256];
-// If quiet == 0  "Registering interupt No. n" will be printed to the screen.
-// If quiet == 1  nothing will be printed to the screen.
-void register_interrupt_handler_quiet(u8int n, isr_t handler, u8int quiet) {
-	if(quiet == 0) {
-		monitor_write("Registering interupt No.");
-		monitor_write_dec(n);
-		monitor_write("\n");
-	}
-	interrupt_handlers[n] = handler;
-}
 
-void register_interrupt_handler(u8int n, isr_t handler) {
-	register_interrupt_handler_quiet(n, handler, 0);
+void register_interrupt_handler(u8int n, isr_t handler)
+{
+    interrupt_handlers[n] = handler;
 }
 
 // This gets called from our ASM interrupt handler stub.
 void isr_handler(registers_t regs)
 {
-    monitor_write("recieved interrupt: ");
-    monitor_write_dec(regs.int_no);
-    monitor_put('\n');
-
     if (interrupt_handlers[regs.int_no] != 0)
     {
         isr_t handler = interrupt_handlers[regs.int_no];
         handler(regs);
+    }
+    else
+    {
+        monitor_write("unhandled interrupt: ");
+        monitor_write_dec(regs.int_no);
+        monitor_put('\n');
     }
 }
 

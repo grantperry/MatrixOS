@@ -12,7 +12,7 @@ alias add="git add"
 
 alias matrix="cd $M_HOME
 			  . ./.matrix"
-alias run="qemu-system-i386 -monitor stdio -cdrom  $M_HOME/MatrixOS.iso"
+alias run="qemu-system-i386 -monitor stdio -fda  $M_HOME/floppy.img"
 alias kern="qemu-system-i386 -monitor stdio -kernel"
 alias build="sh $M_HOME/kernel.sh"
 alias mm="cd $M_HOME

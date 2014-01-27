@@ -1,5 +1,5 @@
 // common.c -- Defines some global functions.
-// From JamesM's kernel development tutorials.
+//             From JamesM's kernel development tutorials.
 
 #include "common.h"
 
@@ -11,16 +11,16 @@ void outb(u16int port, u8int value)
 
 u8int inb(u16int port)
 {
-   u8int ret;
-   asm volatile("inb %1, %0" : "=a" (ret) : "dN" (port));
-   return ret;
+    u8int ret;
+    asm volatile("inb %1, %0" : "=a" (ret) : "dN" (port));
+    return ret;
 }
 
 u16int inw(u16int port)
 {
-   u16int ret;
-   asm volatile ("inw %1, %0" : "=a" (ret) : "dN" (port));
-   return ret;
+    u16int ret;
+    asm volatile ("inw %1, %0" : "=a" (ret) : "dN" (port));
+    return ret;
 }
 
 // Copy len bytes from src to dest.
@@ -33,13 +33,6 @@ void memcpy(u8int *dest, const u8int *src, u32int len)
 
 // Write len copies of val into dest.
 void memset(u8int *dest, u8int val, u32int len)
-{
-    u8int *temp = (u8int *)dest;
-    for ( ; len != 0; len--) *temp++ = val;
-}
-
-// Write len copies of val into dest.
-void memset32(u32int *dest, u8int val, u32int len)
 {
     u8int *temp = (u8int *)dest;
     for ( ; len != 0; len--) *temp++ = val;
@@ -73,10 +66,9 @@ char *strcpy(char *dest, const char *src)
 {
     do
     {
-      *dest++ = (*src + 1);
+      *dest++ = *src++;
     }
     while (*src != 0);
-    return dest;
 }
 
 // Concatenate the NULL-terminated string src onto
@@ -85,12 +77,12 @@ char *strcat(char *dest, const char *src)
 {
     while (*dest != 0)
     {
-        *dest = (*dest + 1);
+        *dest = *dest++;
     }
 
     do
     {
-        *dest++ = (*src + 1);
+        *dest++ = *src++;
     }
     while (*src != 0);
     return dest;
