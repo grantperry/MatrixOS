@@ -1,3 +1,8 @@
+// kheap.c -- Kernel heap functions, also provides
+//            a placement malloc() for use before the heap is 
+//            initialised.
+//            Written for JamesM's kernel development tutorials.
+
 #include "kheap.h"
 
 // end is defined in the linker script.
@@ -6,6 +11,10 @@ u32int placement_address = (u32int)&end;
 
 u32int kmalloc_int(u32int sz, int align, u32int *phys)
 {
+    // This will eventually call malloc() on the kernel heap.
+    // For now, though, we just assign memory at placement_address
+    // and increment it by sz. Even when we've coded our kernel
+    // heap, this will be useful for use before the heap is initialised.
     if (align == 1 && (placement_address & 0xFFFFF000) )
     {
         // Align the placement address;

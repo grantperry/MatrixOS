@@ -1,10 +1,16 @@
-SOURCES=boot.o kernel.o common.o monitor.o descriptor_tables.o gdt.o interupt.o isr.o register_interupts.o  paging.o kheap.o timer.o
+# Makefile for JamesM's kernel tutorials.
+# The C and C++ rules are already setup by default.
+# The only one that needs changing is the assembler 
+# rule, as we use nasm instead of GNU as.
+
+SOURCES=boot.o main.o monitor.o common.o descriptor_tables.o isr.o interrupt.o gdt.o timer.o \
+        kheap.o paging.o
 
 CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector
-LDFLAGS=-Tlinker.ld
+LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
-all: $(SOURCES) link 
+all: $(SOURCES) link
 
 clean:
 	-rm *.o kernel
