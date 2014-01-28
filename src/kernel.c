@@ -8,10 +8,10 @@ int kernel_main(struct multiboot *mboot_ptr) {
 	monitor_clear();
 	init_descriptor_tables();
 	init_interupts();
+	init_timer();
 	monitor_clear();
-
-   initialise_paging();
-   //sleep(500);
+	initialise_paging();
+	sleep(500);
    
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("| Welcome To MatrixOS                                                          |");
