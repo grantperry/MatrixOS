@@ -1,6 +1,8 @@
+// paging.c -- Defines the interface for and structures relating to paging.
+//             Written for JamesM's kernel development tutorials.
+
 #include "paging.h"
 #include "kheap.h"
-#include "common.h"
 
 // The kernel's page directory
 page_directory_t *kernel_directory=0;
@@ -112,7 +114,7 @@ void initialise_paging()
     
     nframes = mem_end_page / 0x1000;
     frames = (u32int*)kmalloc(INDEX_FROM_BIT(nframes));
-    memset32(frames, 0, INDEX_FROM_BIT(nframes));
+    memset(frames, 0, INDEX_FROM_BIT(nframes));
     
     // Let's make a page directory.
     kernel_directory = (page_directory_t*)kmalloc_a(sizeof(page_directory_t));

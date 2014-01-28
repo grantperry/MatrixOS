@@ -13,13 +13,9 @@ make
 cd $MATRIX
 
 
-
-
-sudo /sbin/losetup /dev/loop0 MatrixOS.img
-sudo mount /dev/loop0 /mnt2
-sudo cp bin/MatrixOS.bin /mnt2/kernel
-sudo umount /dev/loop0
-sudo /sbin/losetup -d /dev/loop0
+sudo mount -o loop floppy.img /media/floppy1/
+sudo cp bin/MatrixOS.bin /media/floppy1/kernel
+sudo umount /media/floppy1
 
 #mkdir -p isodir/boot
 #cp bin/MatrixOS.bin isodir/boot/MatrixOS.bin
