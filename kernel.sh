@@ -13,8 +13,10 @@ make
 cd $MATRIX
 
 
-sudo mount -o loop floppy.img /media/floppy1/
+sudo mount -o loop MatrixOS.img /media/floppy1/
 sudo cp bin/MatrixOS.bin /media/floppy1/kernel
+sudo cp initrd.img       /media/floppy1/initrd
+sleep 0.1
 sudo umount /media/floppy1
 
 #mkdir -p isodir/boot

@@ -2,6 +2,7 @@
 //         Written for JamesM's kernel development tutorials.
 
 #include "fs.h"
+#include "common.h"
 
 fs_node_t *fs_root = 0; // The root of the filesystem.
 

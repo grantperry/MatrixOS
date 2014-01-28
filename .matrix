@@ -13,10 +13,5 @@ alias add="git add"
 alias matrix="cd $M_HOME
 			  . ./.matrix"
 alias run="qemu-system-i386 -monitor stdio -fda  $M_HOME/MatrixOS.img"
-alias run="qemu-system-i386 -monitor stdio -fda  $M_HOME/floppy.img"
 alias kern="qemu-system-i386 -monitor stdio -kernel"
 alias build="sh $M_HOME/kernel.sh"
-alias mm="cd $M_HOME
-	  mount tmp-loop"
-alias um="cd $M_HOME
-	  sudo umount tmp-loop"

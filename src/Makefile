@@ -1,5 +1,5 @@
 SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o gdt.o timer.o \
-        kheap.o paging.o register_interupts.o ordered_map.o
+        kheap.o paging.o register_interupts.o ordered_map.o fs.o initrd.o
 
 CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector
 LDFLAGS=-Tlink.ld
