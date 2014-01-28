@@ -11,15 +11,12 @@ int kernel_main(struct multiboot *mboot_ptr) {
 	init_timer();
 	monitor_clear();
 	initialise_paging();
-	sleep(500);
+	sleep(100);
    
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("| Welcome To MatrixOS                                                          |");
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("> ");
-
-	u32int *ptr = (u32int*)0xA0000000;
-    u32int do_page_fault = *ptr;
 
 	return 0;
 }
