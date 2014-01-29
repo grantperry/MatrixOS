@@ -4,9 +4,9 @@
 # rule, as we use nasm instead of GNU as.
 
 SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o gdt.o timer.o \
-        kheap.o paging.o ordered_array.o fs.o initrd.o task.o process.o
+        kheap.o paging.o ordered_array.o fs.o initrd.o task.o process.o syscall.o
 
-CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector
+CFLAGS=-nostdlib -nostdinc -fno-builtin -g -S
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 

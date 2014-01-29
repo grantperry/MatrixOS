@@ -37,6 +37,7 @@ void initialise_tasking()
 	current_task->eip = 0;
 	current_task->page_directory = current_directory;
 	current_task->next = 0;
+	current_task->kernel_stack = kmalloc_a(KERNEL_STACK_SIZE);
 
 	// Reenable interrupts.
 	asm volatile("sti");
@@ -136,16 +137,19 @@ void switch_task()
 
 	// Make sure the memory manager knows we've changed page directory.
 	current_directory = current_task->page_directory;
+
+	// Change our kernel stack over.
+	set_kernel_stack(current_task->kernel_stack+KERNEL_STACK_SIZE);
 	// Here we:
 	// * Stop interrupts so we don't get interrupted.
-	// * Temporarily puts the new EIP location in ECX.
-	// * Loads the stack and base pointers from the new task struct.
-	// * Changes page directory to the physical address (physicalAddr) of the new directory.
-	// * Puts a dummy value (0x12345) in EAX so that above we can recognise that we've just
+	// * Temporarily put the new EIP location in ECX.
+	// * Load the stack and base pointers from the new task struct.
+	// * Change page directory to the physical address (physicalAddr) of the new directory.
+	// * Put a dummy value (0x12345) in EAX so that above we can recognise that we've just
 	//   switched task.
-	// * Restarts interrupts. The STI instruction has a delay - it doesn't take effect until after
+	// * Restart interrupts. The STI instruction has a delay - it doesn't take effect until after
 	//   the next instruction.
-	// * Jumps to the location in ECX (remember we put the new EIP in there).
+	// * Jump to the location in ECX (remember we put the new EIP in there).
 	asm volatile("		 \
 	  cli;				 \
 	  mov %0, %%ecx;	   \
@@ -160,7 +164,7 @@ void switch_task()
 
 int fork()
 {
-	// We are modifying kernel structures, and so cannot
+	// We are modifying kernel structures, and so cannot be interrupted.
 	asm volatile("cli");
 
 	// Take a pointer to this process' task struct for later reference.
@@ -171,22 +175,23 @@ int fork()
 
 	// Create a new process.
 	task_t *new_task = (task_t*)kmalloc(sizeof(task_t));
-
 	new_task->id = next_pid++;
 	new_task->esp = new_task->ebp = 0;
 	new_task->eip = 0;
 	new_task->page_directory = directory;
+	current_task->kernel_stack = kmalloc_a(KERNEL_STACK_SIZE);
 	new_task->next = 0;
 
 	// Add it to the end of the ready queue.
+	// Find the end of the ready queue...
 	task_t *tmp_task = (task_t*)ready_queue;
 	while (tmp_task->next)
 		tmp_task = tmp_task->next;
+	// ...And extend it.
 	tmp_task->next = new_task;
 
 	// This will be the entry point for the new process.
 	u32int eip = read_eip();
-
 
 	// We could be the parent or the child here - check.
 	if (current_task == parent_task)
@@ -197,13 +202,15 @@ int fork()
 		new_task->esp = esp;
 		new_task->ebp = ebp;
 		new_task->eip = eip;
+		// All finished: Reenable interrupts.
 		asm volatile("sti");
 
+		// And by convention return the PID of the child.
 		return new_task->id;
 	}
 	else
 	{
-		// We are the child.
+		// We are the child - by convention return 0.
 		return 0;
 	}
 
@@ -212,4 +219,31 @@ int fork()
 int getpid()
 {
 	return current_task->id;
+}
+
+void switch_to_user_mode()
+{
+	// Set up our kernel stack.
+	set_kernel_stack(current_task->kernel_stack+KERNEL_STACK_SIZE);
+	
+	// Set up a stack structure for switching to user mode.
+	asm volatile("  \
+	  cli; \
+	  mov $0x23, %ax; \
+	  mov %ax, %ds; \
+	  mov %ax, %es; \
+	  mov %ax, %fs; \
+	  mov %ax, %gs; \
+					\
+	   \
+	  mov %esp, %eax; \
+	  pushl $0x23; \
+	  pushl %esp; \
+	  pushf; \
+	  pushl $0x1B; \
+	  push $1f; \
+	  iret; \
+	1: \
+	  "); 
+	  
 }

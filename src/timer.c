@@ -7,14 +7,16 @@
 
 u32int tick = 0;
 u32int ttg = 0;
+u32int freq = 0;
 
 void sleep(u32int t) {
 	ttg = t;
 	asm volatile("sti");
-	while (ttg > 0) {}
+	while(ttg > 0) {}
+	ttg = 0;
 }
 
-static void timer_callback(registers_t regs)
+static void timer_callback(registers_t *regs)
 {
 	ttg = ttg - 1;
 	tick++;
@@ -23,6 +25,7 @@ static void timer_callback(registers_t regs)
 
 void init_timer(u32int frequency)
 {
+	freq = frequency;
 	// Firstly, register our timer callback.
 	register_interrupt_handler(IRQ0, &timer_callback);
 
