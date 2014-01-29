@@ -6,7 +6,7 @@
 SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o gdt.o timer.o \
         kheap.o paging.o ordered_array.o fs.o initrd.o task.o process.o syscall.o
 
-CFLAGS=-nostdlib -nostdinc -fno-builtin -g -S
+CFLAGS=-nostdlib -nostdinc -fno-builtin -g
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 

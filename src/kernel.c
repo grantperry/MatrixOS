@@ -13,15 +13,28 @@
 
 extern u32int placement_address;
 u32int initial_esp;
+struct multiboot *mboot_ptr;
 
-int kernel_main(struct multiboot *mboot_ptr, u32int initial_stack)
+void init();
+
+int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 {
+	monitor_clear();
 	initial_esp = initial_stack;
+	mboot_ptr = mboot_point;
+	monitor_write("#------------------------------------------------------------------------------#");
+	monitor_write("|  Welcome to MatrixOS!!!                                                 v1.0 |");
+	monitor_write("#------------------------------------------------------------------------------#");
+	monitor_write("> ");
+	init();
+	
+	return 0;
+}
+
+void init() {
+
 	// Initialise all the ISRs and segmentation
 	init_descriptor_tables();
-	// Initialise the screen (by clearing it)
-	monitor_clear();
-
 	// Initialise the PIT to 100Hz
 	asm volatile("sti");
 	init_timer(50);
@@ -45,8 +58,4 @@ int kernel_main(struct multiboot *mboot_ptr, u32int initial_stack)
 	initialise_syscalls();
 
 	switch_to_user_mode();
-
-	syscall_monitor_write("Hello, user world!\n");
-
-	return 0;
 }
