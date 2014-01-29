@@ -6,9 +6,7 @@
 
 #include "common.h"
 
-void init_timer();
-
-void set_timer(u32int frequency);
+void init_timer(u32int frequency);
 
 void sleep(u32int t);
 

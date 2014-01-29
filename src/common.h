@@ -23,9 +23,4 @@ u16int inw(u16int port);
 extern void panic(const char *message, const char *file, u32int line);
 extern void panic_assert(const char *file, u32int line, const char *desc);
 
-int strcmp(char *str1, char *str2);
-char *strcpy(char *dest, const char *src);
-char *strcat(char *dest, const char *src);
-int strlen(char *src);
-
 #endif // COMMON_H
