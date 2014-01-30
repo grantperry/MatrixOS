@@ -11,6 +11,8 @@
 #include "task.h"
 #include "syscall.h"
 
+#include "input/keyboard.h"
+
 extern u32int placement_address;
 u32int initial_esp;
 struct multiboot *mboot_ptr;
@@ -58,6 +60,9 @@ void init() {
 	fs_root = initialise_initrd(initrd_location);
 
 	initialise_syscalls();
+
+
+	init_keyboard();
 
 	switch_to_user_mode();
 }
