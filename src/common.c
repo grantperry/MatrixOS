@@ -2,6 +2,11 @@
 //			 From JamesM's kernel development tutorials.
 
 #include "common.h"
+#include "syscall.h"
+
+int print(const char* c) {
+	syscall_monitor_write(c);
+}
 
 // Write a byte out to the specified port.
 void outb(u16int port, u8int value)

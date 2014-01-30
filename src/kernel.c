@@ -28,6 +28,8 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	monitor_write("> ");
 	init();
 	
+	print("Hello, user world!\n");
+	
 	return 0;
 }
 

@@ -1,6 +1,3 @@
-// syscall.c -- Defines the implementation of a system call system.
-//			  Written for JamesM's kernel development tutorials.
-
 #include "syscall.h"
 #include "isr.h"
 
