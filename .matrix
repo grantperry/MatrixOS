@@ -9,6 +9,8 @@ export PATH="$HOME/opt/cross/bin:$PATH"
 alias push="git push MatrixOS master"
 alias commit="git commit"
 alias add="git add"
+alias master="git checkout master"
+alias pages="git checkout gh-pages"
 
 alias matrix="cd $M_HOME
 			  . ./.matrix"
