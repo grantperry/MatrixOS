@@ -10,6 +10,10 @@ u32int ttg = 0;
 u32int freq = 0;
 
 void sleep(u32int t) {
+	syscall_system_sleep(t);
+}
+
+void system_sleep(u32int t) {
 	ttg = t;
 	asm volatile("sti");
 	while(ttg > 0) {}
@@ -20,6 +24,7 @@ static void timer_callback(registers_t *regs)
 {
 	ttg = ttg - 1;
 	tick++;
+	
 	switch_task();
 }
 

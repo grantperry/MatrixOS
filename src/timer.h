@@ -10,4 +10,6 @@ void init_timer(u32int frequency);
 
 void sleep(u32int t);
 
+void system_sleep(u32int t);
+
 #endif
