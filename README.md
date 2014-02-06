@@ -1,4 +1,6 @@
 MatrixOS
 ========
 
-My Hobby Operating System that is soon to implement python as the system language
+My Hobby Operating System currently at version 1 will implement python as the system language.
+
+
