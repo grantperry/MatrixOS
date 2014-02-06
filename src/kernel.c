@@ -25,16 +25,18 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 	monitor_write("#------------------------------------------------------------------------------#");
-	monitor_write("|  Welcome to MatrixOS!!!                                                 v1.0 |");
+	monitor_write("|  Welcome to MatrixOS!!!                                               v1.0.1 |");
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("> ");
+	//sleep(100);
 	
 	init();
 	
 	
 	
 	print("Hello, user world!\n");
-	return 0;
+	
+	for(;;) {}
 }
 
 void init() {

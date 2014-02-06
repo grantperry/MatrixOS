@@ -6,6 +6,7 @@
 #include "monitor.h"
 
 u32int tick = 0;
+u8int sleep_b = 0;
 u32int ttg = 0;
 u32int freq = 0;
 
@@ -15,6 +16,7 @@ void sleep(u32int t) {
 
 void system_sleep(u32int t) {
 	ttg = t;
+	sleep_b = 1;
 	asm volatile("sti");
 	while(ttg > 0) {}
 	ttg = 0;
@@ -22,9 +24,10 @@ void system_sleep(u32int t) {
 
 static void timer_callback(registers_t *regs)
 {
-	ttg = ttg - 1;
+	if (sleep_b) {
+		ttg = ttg - 1;
+	}
 	tick++;
-	
 	switch_task();
 }
 
