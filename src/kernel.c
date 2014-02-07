@@ -17,6 +17,10 @@ extern u32int placement_address;
 u32int initial_esp;
 struct multiboot *mboot_ptr;
 
+/*BUILD_NUMBER_POINTERS*/
+extern char __BUILD_DATE;
+extern char __BUILD_NUMBER;
+
 void init();
 
 int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
