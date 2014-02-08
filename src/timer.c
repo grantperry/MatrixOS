@@ -5,51 +5,86 @@
 #include "isr.h"
 #include "monitor.h"
 
-u32int tick = 0;
-u8int sleep_b = 0;
-u32int ttg = 0;
-u32int freq = 0;
+extern u8int __TASKING_ENABLED;
 
-void sleep(u32int t) {
-	syscall_system_sleep(t);
-}
+u32int tick = 0, globalFreq, secondTick = 0;
+u32int pass = 0, systemTimePassed = 0;
+unsigned long long int secondsPassed = 0;
 
-void system_sleep(u32int t) {
-	ttg = t;
-	sleep_b = 1;
-	asm volatile("sti");
-	while(ttg > 0) {}
-	ttg = 0;
-}
-
-static void timer_callback(registers_t *regs)
-{
-	if (sleep_b) {
-		ttg = ttg - 1;
+void sleep(u32int seconds) {
+	u32int timeLeft = getSeconds() + seconds;  
+	while(timeLeft != getSeconds())
+	{
+		
 	}
-	tick++;
-	switch_task();
+}
+
+void system_sleep(u32int t)
+{
+	//syscall_sleep(t);
+}
+
+//~ void mSleep(long long int milliseconds)
+void mSleep(u32int milliseconds)
+{
+
+  if(milliseconds > 0)
+  {
+    unsigned long eticks;
+
+    eticks = systemTimePassed + milliseconds;
+    while(systemTimePassed < eticks);
+  }
+  
+}
+
+u32int getTick() {
+	return tick;
+}
+u32int getSeconds() {
+	return secondsPassed;
+}
+
+
+unsigned long long int getSystemUpTime()
+{
+  return systemTimePassed;
+}
+
+void timer_callback()
+{
+	tick = tick + 1;
+	secondTick++;
+	if (secondTick == globalFreq) {
+		secondsPassed++;
+		secondTick = 0;
+	}
+	if(__TASKING_ENABLED) {
+		switch_task();
+	}
+	return;
 }
 
 void init_timer(u32int frequency)
 {
-	freq = frequency;
-	// Firstly, register our timer callback.
-	register_interrupt_handler(IRQ0, &timer_callback);
+	asm volatile("sti");
+  globalFreq = frequency;
+  // Firstly, register our timer callback.
+  register_interrupt_handler(IRQ0, &timer_callback);
 
-	// The value we send to the PIT is the value to divide it's input clock
-	// (1193180 Hz) by, to get our required frequency. Important to note is
-	// that the divisor must be small enough to fit into 16-bits.
-	u32int divisor = 1193180 / frequency;
+  // The value we send to the PIT is the value to divide it's input clock
+  // (1193180 Hz) by, to get our required frequency. Important to note is
+  // that the divisor must be small enough to fit into 16-bits.
+  u32int divisor = 1193180 / frequency;
 
-	// Send the command byte.
-	outb(0x43, 0x36);
+  // Send the command byte.
+  outb(0x43, 0x36);
 
-	// Divisor has to be sent byte-wise, so split here into upper/lower bytes.
-	u8int l = (u8int)(divisor & 0xFF);
-	u8int h = (u8int)( (divisor>>8) & 0xFF );
+  // Divisor has to be sent byte-wise, so split here into upper/lower bytes.
+  u8int l = (u8int)(divisor & 0xFF);
+  u8int h = (u8int)( (divisor>>8) & 0xFF );
 
-	// Send the frequency divisor.
-	outb(0x40, l);
-	outb(0x40, h);
+  // Send the frequency divisor.
+  outb(0x40, l);
+  outb(0x40, h);
 }

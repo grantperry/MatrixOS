@@ -19,6 +19,9 @@ extern void alloc_frame(page_t*,int,int);
 extern u32int initial_esp;
 extern u32int read_eip();
 
+//Set this when tasking enabled!
+u8int __TASKING_ENABLED = 0;
+
 // The next available process ID.
 u32int next_pid = 1;
 
@@ -38,7 +41,9 @@ void initialise_tasking()
 	current_task->page_directory = current_directory;
 	current_task->next = 0;
 	current_task->kernel_stack = kmalloc_a(KERNEL_STACK_SIZE);
-
+	
+	__TASKING_ENABLED = 1;
+	
 	// Reenable interrupts.
 	asm volatile("sti");
 }

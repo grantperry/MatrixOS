@@ -1,5 +1,4 @@
-// main.c -- Defines the C-code kernel entry point, calls initialisation routines.
-//		   Made for JamesM's tutorials <www.jamesmolloy.co.uk>
+// kernel.c -- MatrixOS kernel
 
 #include "monitor.h"
 #include "descriptor_tables.h"
@@ -17,10 +16,6 @@ extern u32int placement_address;
 u32int initial_esp;
 struct multiboot *mboot_ptr;
 
-/*BUILD_NUMBER_POINTERS*/
-extern char __BUILD_DATE;
-extern char __BUILD_NUMBER;
-
 void init();
 
 int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
@@ -32,11 +27,13 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	monitor_write("|  Welcome to MatrixOS!!!                                               v1.0.1 |");
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("> ");
-	//sleep(100);
+	
+	
+
 	
 	init();
 	
-	
+	syscall_sleep(2);
 	
 	print("Hello, user world!\n");
 	
@@ -47,6 +44,10 @@ void init() {
 
 	// Initialise all the ISRs and segmentation
 	init_descriptor_tables();
+	
+	asm volatile("sti");
+	initialise_syscalls();
+	
 	// Initialise the PIT to 100Hz
 	asm volatile("sti");
 	init_timer(50);
@@ -59,18 +60,18 @@ void init() {
 	placement_address = initrd_end;
 
 	// Start paging.
+	asm volatile("sti");
 	initialise_paging();
 
-	// Start multitasking.
-	initialise_tasking();
+	
+	asm volatile("sti");
+	init_keyboard();
 
 	// Initialise the initial ramdisk, and set it as the filesystem root.
 	fs_root = initialise_initrd(initrd_location);
-
-	initialise_syscalls();
-
-
-	init_keyboard();
-
+	
+	// Start multitasking.
+	initialise_tasking();
+	
 	switch_to_user_mode();
 }
