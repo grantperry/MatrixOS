@@ -60,9 +60,9 @@ int syscall_##fn(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) \
   return a; \
 }
 
-DECL_SYSCALL1(monitor_write, const char*)
-DECL_SYSCALL1(monitor_write_hex, const char*)
-DECL_SYSCALL1(monitor_write_dec, const char*)
-DECL_SYSCALL1(system_sleep, u32int*)
+DECL_SYSCALL1(monitor_write, char*)
+DECL_SYSCALL1(monitor_write_hex, u32int)
+DECL_SYSCALL1(monitor_write_dec, u32int)
+DECL_SYSCALL1(sleep, u32int)
 
 #endif

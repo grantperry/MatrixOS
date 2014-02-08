@@ -6,17 +6,17 @@
 
 static void syscall_handler(registers_t *regs);
 
-DEFN_SYSCALL1(monitor_write, 0, const char*);
-DEFN_SYSCALL1(monitor_write_hex, 1, const char*);
-DEFN_SYSCALL1(monitor_write_dec, 2, const char*);
-DEFN_SYSCALL1(system_sleep, 3, u32int*);
+DEFN_SYSCALL1(monitor_write, 0, char*);
+DEFN_SYSCALL1(monitor_write_hex, 1, u32int);
+DEFN_SYSCALL1(monitor_write_dec, 2, u32int);
+DEFN_SYSCALL1(sleep, 3, u32int);
 
 static void *syscalls[4] =
 {
 	&monitor_write,
 	&monitor_write_hex,
 	&monitor_write_dec,
-	&system_sleep,
+	&sleep,
 };
 u32int num_syscalls = 4;
 
