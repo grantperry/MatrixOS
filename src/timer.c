@@ -12,8 +12,13 @@ u32int pass = 0, systemTimePassed = 0;
 unsigned long long int secondsPassed = 0;
 
 void sleep(u32int seconds) {
+	u8int sleeping = 1;
 	u32int timeLeft = getSeconds() + seconds;
-	
+	while(sleeping) {
+		if(getSeconds() == timeLeft) {
+			sleeping = 0;
+		}
+	}
 }
 
 void system_sleep(u32int t)

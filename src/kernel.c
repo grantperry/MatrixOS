@@ -18,6 +18,10 @@ struct multiboot *mboot_ptr;
 
 void init();
 
+void sti() {
+	asm volatile("sti");
+}
+
 int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 {
 	monitor_clear();
@@ -33,7 +37,9 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	
 	init();
 	
-	syscall_sleep(2);
+	syscall_sti();
+	
+	sleep(2);
 	
 	print("Hello, user world!\n");
 	
@@ -74,4 +80,5 @@ void init() {
 	initialise_tasking();
 	
 	switch_to_user_mode();
+	return;
 }
