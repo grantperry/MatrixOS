@@ -12,16 +12,13 @@ u32int pass = 0, systemTimePassed = 0;
 unsigned long long int secondsPassed = 0;
 
 void sleep(u32int seconds) {
-	u32int timeLeft = getSeconds() + seconds;  
-	while(timeLeft != getSeconds())
-	{
-		
-	}
+	u32int timeLeft = getSeconds() + seconds;
+	
 }
 
 void system_sleep(u32int t)
 {
-	//syscall_sleep(t);
+	syscall_sleep(t);
 }
 
 //~ void mSleep(long long int milliseconds)
@@ -55,6 +52,7 @@ void timer_callback()
 {
 	tick = tick + 1;
 	secondTick++;
+	syscall_monitor_write_dec(tick);
 	if (secondTick == globalFreq) {
 		secondsPassed++;
 		secondTick = 0;
