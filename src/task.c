@@ -246,7 +246,8 @@ void switch_to_user_mode()
 	  pushl %esp; \
 	  pushf; \
 	  pop %eax; \
-	  or %eax, 0x200 ; \
+	  /*or %eax, 0x200 ;*/ \
+	  or %eax, 0x0202; \
 	  push %eax ; \
 	  pushl $0x1B; \
 	  push $1f; \
