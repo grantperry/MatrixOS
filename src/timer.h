@@ -15,6 +15,8 @@ void system_sleep(u32int t);
 u32int getTick();
 u32int getSeconds();
 
+void system_mSleep(u32int t);
+
 void mSleep(u32int milliseconds);
 
 #endif

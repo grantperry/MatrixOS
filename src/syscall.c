@@ -12,15 +12,18 @@ DEFN_SYSCALL1(monitor_write_hex, 1, u32int);
 DEFN_SYSCALL1(monitor_write_dec, 2, u32int);
 DEFN_SYSCALL1(sleep, 3, u32int);
 DEFN_SYSCALL0(sti, 4);
+DEFN_SYSCALL1(mSleep, 5, u32int);
 
-static void *syscalls[4] =
+static void *syscalls[6] =
 {
 	&monitor_write,
 	&monitor_write_hex,
 	&monitor_write_dec,
 	&sleep,
+	&sti,
+	&mSleep,
 };
-u32int num_syscalls = 4;
+u32int num_syscalls = 6;
 
 void initialise_syscalls()
 {

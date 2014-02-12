@@ -28,7 +28,7 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 	monitor_write("#------------------------------------------------------------------------------#");
-	monitor_write("|  Welcome to MatrixOS!!!                                               v1.0.1 |");
+	monitor_write("|  Welcome to MatrixOS!!!                                               v1.0.2 |");
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("> ");
 
@@ -63,7 +63,7 @@ void init() {
 	// Start paging.
 	initialise_paging();
 
-	//init_keyboard();
+	init_keyboard();
 
 	// Initialise the initial ramdisk, and set it as the filesystem root.
 	fs_root = initialise_initrd(initrd_location);

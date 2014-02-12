@@ -65,5 +65,6 @@ DECL_SYSCALL1(monitor_write_hex, u32int)
 DECL_SYSCALL1(monitor_write_dec, u32int)
 DECL_SYSCALL1(sleep, u32int)
 DECL_SYSCALL0(sti)
+DECL_SYSCALL1(mSleep, u32int)
 
 #endif

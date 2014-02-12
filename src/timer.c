@@ -29,6 +29,10 @@ void system_sleep(u32int t)
 	syscall_sleep(t);
 }
 
+void system_mSleep(u32int t) {
+	syscall_mSleep(t);
+}
+
 //~ void mSleep(long long int milliseconds)
 void mSleep(u32int milliseconds)
 {
