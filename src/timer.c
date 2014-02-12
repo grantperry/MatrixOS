@@ -60,7 +60,6 @@ void timer_callback()
 {
 	tick = tick + 1;
 	secondTick++;
-	syscall_monitor_write_dec(tick);
 	if (secondTick == globalFreq) {
 		secondsPassed++;
 		secondTick = 0;
