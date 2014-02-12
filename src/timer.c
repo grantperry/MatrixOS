@@ -11,17 +11,22 @@ u32int tick = 0, globalFreq, secondTick = 0;
 u32int pass = 0, systemTimePassed = 0;
 unsigned long long int secondsPassed = 0;
 
+u16int taskTickCount = 0;
+u32int taskTickTime = 3;
+
 void sleep(u32int seconds) {
-	u32int timeLeft = getSeconds() + seconds;  
-	while(timeLeft != getSeconds())
-	{
-		
+	u8int sleeping = 1;
+	u32int timeLeft = getSeconds() + seconds;
+	while(sleeping) {
+		if(getSeconds() == timeLeft) {
+			sleeping = 0;
+		}
 	}
 }
 
 void system_sleep(u32int t)
 {
-	//syscall_sleep(t);
+	syscall_sleep(t);
 }
 
 //~ void mSleep(long long int milliseconds)
@@ -55,12 +60,15 @@ void timer_callback()
 {
 	tick = tick + 1;
 	secondTick++;
+	syscall_monitor_write_dec(tick);
 	if (secondTick == globalFreq) {
 		secondsPassed++;
 		secondTick = 0;
 	}
 	if(__TASKING_ENABLED) {
-		switch_task();
+		if(taskTickCount == taskTickTime) {
+			switch_task();
+		}
 	}
 	return;
 }

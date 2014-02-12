@@ -1,5 +1,6 @@
 #include "syscall.h"
 #include "isr.h"
+#include "common.h"
 
 #include "monitor.h"
 #include "timer.h"
@@ -10,6 +11,7 @@ DEFN_SYSCALL1(monitor_write, 0, char*);
 DEFN_SYSCALL1(monitor_write_hex, 1, u32int);
 DEFN_SYSCALL1(monitor_write_dec, 2, u32int);
 DEFN_SYSCALL1(sleep, 3, u32int);
+DEFN_SYSCALL0(sti, 4);
 
 static void *syscalls[4] =
 {
