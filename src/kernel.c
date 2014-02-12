@@ -74,10 +74,8 @@ void init() {
 	// Start multitasking.
 	//initialise_tasking();
 	
-<<<<<<< HEAD
 	//switch_to_user_mode();
-=======
-	switch_to_user_mode();
+
+	//switch_to_user_mode();
 	return;
->>>>>>> 2e081ef72bed17581c2229e1e84ef67f6f0adbf8
 }
