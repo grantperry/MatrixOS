@@ -11,6 +11,9 @@ u32int tick = 0, globalFreq, secondTick = 0;
 u32int pass = 0, systemTimePassed = 0;
 unsigned long long int secondsPassed = 0;
 
+u16int taskTickCount = 0;
+u32int taskTickTime = 3;
+
 void sleep(u32int seconds) {
 	u8int sleeping = 1;
 	u32int timeLeft = getSeconds() + seconds;
@@ -63,7 +66,9 @@ void timer_callback()
 		secondTick = 0;
 	}
 	if(__TASKING_ENABLED) {
-		switch_task();
+		if(taskTickCount == taskTickTime) {
+			switch_task();
+		}
 	}
 	return;
 }

@@ -11,13 +11,16 @@ CFLAGS=-nostdlib -nostdinc -fno-builtin -g
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
+CC=matrix-gcc
+LD=matrix-ld
+
 all: $(SOURCES) $(MODULES) link
 
 clean:
 	-rm *.o ../bin/MatrixOS.bin
 
 link:
-	ld $(LDFLAGS) -o ../bin/MatrixOS.bin $(SOURCES) $(MODULES)
+	$(LD) $(LDFLAGS) -o ../bin/MatrixOS.bin $(SOURCES) $(MODULES)
 
 .s.o:
 	nasm $(ASFLAGS) $<
