@@ -103,8 +103,9 @@ void move_stack(void *new_stack_start, u32int size)
 void switch_task()
 {
 	// If we haven't initialised tasking yet, just return.
-	if (!current_task)
+	if (!current_task) {
 		return;
+	}
 
 	// Read esp, ebp now for saving later on.
 	u32int esp, ebp, eip;
@@ -123,8 +124,9 @@ void switch_task()
 	eip = read_eip();
 
 	// Have we just switched tasks?
-	if (eip == 0x12345)
+	if (eip == 0x12345) {
 		return;
+	}
 
 	// No, we didn't switch tasks. Let's save some register values and switch.
 	current_task->eip = eip;
@@ -239,14 +241,18 @@ void switch_to_user_mode()
 	  mov %ax, %es; \
 	  mov %ax, %fs; \
 	  mov %ax, %gs; \
-					\
-	   \
+	  \
+	  \
 	  mov %esp, %eax; \
 	  pushl $0x23; \
 	  pushl %esp; \
 	  pushf; \
+	  pop %eax; \
+	  xor %eax, 0x202; \
+	  push %eax ; \
 	  pushl $0x1B; \
 	  push $1f; \
+	  sti; \
 	  iret; \
 	1: \
 	  "); 
