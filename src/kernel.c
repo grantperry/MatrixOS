@@ -71,7 +71,7 @@ void init() {
 	fs_root = initialise_initrd(initrd_location);
 	
 	// Start multitasking.
-	initialise_tasking();
+	//initialise_tasking();
 	
-	switch_to_user_mode();
+	//switch_to_user_mode();
 }
