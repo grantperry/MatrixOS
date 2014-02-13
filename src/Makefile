@@ -18,6 +18,7 @@ all: $(SOURCES) $(MODULES) link
 
 clean:
 	-rm *.o ../bin/MatrixOS.bin
+	cd input; rm *.o; cd ..;
 
 link:
 	$(LD) $(LDFLAGS) -o ../bin/MatrixOS.bin $(SOURCES) $(MODULES)
