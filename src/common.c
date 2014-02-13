@@ -4,7 +4,7 @@
 #include "common.h"
 #include "syscall.h"
 
-int print(const char* c) {
+int print(char* c) {
 	syscall_monitor_write(c);
 }
 

@@ -3,7 +3,6 @@
 #include "../isr.h"
 #include "../common.h"
 
-u8int c;
 
 void init_keyboard() { /////////////////////////////////////////////////////////
 	register_interrupt_handler(IRQ1, &keyboard_handler);
@@ -19,6 +18,8 @@ void init_keyboard() { /////////////////////////////////////////////////////////
 }
 
 void keyboard_handler(registers_t *regs) {
-	syscall_monitor_write("k:\n");
-	c = inb(0x60);
+	u8int scancode = inb(0x60);
+	if(scancode & 0x80) {
+		syscall_monitor_write("release\n");
+	}else{syscall_monitor_write("press\n");}
 }

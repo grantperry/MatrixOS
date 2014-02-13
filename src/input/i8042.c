@@ -9,8 +9,6 @@
 
 u8int status = 0;
 
-volatile s32int shift_flag = 0;
-volatile s32int caps_flag = 0;
 
 u8int PS2_2 = 0;
 u8int PS2_1 = 0;
@@ -73,7 +71,6 @@ void i8042_controller_self_test() {	//4
 	i8042_write_command(0xAA);
 	u8int resp = i8042_read_data();
 	resp = i8042_read_data();
-	syscall_monitor_write_hex(resp);
 	if(DEBUG) {
 		if (resp == 0x55) syscall_monitor_write("PASS\n");
 		if (resp == 0xFC) syscall_monitor_write("FAIL\n");
@@ -82,12 +79,6 @@ void i8042_controller_self_test() {	//4
 
 void i8042_two_channels() {	//5
 	if(DEBUG) syscall_monitor_write("5. finding channels\n");
-	i8042_write_command(0xA8);
-	i8042_write_command(0x20);
-	status = i8042_read_data();
-	u8int bit = status & (1 << 5);
-	if (bit == 0) PS2_2 = 1; syscall_monitor_write("PS/2 = YES\n");
-	if (bit == 1) PS2_2 = 0;
 }
 
 void i8042_interface_test() {	//6
@@ -97,7 +88,14 @@ void i8042_interface_test() {	//6
 
 void i8042_enable_devices() {	//7
 	if(DEBUG) syscall_monitor_write("7. enabling devices...\n");
-
+	i8042_write_command(0xAE);
+	
+	i8042_write_command(0x20);
+	u8int stat = i8042_read_data();
+	stat |= 1 << 0;
+	stat |= 1 << 1;
+	i8042_write_command(0x60);
+	i8042_write_data(stat);
 }
 
 void i8042_reset_devices() {	//8
