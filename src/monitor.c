@@ -29,6 +29,15 @@ void monitor_set_cursor_pos(u8int cursorY, u8int cursorX) {
 	cursor_x = cursorX;
 }
 
+void monitor_command(char command[], char arg1[]) {
+	
+}
+
+void monitor_backspace() {
+	monitor_set_cursor_pos(cursor_y, cursor_x - 1);
+	monitor_put(0x00);
+}
+
 // Scrolls the text on the screen up by one line.
 static void scroll()
 {
@@ -88,13 +97,15 @@ void monitor_put(char c)
 	if (c == 0x08 && cursor_x)
 	{
 		cursor_x--;
+		monitor_put(' '); //blank
+		cursor_x--;
 	}
 
 	// Handle a tab by increasing the cursor's X, but only to a point
 	// where it is divisible by 8.
 	else if (c == 0x09)
 	{
-		cursor_x = (cursor_x+8) & ~(8-1);
+		cursor_x = (cursor_x+4) & ~(4-1);
 	}
 
 	// Handle carriage return

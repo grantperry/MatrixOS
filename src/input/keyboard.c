@@ -33,6 +33,8 @@ s32int isSpecialKey(unsigned char keyPressChar)
     return 3;
   case 'P': //scancode for down arrow key
     return 4;
+  case 0x1C:
+    return 5;
   case 60: /* F12 */
     //put something cool here..
     return -1;
@@ -145,6 +147,18 @@ void keyboard_handler(registers_t *regs) {
 		}
 		
 		if(specialKey != 0){
+		switch(specialKey) {
+			case 1:
+				monitor_command("cursor", "left");
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+				monitor_put('\r');
+			default:
+				break;
+		}
+		
 		}
 	}
 }

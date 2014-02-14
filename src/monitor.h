@@ -23,6 +23,10 @@ void monitor_set_back_colour(u8int background);
 
 void monitor_set_cursor_pos(u8int cursorY, u8int cursorX);
 
+void monitor_command(char com[], char arg[]);
+
+void monitor_backspace();
+
 // Output a hex value to the monitor.
 void monitor_write_hex(u32int n);
 

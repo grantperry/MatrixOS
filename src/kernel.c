@@ -56,6 +56,7 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 }
 
 void print_version() {
+	
 	if(VER_MINOR == 0 && VER_FIX == 0){
 		monitor_set_back_colour(1);
 	}
