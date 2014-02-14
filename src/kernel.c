@@ -65,7 +65,7 @@ void print_version() {
 	if(VER_FIX >= 1) {
 		monitor_set_back_colour(4);
 	}
-
+	
 	monitor_write("v");
 	monitor_set_fore_colour(10);//green
 	monitor_write_dec(VER_MAJOR);
