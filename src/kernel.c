@@ -14,7 +14,7 @@
 
 #define VER_MAJOR		1
 #define VER_MINOR		0
-#define VER_FIX			3
+#define VER_FIX			4
 
 extern u32int placement_address;
 u32int initial_esp;
