@@ -24,6 +24,11 @@ static void move_cursor()
 	outb(0x3D5, cursorLocation);	  // Send the low cursor byte.
 }
 
+void monitor_set_cursor_pos(u8int cursorY, u8int cursorX) {
+	cursor_y = cursorY;
+	cursor_x = cursorX;
+}
+
 // Scrolls the text on the screen up by one line.
 static void scroll()
 {

@@ -21,6 +21,8 @@ void monitor_set_fore_colour(u8int foreground);
 
 void monitor_set_back_colour(u8int background);
 
+void monitor_set_cursor_pos(u8int cursorY, u8int cursorX);
+
 // Output a hex value to the monitor.
 void monitor_write_hex(u32int n);
 
