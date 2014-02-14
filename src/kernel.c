@@ -12,6 +12,10 @@
 
 #include "input/keyboard.h"
 
+#define VER_MAJOR		1
+#define VER_MINOR		0
+#define VER_FIX			3
+
 extern u32int placement_address;
 u32int initial_esp;
 struct multiboot *mboot_ptr;
@@ -22,13 +26,23 @@ void sti() {
 	asm volatile("sti");
 }
 
+void print_version();
+
 int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 {
 	monitor_clear();
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 	monitor_write("#------------------------------------------------------------------------------#");
-	monitor_write("|  Welcome to MatrixOS!!!                                               v1.0.2 |");
+	monitor_write("|");
+	monitor_set_fore_colour(10);
+	monitor_set_cursor_pos(1, 3);
+	monitor_write("Welcome to MatrixOS!!!");
+	monitor_set_fore_colour(15);
+	monitor_set_cursor_pos(1, 70);
+	print_version();
+	monitor_set_cursor_pos(1, 79);
+	monitor_write("|");
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("> ");
 
@@ -39,6 +53,31 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	print("Hello, user world!\n");
 	
 	for(;;) {}
+}
+
+void print_version() {
+	if(VER_MINOR == 0 && VER_FIX == 0){
+		monitor_set_back_colour(1);
+	}
+	if(VER_MINOR >= 1 && VER_FIX == 0) {
+		monitor_set_back_colour(12);
+	}
+	if(VER_FIX >= 1) {
+		monitor_set_back_colour(4);
+	}
+	
+	monitor_write("v");
+	monitor_set_fore_colour(10);//green
+	monitor_write_dec(VER_MAJOR);
+	monitor_write(".");
+	monitor_set_fore_colour(14);//yellow
+	monitor_write_dec(VER_MINOR);
+	monitor_set_fore_colour(10);//green
+	monitor_write(".");
+	monitor_set_fore_colour(6);//red
+	monitor_write_dec(VER_FIX);
+	monitor_set_fore_colour(15);
+	monitor_set_back_colour(0);
 }
 
 void init() {

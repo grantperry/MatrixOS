@@ -10,6 +10,9 @@ u16int *video_memory = (u16int *)0xB8000;
 u8int cursor_x = 0;
 u8int cursor_y = 0;
 
+u8int backColour = 0;
+u8int foreColour = 15;
+
 // Updates the hardware cursor.
 static void move_cursor()
 {
@@ -19,6 +22,11 @@ static void move_cursor()
 	outb(0x3D5, cursorLocation >> 8); // Send the high cursor byte.
 	outb(0x3D4, 15);				  // Tell the VGA board we are setting the low cursor byte.
 	outb(0x3D5, cursorLocation);	  // Send the low cursor byte.
+}
+
+void monitor_set_cursor_pos(u8int cursorY, u8int cursorX) {
+	cursor_y = cursorY;
+	cursor_x = cursorX;
 }
 
 // Scrolls the text on the screen up by one line.
@@ -51,12 +59,22 @@ static void scroll()
 	}
 }
 
+void monitor_set_colour(u8int back_ground, u8int fore_ground) {
+	foreColour = fore_ground;
+	backColour = back_ground;
+}
+
+void monitor_set_back_colour(u8int back_ground) {
+	backColour = back_ground;
+}
+
+void monitor_set_fore_colour(u8int fore_ground) {
+	foreColour = fore_ground;
+}
+
 // Writes a single character out to the screen.
 void monitor_put(char c)
 {
-	// The background colour is black (0), the foreground is white (15).
-	u8int backColour = 0;
-	u8int foreColour = 10;
 
 	// The attribute byte is made up of two nibbles - the lower being the 
 	// foreground colour, and the upper the background colour.
