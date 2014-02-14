@@ -4,7 +4,7 @@
 #include "../isr.h"
 #include "../common.h"
 
-
+u8int shift_flag = 0;
 
 
 void init_keyboard() { /////////////////////////////////////////////////////////
@@ -18,6 +18,28 @@ void init_keyboard() { /////////////////////////////////////////////////////////
 	i8042_enable_devices();
 	i8042_reset_devices();
 	i8042_lable_devices();
+}
+
+s32int isSpecialKey(unsigned char keyPressChar)
+{
+
+  switch(keyPressChar)
+  {
+  case 'K': //scancode for left arrow key
+    return 1;
+  case 'M': //scancode for right arrow key
+    return 2;
+  case 'H': //scancode for up arrow key
+    return 3;
+  case 'P': //scancode for down arrow key
+    return 4;
+  case 60: /* F12 */
+    //put something cool here..
+    return -1;
+  default:
+    return 0;
+  }
+
 }
 
 char lowerCaseKbdus[128] =
@@ -103,9 +125,26 @@ char upperCaseKbdus[128] =
 
 void keyboard_handler(registers_t *regs) {
 	u8int scancode = inb(0x60);
+	u8int specialKey = 0;
+	specialKey = isSpecialKey(scancode);
 	if(scancode & 0x80) {
 		scancode = scancode - 0x80;
+		
+		if(scancode == 42 || scancode - 0x80 == 54) {
+			shift_flag = 0;
+		}
 	} else {
-		monitor_put(lowerCaseKbdus[scancode]);
+		if(scancode == 42 || scancode - 0x80 == 54) {
+			shift_flag = 1;
+		}
+		if(shift_flag == 0) {
+			monitor_put(lowerCaseKbdus[scancode]);
+		}
+		if(shift_flag == 1) {
+			monitor_put(upperCaseKbdus[scancode]);
+		}
+		
+		if(specialKey != 0){
+		}
 	}
 }
