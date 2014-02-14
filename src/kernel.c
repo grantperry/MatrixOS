@@ -11,6 +11,7 @@
 #include "syscall.h"
 
 #include "input/keyboard.h"
+#include "system/moduleLoading.h"
 
 #define VER_MAJOR		1
 #define VER_MINOR		0
@@ -44,7 +45,6 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	monitor_set_cursor_pos(1, 79);
 	monitor_write("|");
 	monitor_write("#------------------------------------------------------------------------------#");
-	monitor_write("> ");
 
 	init();
 
@@ -103,7 +103,7 @@ void init() {
 	// Start paging.
 	initialise_paging();
 
-	init_keyboard();
+	runModule(&init_keyboard);
 
 	// Initialise the initial ramdisk, and set it as the filesystem root.
 	fs_root = initialise_initrd(initrd_location);

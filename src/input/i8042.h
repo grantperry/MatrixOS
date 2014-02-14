@@ -24,14 +24,14 @@
  */
 #define I8042_BUFFER_SIZE	16
 
-void i8042_disable_devices();				//1
-void i8042_flush_output_buffer();			//2
-void i8042_set_controller_config_byte();	//3
-void i8042_controller_self_test();		//4
-void i8042_two_channels();				//5
-void i8042_interface_test();				//6
-void i8042_enable_devices();				//7
-void i8042_reset_devices();				//8
-void i8042_lable_devices();				//9
+u8int i8042_disable_devices();				//1
+u8int i8042_flush_output_buffer();			//2
+u8int i8042_set_controller_config_byte();	//3
+u8int i8042_controller_self_test();		//4
+u8int i8042_two_channels();				//5
+u8int i8042_interface_test();				//6
+u8int i8042_enable_devices();				//7
+u8int i8042_reset_devices();				//8
+u8int i8042_lable_devices();				//9
 
 #endif //I8042_H

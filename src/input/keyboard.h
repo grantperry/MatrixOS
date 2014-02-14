@@ -4,7 +4,7 @@
 
 
 void keyboard_handler(registers_t *regs);
-void init_keyboard();
+s8int init_keyboard();
 
 
 #endif

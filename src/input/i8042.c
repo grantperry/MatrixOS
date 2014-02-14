@@ -5,7 +5,7 @@
 #define I8042_KBD_PORT_NO	0
 #define I8042_AUX_PORT_NO	1
 
-#define DEBUG				1
+#define DEBUG				0
 
 u8int status = 0;
 
@@ -38,24 +38,26 @@ static inline void i8042_write_command(int val)
 }
 
 ////////////////////////////////////////////////////////
-void i8042_disable_devices() {	//1
-	if(DEBUG) syscall_monitor_write("\n1. disabling devices...\n");
+u8int i8042_disable_devices() {	//1
+	if(DEBUG) syscall_monitor_write("disabling devices...");
 	i8042_write_command(0xAD);
 	i8042_write_command(0xA7);
+	return 0;
 }
 
-void i8042_flush_output_buffer() {	//2
-	if(DEBUG) syscall_monitor_write("2. flushing output buffer\n");
+u8int i8042_flush_output_buffer() {	//2
+	if(DEBUG) syscall_monitor_write("flushing output buffer");
 	u8int i = 0;
 	u8int c;
 	while(i < I8042_BUFFER_SIZE) {
 		c = i8042_read_data();
 		i++;
 	}
+	return 0;
 }
 
-void i8042_set_controller_config_byte() {	//3
-	if(DEBUG) syscall_monitor_write("3. setting controller config byte\n");
+u8int i8042_set_controller_config_byte() {	//3
+	if(DEBUG) syscall_monitor_write("setting controller config byte");
 	i8042_write_command(0x20);
 	status = i8042_read_data();
 	status |= 1 << 0;
@@ -64,10 +66,11 @@ void i8042_set_controller_config_byte() {	//3
 	i8042_write_command(0x60);
 	i8042_write_data(status);
 	if(DEBUG && !(status & (1 << 5))) syscall_monitor_write("DUAL PS/2 = YES\n"); //TODO check if this is right
+	return 0;
 }
 
-void i8042_controller_self_test() {	//4
-	if(DEBUG) syscall_monitor_write("4. controller self test\n");
+u8int i8042_controller_self_test() {	//4
+	if(DEBUG) syscall_monitor_write("controller self test");
 	i8042_write_command(0xAA);
 	u8int resp = i8042_read_data();
 	resp = i8042_read_data();
@@ -75,19 +78,22 @@ void i8042_controller_self_test() {	//4
 		if (resp == 0x55) syscall_monitor_write("PASS\n");
 		if (resp == 0xFC) syscall_monitor_write("FAIL\n");
 	}
+	return 0;
 }
 
-void i8042_two_channels() {	//5
-	if(DEBUG) syscall_monitor_write("5. finding channels\n");
+u8int i8042_two_channels() {	//5
+	if(DEBUG) syscall_monitor_write("finding channels");
+	return 0;
 }
 
-void i8042_interface_test() {	//6
-	if(DEBUG) syscall_monitor_write("6. checking peripherals\n");
+u8int i8042_interface_test() {	//6
+	if(DEBUG) syscall_monitor_write("checking peripherals");
+	return 0;
 	
 }
 
-void i8042_enable_devices() {	//7
-	if(DEBUG) syscall_monitor_write("7. enabling devices...\n");
+u8int i8042_enable_devices() {	//7
+	if(DEBUG) syscall_monitor_write("enabling devices...");
 	i8042_write_command(0xAE);
 	
 	i8042_write_command(0x20);
@@ -96,15 +102,16 @@ void i8042_enable_devices() {	//7
 	stat |= 1 << 1;
 	i8042_write_command(0x60);
 	i8042_write_data(stat);
+	return 0;
 }
 
-void i8042_reset_devices() {	//8
-	if(DEBUG) syscall_monitor_write("8. resetting devices\n");
-
+u8int i8042_reset_devices() {	//8
+	if(DEBUG) syscall_monitor_write("resetting devices");
+	return 0;
 }
 
-void i8042_lable_devices() {	//9
-	if(DEBUG) syscall_monitor_write("9. name devices\n");
-
+u8int i8042_lable_devices() {	//9
+	if(DEBUG) syscall_monitor_write("name devices");
+	return 0;
 }
 

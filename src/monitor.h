@@ -27,6 +27,14 @@ void monitor_command(char com[], char arg[]);
 
 void monitor_backspace();
 
+u8int monitor_getX();
+
+u8int monitor_getY();
+
+u8int monitor_get_back_colour();
+
+u8int monitor_get_fore_colour();
+
 // Output a hex value to the monitor.
 void monitor_write_hex(u32int n);
 

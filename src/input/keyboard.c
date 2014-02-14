@@ -5,11 +5,12 @@
 #include "../common.h"
 
 #include "../fun/fun.h"
+#include "../system/moduleLoading.h"
 
 u8int shift_flag = 0;
 
-
-void init_keyboard() { /////////////////////////////////////////////////////////
+s8int init_keyboard() { /////////////////////////////////////////////////////////
+	syscall_monitor_write("Initalizing Keyboard.");
 	register_interrupt_handler(IRQ1, &keyboard_handler);
 	i8042_disable_devices();
 	i8042_flush_output_buffer();
@@ -20,6 +21,7 @@ void init_keyboard() { /////////////////////////////////////////////////////////
 	i8042_enable_devices();
 	i8042_reset_devices();
 	i8042_lable_devices();
+	return 0;
 }
 
 s32int isSpecialKey(unsigned char keyPressChar)

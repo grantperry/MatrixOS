@@ -13,6 +13,21 @@ u8int cursor_y = 0;
 u8int backColour = 0;
 u8int foreColour = 15;
 
+u8int monitor_getX() {
+	return cursor_x;
+}
+
+u8int monitor_getY() {
+	return cursor_y;
+}
+
+u8int monitor_get_fore_colour() {
+	return foreColour;
+}
+u8int monitor_get_back_colour() {
+	return backColour;
+}
+
 // Updates the hardware cursor.
 static void move_cursor()
 {
