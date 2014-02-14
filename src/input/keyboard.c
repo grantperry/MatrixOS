@@ -4,6 +4,8 @@
 #include "../isr.h"
 #include "../common.h"
 
+#include "../fun/fun.h"
+
 u8int shift_flag = 0;
 
 
@@ -35,8 +37,8 @@ s32int isSpecialKey(unsigned char keyPressChar)
     return 4;
   case 0x1C:
     return 5;
-  case 60: /* F12 */
-    //put something cool here..
+  case 0x58: /* F12 */
+    colour_fun();
     return -1;
   default:
     return 0;
