@@ -50,10 +50,6 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 
 	init();
 
-	sleep(2);
-
-	print("Hello, user world!\n");
-
 	for(;;) {}
 }
 
