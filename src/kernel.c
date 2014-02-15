@@ -12,6 +12,7 @@
 
 #include "input/keyboard.h"
 #include "system/moduleLoading.h"
+#include "graphics/graphics.h"
 
 #define VER_MAJOR		1
 #define VER_MINOR		0
@@ -49,6 +50,8 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	monitor_write("#------------------------------------------------------------------------------#");
 
 	init();
+
+	init_graphics();
 
 	for(;;) {}
 }
