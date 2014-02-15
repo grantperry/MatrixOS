@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 
 struct initrd_header
 {
@@ -17,7 +17,7 @@ int main(char argc, char **argv)
    int i;
    for(i = 0; i < nheaders; i++)
    {
-       printf("writing file %s->%s at 0x%x\n", argv[i*2+1], argv[i*2+2], off);
+       printf("writing file %s -> %s at 0x%x\n", argv[i*2+1], argv[i*2+2], off);
        strcpy(headers[i].name, argv[i*2+2]);
        headers[i].offset = off;
        FILE *stream = fopen(argv[i*2+1], "r");
