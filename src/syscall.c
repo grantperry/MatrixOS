@@ -25,10 +25,12 @@ static void *syscalls[6] =
 };
 u32int num_syscalls = 6;
 
-void initialise_syscalls()
+s8int initialise_syscalls()
 {
+	monitor_write("Initalizing System Calls");
 	// Register our syscall handler.
 	register_interrupt_handler (0x80, &syscall_handler);
+	return 0;
 }
 
 void syscall_handler(registers_t *regs)

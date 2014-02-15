@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-void initialise_syscalls();
+s8int initialise_syscalls();
 
 #define DECL_SYSCALL0(fn) int syscall_##fn();
 #define DECL_SYSCALL1(fn,p1) int syscall_##fn(p1);

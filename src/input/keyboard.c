@@ -54,7 +54,7 @@ char lowerCaseKbdus[128] =
   '9', '0', '-', '=', '\b',	/* Backspace */
   '\t',			/* Tab */
   'q', 'w', 'e', 'r',	/* 19 */
-  't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\r',		/* Enter key */
+  't', 'y', 'u', 'i', 'o', 'p', '[', ']', 0,		/* Enter key */
   0,			/* 29   - Control */
   'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',	/* 39 */
   '\'', '`',   0,		/* Left shift */
@@ -154,11 +154,19 @@ void keyboard_handler(registers_t *regs) {
 		switch(specialKey) {
 			case 1:
 				monitor_command("cursor", "left");
+				break;
 			case 2:
+				//monitor_command("cursor", "right");
+				break;
 			case 3:
+				//monitor_command("cursor", "uo");
+				break;
 			case 4:
+				//monitor_command("cursor", "down");
+				break;
 			case 5:
 				monitor_put('\r');
+				break;
 			default:
 				break;
 		}

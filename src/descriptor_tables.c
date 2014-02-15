@@ -32,15 +32,16 @@ extern isr_t interrupt_handlers[];
 
 // Initialisation routine - zeroes all the interrupt service routines,
 // initialises the GDT and IDT.
-void init_descriptor_tables()
+s8int init_descriptor_tables()
 {
-
+	monitor_write("Filling Descriptor Tables.");
 	// Initialise the global descriptor table.
 	init_gdt();
 	// Initialise the interrupt descriptor table.
 	init_idt();
 	// Nullify all the interrupt handlers.
 	memset(&interrupt_handlers, 0, sizeof(isr_t)*256);
+	return 0;
 }
 
 static void init_gdt()

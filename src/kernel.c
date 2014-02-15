@@ -29,6 +29,8 @@ void sti() {
 
 void print_version();
 
+s8int locate_initrd();
+
 int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 {
 	monitor_clear();
@@ -37,12 +39,12 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	monitor_write("#------------------------------------------------------------------------------#");
 	monitor_write("|");
 	monitor_set_fore_colour(10);
-	monitor_set_cursor_pos(1, 3);
+	monitor_set_cursor_pos(3, 1);
 	monitor_write("Welcome to MatrixOS!!!");
 	monitor_set_fore_colour(15);
-	monitor_set_cursor_pos(1, 70);
+	monitor_set_cursor_pos(70, 1);
 	print_version();
-	monitor_set_cursor_pos(1, 79);
+	monitor_set_cursor_pos(79, 1);
 	monitor_write("|");
 	monitor_write("#------------------------------------------------------------------------------#");
 
@@ -84,30 +86,22 @@ void print_version() {
 void init() {
 
 	// Initialise all the ISRs and segmentation
-	init_descriptor_tables();
+	runModule(&init_descriptor_tables);
 	
 	asm volatile("sti");
-	initialise_syscalls();
+	runModule(&initialise_syscalls);
 	
-	// Initialise the PIT to 100Hz
+	// Initialise the PIT to 50Hz
 	asm volatile("sti");
 	init_timer(50);
-
-	// Find the location of our initial ramdisk.
-	ASSERT(mboot_ptr->mods_count > 0);
-	u32int initrd_location = *((u32int*)mboot_ptr->mods_addr);
-	u32int initrd_end = *(u32int*)(mboot_ptr->mods_addr+4);
-	// Don't trample our module with placement accesses, please!
-	placement_address = initrd_end;
+	
+	runModule(&locate_initrd);
 
 	// Start paging.
-	initialise_paging();
+	runModule(&initialise_paging);
 
 	runModule(&init_keyboard);
 
-	// Initialise the initial ramdisk, and set it as the filesystem root.
-	fs_root = initialise_initrd(initrd_location);
-	
 	// Start multitasking.
 	//initialise_tasking();
 	
@@ -115,4 +109,17 @@ void init() {
 
 	//switch_to_user_mode();
 	return;
+}
+
+s8int locate_initrd() {
+	syscall_monitor_write("Locating Initrd.");
+	// Find the location of our initial ramdisk.
+	ASSERT(mboot_ptr->mods_count > 0);
+	u32int initrd_location = *((u32int*)mboot_ptr->mods_addr);
+	u32int initrd_end = *(u32int*)(mboot_ptr->mods_addr+4);
+	// Don't trample our module with placement accesses, please!
+	placement_address = initrd_end;
+	// Initialise the initial ramdisk, and set it as the filesystem root.
+	fs_root = initialise_initrd(initrd_location);
+	return 0;
 }

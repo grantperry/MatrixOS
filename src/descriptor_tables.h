@@ -11,7 +11,7 @@
 #include "common.h"
 
 // Initialisation function is publicly accessible.
-void init_descriptor_tables();
+s8int init_descriptor_tables();
 
 // Allows the kernel stack in the TSS to be changed.
 void set_kernel_stack(u32int stack);

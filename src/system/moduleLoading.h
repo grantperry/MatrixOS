@@ -1,3 +1,3 @@
 #include "../common.h"
 
-void runModule(u8int (*func)(void));
+void runModule(s8int (*func)(void));

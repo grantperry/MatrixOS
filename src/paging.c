@@ -107,8 +107,9 @@ void free_frame(page_t *page)
 	}
 }
 
-void initialise_paging()
+s8int initialise_paging()
 {
+	syscall_monitor_write("Initalizing Paging.");
 	// The size of physical memory. For the moment we 
 	// assume it is 16MB big.
 	u32int mem_end_page = 0x1000000;
@@ -164,6 +165,8 @@ void initialise_paging()
 
 	current_directory = clone_directory(kernel_directory);
 	switch_page_directory(current_directory);
+
+	return 0;
 }
 
 void switch_page_directory(page_directory_t *dir)

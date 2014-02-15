@@ -21,7 +21,7 @@ void monitor_set_fore_colour(u8int foreground);
 
 void monitor_set_back_colour(u8int background);
 
-void monitor_set_cursor_pos(u8int cursorY, u8int cursorX);
+void monitor_set_cursor_pos(u8int cursorX, u8int cursorY);
 
 void monitor_command(char com[], char arg[]);
 

@@ -13,6 +13,10 @@ u8int cursor_y = 0;
 u8int backColour = 0;
 u8int foreColour = 15;
 
+static void scroll();
+
+void monitor_clear();
+
 u8int monitor_getX() {
 	return cursor_x;
 }
@@ -39,19 +43,20 @@ static void move_cursor()
 	outb(0x3D5, cursorLocation);	  // Send the low cursor byte.
 }
 
-void monitor_set_cursor_pos(u8int cursorY, u8int cursorX) {
+void monitor_set_cursor_pos(u8int cursorX, u8int cursorY) {
 	cursor_y = cursorY;
 	cursor_x = cursorX;
 }
 
 void monitor_command(char command[], char arg1[]) {
-	
+	if(!strcmp(command, "cursor")) {
+		if(!strcmp(arg1, "left")) {
+			cursor_x--;
+			move_cursor;
+		}
+	}
 }
 
-void monitor_backspace() {
-	monitor_set_cursor_pos(cursor_y, cursor_x - 1);
-	monitor_put(0x00);
-}
 
 // Scrolls the text on the screen up by one line.
 static void scroll()
@@ -127,6 +132,7 @@ void monitor_put(char c)
 	else if (c == '\r')
 	{
 		cursor_x = 0;
+		cursor_y++;
 	}
 
 	// Handle newline by moving cursor back to left and increasing the row
