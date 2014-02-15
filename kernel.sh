@@ -16,7 +16,7 @@ cd $MATRIX
 mkdir -p isodir
 mkdir -p isodir/boot
 cp bin/MatrixOS.bin isodir/MatrixOS.bin
-cp initrd.img       isodir/initrd
+cp initrd/initrd.img       isodir/initrd
 mkdir -p isodir/boot/grub
 cp grub/grub.cfg isodir/boot/grub/grub.cfg
 grub-mkrescue -o MatrixOS.iso isodir
