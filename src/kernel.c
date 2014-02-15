@@ -73,7 +73,7 @@ void print_version() {
 	monitor_write_dec(VER_MINOR);
 	monitor_set_fore_colour(10);//green
 	monitor_write(".");
-	monitor_set_fore_colour(6);//red
+	monitor_set_fore_colour(12);//red
 	monitor_write_dec(VER_FIX);
 	monitor_set_fore_colour(15);
 	monitor_set_back_colour(0);
