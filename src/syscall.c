@@ -30,6 +30,7 @@ s8int initialise_syscalls()
 	monitor_write("Initalizing System Calls");
 	// Register our syscall handler.
 	register_interrupt_handler (0x80, &syscall_handler);
+	SYSCALLS_ENABLED = 1;
 	return 0;
 }
 

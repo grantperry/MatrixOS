@@ -5,6 +5,8 @@
 
 s8int initialise_syscalls();
 
+u8int SYSCALLS_ENABLED = 0;
+
 #define DECL_SYSCALL0(fn) int syscall_##fn();
 #define DECL_SYSCALL1(fn,p1) int syscall_##fn(p1);
 #define DECL_SYSCALL2(fn,p1,p2) int syscall_##fn(p1,p2);
