@@ -19,4 +19,6 @@ void system_mSleep(u32int t);
 
 void mSleep(u32int milliseconds);
 
+u8int SLEEP_ENABLED;
+
 #endif

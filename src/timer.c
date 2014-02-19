@@ -76,6 +76,9 @@ void timer_callback()
 	return;
 }
 
+
+extern u8int SLEEP_ENABLED;
+
 void init_timer(u32int frequency)
 {
 	asm volatile("sti");
@@ -98,4 +101,6 @@ void init_timer(u32int frequency)
   // Send the frequency divisor.
   outb(0x40, l);
   outb(0x40, h);
+  
+  SLEEP_ENABLED = 1;
 }

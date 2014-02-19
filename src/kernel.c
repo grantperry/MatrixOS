@@ -18,6 +18,8 @@
 #define VER_MINOR		0
 #define VER_FIX			4
 
+#define TASKING_USER
+
 extern u32int placement_address;
 u32int initial_esp;
 struct multiboot *mboot_ptr;
@@ -83,6 +85,8 @@ void print_version() {
 }
 
 void init() {
+	SYSCALL_ENABLED =	0;
+	SLEEP_ENABLED =		0;
 
 	// Initialise all the ISRs and segmentation
 	runModule(&init_descriptor_tables);
@@ -101,12 +105,13 @@ void init() {
 
 	runModule(&init_keyboard);
 
+#ifdef TASKING_USER
 	// Start multitasking.
-	//initialise_tasking();
+	runModule(&initialise_tasking);
 	
-	//switch_to_user_mode();
-
-	//switch_to_user_mode();
+	runModule(&switch_to_user_mode);
+#endif
+	syscall_monitor_write(" \b");
 	return;
 }
 

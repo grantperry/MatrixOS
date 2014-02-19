@@ -1,11 +1,11 @@
+#include "common.h"
+
 #ifndef SYSCALL_H
 #define SYSCALL_H
 
-#include "common.h"
-
 s8int initialise_syscalls();
 
-u8int SYSCALLS_ENABLED = 0;
+u8int SYSCALL_ENABLED;
 
 #define DECL_SYSCALL0(fn) int syscall_##fn();
 #define DECL_SYSCALL1(fn,p1) int syscall_##fn(p1);

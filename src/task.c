@@ -25,8 +25,9 @@ u8int __TASKING_ENABLED = 0;
 // The next available process ID.
 u32int next_pid = 1;
 
-void initialise_tasking()
+s8int initialise_tasking()
 {
+	syscall_monitor_write("Initaling Tasking");
 	// Rather important stuff happening, no interrupts please!
 	asm volatile("cli");
 
@@ -46,6 +47,7 @@ void initialise_tasking()
 	
 	// Reenable interrupts.
 	asm volatile("sti");
+	return 0;
 }
 
 void move_stack(void *new_stack_start, u32int size)
@@ -230,6 +232,7 @@ int getpid()
 
 void switch_to_user_mode()
 {
+	syscall_monitor_write("switching to User Mode!!!");
 	// Set up our kernel stack.
 	set_kernel_stack(current_task->kernel_stack+KERNEL_STACK_SIZE);
 	
@@ -255,6 +258,5 @@ void switch_to_user_mode()
 	  sti; \
 	  iret; \
 	1: \
-	  "); 
-	  
+	"); 
 }

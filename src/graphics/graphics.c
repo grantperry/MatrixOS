@@ -1,9 +1,6 @@
 #include "graphics.h"
-
-unsigned char *VGA = (unsigned char *)0xA0000000;
+#include "../common.h"
 
 void init_graphics() {
-	while(1) {
-		&VGA = 1;
-	}
+
 }
