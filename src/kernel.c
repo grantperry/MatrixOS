@@ -18,7 +18,7 @@
 #define VER_MINOR		0
 #define VER_FIX			4
 
-#define TASKING_USER
+//#define TASKING_USER
 
 extern u32int placement_address;
 u32int initial_esp;
