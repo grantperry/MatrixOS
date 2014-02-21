@@ -1,8 +1,3 @@
-;
-; boot.s -- Kernel start location. Also defines multiboot header.
-;           Based on Bran's kernel development tutorial file start.asm
-;
-
 MBOOT_PAGE_ALIGN    equ 1<<0    ; Load kernel and modules on a page boundary
 MBOOT_MEM_INFO      equ 1<<1    ; Provide your kernel with memory info
 MBOOT_HEADER_MAGIC  equ 0x1BADB002 ; Multiboot Magic value
@@ -19,6 +14,9 @@ MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 [EXTERN bss]                    ; Start of the .bss section.
 [EXTERN end]                    ; End of the last loadable section.
 
+;
+; Our MultiBoot Header
+;
 mboot:
     dd  MBOOT_HEADER_MAGIC      ; GRUB will search for this value on each
                                 ; 4-byte boundary in your kernel file
@@ -34,6 +32,9 @@ mboot:
 [GLOBAL start]                  ; Kernel entry point.
 [EXTERN kernel_main]                   ; This is the entry point of our C code
 
+;
+; THE START OF LIFE!!!
+;
 start:
     ; Load multiboot information:
     push esp

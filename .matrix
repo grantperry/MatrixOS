@@ -6,9 +6,14 @@ cd $M_HOME
 
 export PATH="$HOME/opt/cross/bin:$PATH"
 
-alias push="git push MatrixOS master"
-alias commit="git commit"
-alias add="git add"
+alias push="cd src;
+			rm *.o;
+			cd ..;
+			git push MatrixOS master;"
+alias commit="git checkout *.o;
+				git commit;"
+alias add="git add "
+alias pre_commit="cd $M_HOME/src;"
 alias master="git checkout master"
 alias pages="git checkout gh-pages"
 
@@ -18,3 +23,5 @@ alias run="qemu-system-i386 -monitor stdio -cdrom  $M_HOME/MatrixOS.iso"
 alias kern="qemu-system-i386 -monitor stdio -kernel"
 alias build="sh $M_HOME/kernel.sh"
 alias bld="build; run"
+alias release="cd $M_HOME/src;
+				make release;"

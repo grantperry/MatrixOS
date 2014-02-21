@@ -19,6 +19,8 @@ LD=matrix-ld
 
 all: $(SOURCES) $(MODULES) link
 
+release: clean all
+
 clean:
 	-rm *.o ../bin/MatrixOS.bin
 	cd input; rm *.o; cd ..;
