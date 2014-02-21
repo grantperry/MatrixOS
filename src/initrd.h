@@ -1,5 +1,4 @@
 // initrd.h -- Defines the interface for and structures relating to the initial ramdisk.
-//             Written for JamesM's kernel development tutorials.
 
 #ifndef INITRD_H
 #define INITRD_H

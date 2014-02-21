@@ -1,5 +1,4 @@
 // monitor.h -- Defines the interface for monitor.h
-//              From JamesM's kernel development tutorials.
 
 #ifndef MONITOR_H
 #define MONITOR_H

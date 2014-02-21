@@ -14,25 +14,38 @@ u8int backColour = 0;
 u8int foreColour = 15;
 
 static void scroll();
-
 void monitor_clear();
 
+/*
+// Get the X Position of the hardware cursor.
+*/
 u8int monitor_getX() {
 	return cursor_x;
 }
 
+/*
+// Get the Y Position of the hardware cursor.
+*/
 u8int monitor_getY() {
 	return cursor_y;
 }
 
+/*
+// Get the current foreground colour.
+*/
 u8int monitor_get_fore_colour() {
 	return foreColour;
 }
+
+/*
+// Get the current background colour.
+*/
 u8int monitor_get_back_colour() {
 	return backColour;
 }
-
+/*
 // Updates the hardware cursor.
+*/
 static void move_cursor()
 {
 	// The screen is 80 characters wide...
@@ -43,11 +56,18 @@ static void move_cursor()
 	outb(0x3D5, cursorLocation);	  // Send the low cursor byte.
 }
 
+/*
+// set the new cursor position.
+// TODO add move_cursor() to the end of this.
+*/
 void monitor_set_cursor_pos(u8int cursorX, u8int cursorY) {
 	cursor_y = cursorY;
 	cursor_x = cursorX;
 }
 
+/*
+// Making a way to send commands to the monitor driver.
+*/
 void monitor_command(char command[], char arg1[]) {
 	if(!strcmp(command, "cursor")) {
 		if(!strcmp(arg1, "left")) {
@@ -57,8 +77,9 @@ void monitor_command(char command[], char arg1[]) {
 	}
 }
 
-
+/*
 // Scrolls the text on the screen up by one line.
+*/
 static void scroll()
 {
 
@@ -87,21 +108,31 @@ static void scroll()
 		cursor_y = 24;
 	}
 }
-
+/*
+// Set both colours of the screen.
+*/
 void monitor_set_colour(u8int back_ground, u8int fore_ground) {
 	foreColour = fore_ground;
 	backColour = back_ground;
 }
 
+/*
+// Set the background colour of the screen.
+*/
 void monitor_set_back_colour(u8int back_ground) {
 	backColour = back_ground;
 }
 
+/*
+// Set the foreground colour of the screen.
+*/
 void monitor_set_fore_colour(u8int fore_ground) {
 	foreColour = fore_ground;
 }
 
+/*
 // Writes a single character out to the screen.
+*/
 void monitor_put(char c)
 {
 
@@ -164,7 +195,9 @@ void monitor_put(char c)
 
 }
 
+/*
 // Clears the screen, by copying lots of spaces to the framebuffer.
+*/
 void monitor_clear()
 {
 	// Make an attribute byte for the default colours
@@ -183,7 +216,9 @@ void monitor_clear()
 	move_cursor();
 }
 
+/*
 // Outputs a null-terminated ASCII string to the monitor.
+*/
 void monitor_write(char *c)
 {
 	int i = 0;
@@ -193,6 +228,9 @@ void monitor_write(char *c)
 	}
 }
 
+/*
+// Writes a integer to the screen as a Hexadecimal value
+*/
 void monitor_write_hex(u32int n)
 {
 	s32int tmp;
@@ -234,6 +272,9 @@ void monitor_write_hex(u32int n)
 
 }
 
+/*
+// Writes a integer to the screen as a decimal number.
+*/
 void monitor_write_dec(u32int n)
 {
 

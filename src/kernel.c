@@ -25,15 +25,21 @@ u32int initial_esp;
 struct multiboot *mboot_ptr;
 
 void init();
+void print_version();
+s8int locate_initrd();
 
+/*
+// Call asm 'sti'.
+// This is a syscall function. 
+*/
 void sti() {
 	asm volatile("sti");
 }
 
-void print_version();
-
-s8int locate_initrd();
-
+/*
+// This is where everything starts...
+// If you dont understand this go learn osDeving
+*/
 int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 {
 	monitor_clear();
@@ -58,6 +64,10 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	for(;;) {}
 }
 
+/*
+// Print the current version of MatrixOS in COLOUR!!!
+// Is printed wherever the cursor is.
+*/
 void print_version() {
 	
 	if(VER_MINOR == 0 && VER_FIX == 0){
@@ -84,6 +94,9 @@ void print_version() {
 	monitor_set_back_colour(0);
 }
 
+/*
+// Stick your lowlevel initalisation in here!
+*/
 void init() {
 	SYSCALL_ENABLED =	0;
 	SLEEP_ENABLED =		0;
@@ -115,6 +128,9 @@ void init() {
 	return;
 }
 
+/*
+// Find the Initrd and remeber where it is!
+*/
 s8int locate_initrd() {
 	syscall_monitor_write("Locating Initrd.");
 	// Find the location of our initial ramdisk.
