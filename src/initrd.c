@@ -1,5 +1,4 @@
 // initrd.c -- Defines the interface for and structures relating to the initial ramdisk.
-//			 Written for JamesM's kernel development tutorials.
 
 #include "initrd.h"
 
@@ -12,6 +11,9 @@ int nroot_nodes;					// Number of file nodes.
 
 struct dirent dirent;
 
+/*
+// place the data specified in the memory specified.
+*/
 static u32int initrd_read(fs_node_t *node, u32int offset, u32int size, u8int *buffer)
 {
 	initrd_file_header_t header = file_headers[node->inode];
@@ -23,6 +25,9 @@ static u32int initrd_read(fs_node_t *node, u32int offset, u32int size, u8int *bu
 	return size;
 }
 
+/*
+// Read a directory of the initrd file
+*/
 static struct dirent *initrd_readdir(fs_node_t *node, u32int index)
 {
 	if (node == initrd_root && index == 0)
@@ -41,6 +46,9 @@ static struct dirent *initrd_readdir(fs_node_t *node, u32int index)
 	return &dirent;
 }
 
+/*
+// Find a directory and return the pointer.
+*/
 static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
 {
 	if (node == initrd_root &&
@@ -54,6 +62,9 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
 	return 0;
 }
 
+/*
+// Initalise the InitRD.
+*/
 fs_node_t *initialise_initrd(u32int location)
 {
 	// Initialise the main and file header pointers and populate the root directory.
