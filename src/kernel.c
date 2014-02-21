@@ -124,7 +124,6 @@ void init() {
 	
 	runModule(&switch_to_user_mode);
 #endif
-	syscall_monitor_write(" \b");
 	return;
 }
 

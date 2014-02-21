@@ -58,11 +58,11 @@ static void move_cursor()
 
 /*
 // set the new cursor position.
-// TODO add move_cursor() to the end of this.
 */
 void monitor_set_cursor_pos(u8int cursorX, u8int cursorY) {
 	cursor_y = cursorY;
 	cursor_x = cursorX;
+	move_cursor();
 }
 
 /*
