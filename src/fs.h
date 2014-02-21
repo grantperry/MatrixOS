@@ -1,6 +1,3 @@
-// fs.h -- Defines the interface for and structures relating to the virtual file system.
-//         Written for JamesM's kernel development tutorials.
-
 #ifndef FS_H
 #define FS_H
 
