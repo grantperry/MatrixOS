@@ -1,10 +1,3 @@
-//
-// descriptor_tables.c - Initialises the GDT and IDT, and defines the 
-//					   default ISR and IRQ handler.
-//					   Based on code from Bran's kernel development tutorials.
-//					   Rewritten for JamesM's kernel development tutorials.
-//
-
 #include "common.h"
 #include "descriptor_tables.h"
 #include "isr.h"
@@ -30,8 +23,10 @@ tss_entry_t tss_entry;
 // Extern the ISR handler array so we can nullify them on startup.
 extern isr_t interrupt_handlers[];
 
+/*
 // Initialisation routine - zeroes all the interrupt service routines,
 // initialises the GDT and IDT.
+*/
 s8int init_descriptor_tables()
 {
 	monitor_write("Filling Descriptor Tables.");
@@ -44,6 +39,10 @@ s8int init_descriptor_tables()
 	return 0;
 }
 
+/*
+// Initalise GDT
+// TODO document this. 
+*/
 static void init_gdt()
 {
 	gdt_ptr.limit = (sizeof(gdt_entry_t) * 6) - 1;
@@ -60,7 +59,9 @@ static void init_gdt()
 	tss_flush();
 }
 
+/*
 // Set the value of one GDT entry.
+*/ 
 static void gdt_set_gate(s32int num, u32int base, u32int limit, u8int access, u8int gran)
 {
 	gdt_entries[num].base_low	= (base & 0xFFFF);
@@ -73,8 +74,9 @@ static void gdt_set_gate(s32int num, u32int base, u32int limit, u8int access, u8
 	gdt_entries[num].granularity |= gran & 0xF0;
 	gdt_entries[num].access	  = access;
 }
-
+/*
 // Initialise our task state segment structure.
+*/
 static void write_tss(s32int num, u16int ss0, u32int esp0)
 {
 	// Firstly, let's compute the base and limit of our entry into the GDT.
@@ -100,11 +102,17 @@ static void write_tss(s32int num, u16int ss0, u32int esp0)
 	tss_entry.ss = tss_entry.ds = tss_entry.es = tss_entry.fs = tss_entry.gs = 0x13;
 }
 
+/*
+// Set our kernel stack.
+*/
 void set_kernel_stack(u32int stack)
 {
 	tss_entry.esp0 = stack;
 }
 
+/*
+// Init IDT
+*/
 static void init_idt()
 {
 	idt_ptr.limit = sizeof(idt_entry_t) * 256 -1;
