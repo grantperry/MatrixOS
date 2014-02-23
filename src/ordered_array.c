@@ -1,14 +1,19 @@
 // ordered_array.c -- Implementation for creating, inserting and deleting
 //					from ordered arrays.
-//					Written for JamesM's kernel development tutorials.
 
 #include "ordered_array.h"
 
+/*
+// A standard less than predicate.
+*/
 s8int standard_lessthan_predicate(type_t a, type_t b)
 {
 	return (a<b)?1:0;
 }
 
+/*
+// Create an ordered array.
+*/
 ordered_array_t create_ordered_array(u32int max_size, lessthan_predicate_t less_than)
 {
 	ordered_array_t to_ret;
@@ -31,11 +36,17 @@ ordered_array_t place_ordered_array(void *addr, u32int max_size, lessthan_predic
 	return to_ret;
 }
 
+/*
+// Destroy an ordered array.
+*/
 void destroy_ordered_array(ordered_array_t *array)
 {
 //	kfree(array->array);
 }
 
+/*
+// Add an item into the array.
+*/
 void insert_ordered_array(type_t item, ordered_array_t *array)
 {
 	ASSERT(array->less_than);
@@ -59,12 +70,18 @@ void insert_ordered_array(type_t item, ordered_array_t *array)
 	}
 }
 
+/*
+// Lookup the item at index i.
+*/
 type_t lookup_ordered_array(u32int i, ordered_array_t *array)
 {
 	ASSERT(i < array->size);
 	return array->array[i];
 }
 
+/*
+// Deletes the item at location i from the array.
+*/
 void remove_ordered_array(u32int i, ordered_array_t *array)
 {
 	while (i < array->size)
