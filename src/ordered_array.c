@@ -41,7 +41,7 @@ ordered_array_t place_ordered_array(void *addr, u32int max_size, lessthan_predic
 */
 void destroy_ordered_array(ordered_array_t *array)
 {
-//	kfree(array->array);
+	kfree(array->array);
 }
 
 /*
