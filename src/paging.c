@@ -1,5 +1,4 @@
 // paging.c -- Defines the interface for and structures relating to paging.
-//			 Written for JamesM's kernel development tutorials.
 
 #include "paging.h"
 #include "kheap.h"
@@ -21,8 +20,9 @@ extern heap_t *kheap;
 // Macros used in the bitset algorithms.
 #define INDEX_FROM_BIT(a) (a/(8*4))
 #define OFFSET_FROM_BIT(a) (a%(8*4))
-
+/*
 // Static function to set a bit in the frames bitset
+*/
 static void set_frame(u32int frame_addr)
 {
 	u32int frame = frame_addr/0x1000;
@@ -31,7 +31,9 @@ static void set_frame(u32int frame_addr)
 	frames[idx] |= (0x1 << off);
 }
 
+/*
 // Static function to clear a bit in the frames bitset
+*/
 static void clear_frame(u32int frame_addr)
 {
 	u32int frame = frame_addr/0x1000;
@@ -40,7 +42,9 @@ static void clear_frame(u32int frame_addr)
 	frames[idx] &= ~(0x1 << off);
 }
 
+/*
 // Static function to test if a bit is set.
+*/
 static u32int test_frame(u32int frame_addr)
 {
 	u32int frame = frame_addr/0x1000;
@@ -49,7 +53,9 @@ static u32int test_frame(u32int frame_addr)
 	return (frames[idx] & (0x1 << off));
 }
 
+/*
 // Static function to find the first free frame.
+*/
 static u32int first_frame()
 {
 	u32int i, j;
@@ -70,7 +76,9 @@ static u32int first_frame()
 	}
 }
 
+/*
 // Function to allocate a frame.
+*/
 void alloc_frame(page_t *page, int is_kernel, int is_writeable)
 {
 	if (page->frame != 0)
@@ -92,7 +100,9 @@ void alloc_frame(page_t *page, int is_kernel, int is_writeable)
 	}
 }
 
+/*
 // Function to deallocate a frame.
+*/
 void free_frame(page_t *page)
 {
 	u32int frame;
@@ -107,6 +117,12 @@ void free_frame(page_t *page)
 	}
 }
 
+/*
+// Initialise paging by 
+// Setting the size of phisical memory.
+// Making the page directory.
+// Register Interupts for page faults.
+*/
 s8int initialise_paging()
 {
 	syscall_monitor_write("Initalizing Paging.");
@@ -169,6 +185,9 @@ s8int initialise_paging()
 	return 0;
 }
 
+/*
+// Change paging directory by changing the cr3 and cr0 registers.
+*/
 void switch_page_directory(page_directory_t *dir)
 {
 	current_directory = dir;
@@ -179,6 +198,9 @@ void switch_page_directory(page_directory_t *dir)
 	asm volatile("mov %0, %%cr0":: "r"(cr0));
 }
 
+/*
+// Return the page at address and if make is true make then return
+*/
 page_t *get_page(u32int address, int make, page_directory_t *dir)
 {
 	// Turn the address into an index.
@@ -204,7 +226,9 @@ page_t *get_page(u32int address, int make, page_directory_t *dir)
 	}
 }
 
-
+/*
+// This is called by interupts when a Page Fault occurs.
+*/
 void page_fault(registers_t *regs)
 {
 	// A page fault has occurred.
