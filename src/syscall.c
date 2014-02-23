@@ -26,6 +26,9 @@ static void *syscalls[6] =
 
 u32int num_syscalls = 6;
 
+/*
+// Initialise syscalls by registereing the handler.
+*/
 s8int initialise_syscalls()
 {
 	monitor_write("Initalizing System Calls");
@@ -35,6 +38,9 @@ s8int initialise_syscalls()
 	return 0;
 }
 
+/*
+// Our syscall Handler. this is called whenever someone calls a syscall.
+*/
 void syscall_handler(registers_t *regs)
 {
 	// Firstly, check if the requested syscall number is valid.
