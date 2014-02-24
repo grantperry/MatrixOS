@@ -1,7 +1,4 @@
-// 
 // task.h - Defines the structures and prototypes needed to multitask.
-//          Written for JamesM's kernel development tutorials.
-//
 
 #ifndef TASK_H
 #define TASK_H
