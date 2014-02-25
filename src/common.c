@@ -170,6 +170,6 @@ void k_save()
   u32int i;
 
   for(i = 0; i < 25 * 80 + 1; i++)
-    screen[i] = *((u32int*)video_memory + i);
+    screen[i] = video_memory + i;
 
 }
