@@ -4,6 +4,9 @@
 #include "common.h"
 #include "syscall.h"
 
+u32int screen[25 * 80]; //char array to hold screen characters when k_save() is called.
+extern u16int video_memory; // from monitor.c
+
 /*
 // print: Print an array of chars to std Text Mode via. Syscalls.
 */
@@ -160,4 +163,13 @@ extern void panic_assert(const char *file, u32int line, const char *desc)
 	monitor_write("\n");
 	// Halt by going into an infinite loop.
 	for(;;);
+}
+
+void k_save()
+{
+  u32int i;
+
+  for(i = 0; i < 25 * 80 + 1; i++)
+    screen[i] = *((u32int*)video_memory + i);
+
 }
