@@ -1,3 +1,5 @@
+#include "task.h"
+
 #ifndef COMMON_H
 #define COMMON_H
 
@@ -19,6 +21,11 @@ u8int inb(u16int port);
 u16int inw(u16int port);
 
 void sti();
+
+#define TRUE    1  //define a few variable
+#define ON      1
+#define FALSE   0
+#define OFF     0
 
 #define PANIC(msg) panic(msg, __FILE__, __LINE__);
 

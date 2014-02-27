@@ -6,9 +6,6 @@
 #include "task.h"
 #include "paging.h"
 
-// The currently running task.
-volatile task_t *current_task;
-
 // The start of the task linked list.
 volatile task_t *ready_queue;
 
