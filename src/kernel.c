@@ -27,6 +27,7 @@ struct multiboot *mboot_ptr;
 void init();
 void print_version();
 s8int locate_initrd();
+s8int init_Interupts();
 
 /*
 // Call asm 'sti'.
@@ -105,6 +106,8 @@ void init() {
 	asm volatile("sti");
 	runModule(&initialise_syscalls);
 	
+	runModule(&init_Interupts);
+	
 	// Initialise the PIT to 50Hz
 	asm volatile("sti");
 	init_timer(50);
@@ -123,7 +126,7 @@ void init() {
 	runModule(&switch_to_user_mode);
 #endif
 	sleep(1);
-	VGA_init(320, 200, 256); //dont change these numbers
+	//VGA_init(320, 200, 256); //dont change these numbers
 	
 	return;
 }
@@ -141,5 +144,16 @@ s8int locate_initrd() {
 	placement_address = initrd_end;
 	// Initialise the initial ramdisk, and set it as the filesystem root.
 	fs_root = initialise_initrd(initrd_location);
+	return 0;
+}
+
+void General_Protection_Fault(registers_t *regs) {
+	
+	PANIC("General Protection Fault");
+}
+
+s8int init_Interupts() {
+	syscall_monitor_write("Initalizing Interupts.");
+	register_interrupt_handler(13, General_Protection_Fault);
 	return 0;
 }
