@@ -58,6 +58,8 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	monitor_write("#------------------------------------------------------------------------------#");
 
 	init();
+	
+	//go();
 
 	for(;;) {}
 }
@@ -122,12 +124,9 @@ void init() {
 	
 	runModule(&switch_to_user_mode);
 #endif
-#ifdef VGA
-#ifndef TASKING_USER
 	sleep(1);
-#endif //TASKING_USER
-	VGA_init(1024, 768, 24)
-#endif //VGA
+	//VGA_init(1024, 768, 24); //dont change these numbers
+	
 	return;
 }
 

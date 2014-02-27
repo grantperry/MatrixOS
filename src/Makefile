@@ -9,7 +9,7 @@ MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS)
 INPUT=input/i8042.o input/keyboard.o
 SYSTEM=system/moduleLoading.o
 FUN=fun/fun.o
-GRAPHICS=graphics/graphics.o graphics/x_server.o
+GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o
 
 CFLAGS=-nostdlib -nostdinc -fno-builtin -g
 LDFLAGS=-Tlink.ld

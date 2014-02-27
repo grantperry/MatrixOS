@@ -5,4 +5,6 @@
 
 void VGA_init(int width, int height, int bpp);
 
+void go();
+
 #endif //GRAPHICS_H
