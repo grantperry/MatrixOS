@@ -2,15 +2,11 @@
 #ifndef VESA_H
 #define VESA_H
 
+#include "../task.h"
+
 	#define wVESA     1024
 	#define hVESA     768
 	#define dVESA     32
-
-// define our structure
-typedef struct __attribute__ ((packed)) {
-  unsigned short di, si, bp, sp, bx, dx, cx, ax;
-  unsigned short gs, fs, es, ds, eflags;
-} regs16_t;
 
 int widthVESA, heightVESA, depthVESA;
 

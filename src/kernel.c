@@ -15,8 +15,8 @@
 #include "graphics/graphics.h"
 
 #define VER_MAJOR		1
-#define VER_MINOR		0
-#define VER_FIX			4
+#define VER_MINOR		1
+#define VER_FIX			0
 
 //#define TASKING_USER
 
@@ -123,7 +123,7 @@ void init() {
 	runModule(&switch_to_user_mode);
 #endif
 	sleep(1);
-	VGA_init(1024, 768, 24); //dont change these numbers
+	VGA_init(320, 200, 256); //dont change these numbers
 	
 	return;
 }
