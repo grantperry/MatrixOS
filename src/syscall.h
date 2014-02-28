@@ -1,5 +1,9 @@
 #include "common.h"
 
+/*
+// This is a file full of macros to help make syscalls.
+*/
+
 #ifndef SYSCALL_H
 #define SYSCALL_H
 

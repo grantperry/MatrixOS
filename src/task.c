@@ -1,27 +1,39 @@
-// 
 // task.c - Implements the functionality needed to multitask.
-//		  Written for JamesM's kernel development tutorials.
-//
 
 #include "task.h"
 #include "paging.h"
 
-// The start of the task linked list.
-volatile task_t *ready_queue;
+/*
+// The currently running task.
+*/
+volatile task_t *current_task;
 
+/*
+// The start of the task linked list.
+*/
+volatile task_t *ready_queue;
+/*
 // Some externs are needed to access members in paging.c...
+*/
 extern page_directory_t *kernel_directory;
 extern page_directory_t *current_directory;
 extern void alloc_frame(page_t*,int,int);
 extern u32int initial_esp;
 extern u32int read_eip();
 
+/*
 //Set this when tasking enabled!
+*/
 u8int __TASKING_ENABLED = 0;
 
+/*
 // The next available process ID.
+*/
 u32int next_pid = 1;
 
+/*
+// Initialise tasking is called by the kernel on startup.
+*/
 s8int initialise_tasking()
 {
 	syscall_monitor_write("Initaling Tasking");
@@ -47,6 +59,9 @@ s8int initialise_tasking()
 	return 0;
 }
 
+/*
+// Move the stack to 'new_stack_start' and make it 'size'
+*/
 void move_stack(void *new_stack_start, u32int size)
 {
   u32int i;
@@ -99,6 +114,9 @@ void move_stack(void *new_stack_start, u32int size)
   asm volatile("mov %0, %%ebp" : : "r" (new_base_pointer));
 }
 
+/*
+// Switch to the next task in the list.
+*/
 void switch_task()
 {
 	// If we haven't initialised tasking yet, just return.
@@ -168,6 +186,10 @@ void switch_task()
 				 : : "r"(eip), "r"(esp), "r"(ebp), "r"(current_directory->physicalAddr));
 }
 
+/*
+// Create a new thread.
+// TODO: figure out if this is true.
+*/
 int fork()
 {
 	// We are modifying kernel structures, and so cannot be interrupted.
@@ -222,11 +244,16 @@ int fork()
 
 }
 
+/*
+// Return the Process ID of the current running task.
+*/
 int getpid()
 {
 	return current_task->id;
 }
-
+/*
+// Switch to user mode.
+*/
 void switch_to_user_mode()
 {
 	syscall_monitor_write("switching to User Mode!!!");
