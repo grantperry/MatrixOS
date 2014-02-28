@@ -16,8 +16,12 @@ typedef struct task
     u32int eip;            // Instruction pointer.
     page_directory_t *page_directory; // Page directory.
     u32int kernel_stack;   // Kernel stack location.
+    u32int ready_to_run;   //is the process ready to run
     struct task *next;     // The next task in a linked list.
 } task_t;
+
+// The currently running task.
+volatile task_t *current_task;
 
 // Initialises the tasking system.
 s8int initialise_tasking();

@@ -20,6 +20,19 @@ u16int inw(u16int port);
 
 void sti();
 
+// define our structure for our registers.
+typedef struct __attribute__ ((packed)) {
+  unsigned short di, si, bp, sp, bx, dx, cx, ax;
+  unsigned short gs, fs, es, ds, eflags;
+} regs16_t;
+
+extern void int32(u8int intnum, regs16_t *regs);
+
+#define TRUE    1  //define a few variable
+#define ON      1
+#define FALSE   0
+#define OFF     0
+
 #define PANIC(msg) panic(msg, __FILE__, __LINE__);
 
 #define ASSERT(b) ((b) ? (void)0 : panic_assert(__FILE__, __LINE__, #b))
