@@ -126,7 +126,7 @@ void init() {
 	runModule(&switch_to_user_mode);
 #endif
 	sleep(1);
-	//VGA_init(320, 200, 256); //dont change these numbers
+	VGA_init(320, 200, 256); //dont change these numbers
 	
 	return;
 }
