@@ -9,7 +9,7 @@ u32int VGA_height;
 u32int VGA_bpp;
 
 void (*putPixel)(int, int, int);
-extern int font_std[26][8];
+extern int font_std[127][8];
 
 unsigned char* vram = (unsigned char*)0xA0000;
 
@@ -40,8 +40,13 @@ void VGA_init (int width, int height, int bpp) {
 	putPixel = putPixel_simpleStd;
 	//putRect(10,10,100,100,2);
 	//putRect(20,20,80,80,3);
-	putGraphicString("HELLO", 110, 100, 2, 8);
-	putGraphicString("WORLD", 110 + (8*6), 100, 2, 8);
+	
+	putGraphicString("Hello, World!", 0, 0, 2, 8);
+	//putGraphicString("abcdefghijklmnop", 0, 0, 2, 8);
+	//putGraphicString("qrstuvwxyzABCDEF", 0, 8, 2, 8);
+	//putGraphicString("GHIJKLMNOPQRSTUV", 0, 16, 2, 8);
+	//putGraphicString("WXYZ1234567890", 0, 24, 2, 8);
+
 
 }
 
@@ -49,7 +54,7 @@ void putGraphicChar(char *letter, int x, int y, int color, int fontSize)
 {
   int offset, index, encodedLine, modNumber;
 
-  int asciiCharToPrint = *(letter) - 65; //gest the index of the char to print
+  int asciiCharToPrint = *(letter)/* - 65*/; //gest the index of the char to print
 
   int tmpX = x, tmpY = y;
 
