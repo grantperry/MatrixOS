@@ -46,7 +46,9 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	monitor_clear();
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
-	monitor_write("#------------------------------------------------------------------------------#");
+
+	init();
+	monitor_write("#--------------------------------------#");
 	monitor_write("|");
 	monitor_set_fore_colour(10);
 	monitor_set_cursor_pos(3, 1);
@@ -56,9 +58,7 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	print_version();
 	monitor_set_cursor_pos(79, 1);
 	monitor_write("|");
-	monitor_write("#------------------------------------------------------------------------------#");
-
-	init();
+	monitor_write("#--------------------------------------#");
 
 	for(;;) {}
 }
@@ -125,9 +125,9 @@ void init() {
 	
 	runModule(&switch_to_user_mode);
 #endif
-	//sleep(1);
+	sleep(1);
 	VGA_init(320, 200, 256); //dont change these numbers
-	
+	monitor_clear();
 	return;
 }
 

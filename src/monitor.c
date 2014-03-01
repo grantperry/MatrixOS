@@ -176,7 +176,7 @@ void monitor_put(char c)
 		else if(c >= ' ')
 		{
 			if(VGA) {
-				putGraphicChar(&c, (cursor_x * 8), (cursor_y * 8), 5, 8);
+				putGraphicChar(&c, (cursor_x * 8), (cursor_y * 8), 2, 8);
 				cursor_x++;
 				if(cursor_x == 40) {
 					cursor_x = 0;
