@@ -3,6 +3,7 @@
 #include "../monitor.h"
 #include "../isr.h"
 #include "../common.h"
+#include "special_keys.h"
 
 #include "../fun/fun.h"
 #include "../system/moduleLoading.h"
@@ -26,26 +27,26 @@ s8int init_keyboard() { ////////////////////////////////////////////////////////
 
 s32int isSpecialKey(unsigned char keyPressChar)
 {
-
-  switch(keyPressChar)
-  {
-  case 'K': //scancode for left arrow key
-    return 1;
-  case 'M': //scancode for right arrow key
-    return 2;
-  case 'H': //scancode for up arrow key
-    return 3;
-  case 'P': //scancode for down arrow key
-    return 4;
-  case 0x1C:
-    return 5;
-  case 0x58: /* F12 */
-    colour_fun();
-    return -1;
-  default:
-    return 0;
-  }
-
+	switch(keyPressChar) {
+		case 'K': //scancode for left arrow key
+			return 1;
+		case 'M': //scancode for right arrow key
+			return 2;
+		case 'H': //scancode for up arrow key
+			return 3;
+		case 'P': //scancode for down arrow key
+			return 4;
+		case 0x1C:
+			return 5;
+		case 0x58: /* F12 */
+			doSpecial(12);
+			return -1;
+		case 0x3B: /* F1 */
+			doSpecial(1);
+			return -1;
+		default:
+			return 0;
+	}
 }
 
 char lowerCaseKbdus[128] =
@@ -156,13 +157,13 @@ void keyboard_handler(registers_t *regs) {
 				monitor_command("cursor", "left");
 				break;
 			case 2:
-				//monitor_command("cursor", "right");
+				monitor_command("cursor", "right");
 				break;
 			case 3:
-				//monitor_command("cursor", "uo");
+				monitor_command("cursor", "up");
 				break;
 			case 4:
-				//monitor_command("cursor", "down");
+				monitor_command("cursor", "down");
 				break;
 			case 5:
 				monitor_put('\r');
