@@ -11,6 +11,8 @@ u32int VGA_bpp;
 void (*putPixel)(int, int, int);
 extern int font_std[128][8];
 
+u16int chars_wide, chars_hight, chars_pos, chars_size;
+
 unsigned char* vram = (unsigned char*)0xA0000;
 
 void putPixel_simpleStd(int x, int y, int color)
@@ -34,14 +36,21 @@ void VGA_init (int width, int height, int bpp) {
 	VGA_width = width;
 	VGA_height = height;
 	VGA_bpp = bpp;
-	regs16_t regs;
-	regs.ax = 0x0013;
-	int32(0x10, &regs);
-	putPixel = putPixel_simpleStd;
+	if (VGA_width == 320 && VGA_height == 200 && VGA_bpp == 256) { //graphics mode 13
+		regs16_t regs;
+		regs.ax = 0x0013; //graphics mode 13
+		int32(0x10, &regs);
+		putPixel = putPixel_simpleStd;
+		chars_wide = 40;
+		chars_hight = 25;
+		chars_pos = 0;
+		chars_size = 8;
+	}
+	VGA = 1;
 	//putRect(10,10,100,100,2);
 	//putRect(20,20,80,80,3);
 	
-	putGraphicString("abcdefghijklmnopqrstuvwxyz {|}~", 0, 0, 2, 8);
+	//putGraphicString("abcdefghijklmnopqrstuvwxyz {|}~asdfghjkl", 0, 0, 3, 8);
 	//putGraphicString("abcdefghijklmnop", 0, 0, 2, 8);
 	//putGraphicString("qrstuvwxyzABCDEF", 0, 8, 2, 8);
 	//putGraphicString("GHIJKLMNOPQRSTUV", 0, 16, 2, 8);
@@ -57,6 +66,12 @@ void putGraphicChar(char *letter, int x, int y, int color, int fontSize)
   int asciiCharToPrint = *(letter)/* - 65*/; //gest the index of the char to print
 
   int tmpX = x, tmpY = y;
+  
+  for (y = tmpY; y < tmpY + fontSize; y++) { //clear the space for char
+  	for(x = tmpX; x < tmpX + fontSize; x++) {
+  		putPixel(x, y, 0);
+  	}
+  }
 
   for(y = tmpY; y < tmpY + fontSize; y++)
   {
@@ -98,4 +113,10 @@ void putGraphicString(char *string, int x, int y, int color, int fontSize)
     x = x + moveX;
     string++;
   }
+}
+
+putString(char *string, int color) {
+	if(chars_pos == chars_wide) {
+		
+	}
 }
