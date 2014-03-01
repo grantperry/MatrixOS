@@ -6,7 +6,7 @@ SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o
 
 MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH)
 
-INPUT=input/i8042.o input/keyboard.o
+INPUT=input/i8042.o input/keyboard.o input/special_keys.o
 SYSTEM=system/moduleLoading.o
 FUN=fun/fun.o
 GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o

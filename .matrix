@@ -7,9 +7,9 @@ cd $M_HOME
 export PATH="$HOME/opt/cross/bin:$PATH"
 
 alias push="cd src;
-			rm *.o;
-			cd ..;
-			git push MatrixOS master;"
+		rm *.o;
+		cd ..;
+		git push MatrixOS master;"
 alias commit="git checkout *.o;
 				git commit;"
 alias add="git add "
@@ -25,3 +25,4 @@ alias build="sh $M_HOME/kernel.sh"
 alias bld="build; run"
 alias release="cd $M_HOME/src;
 				make release;"
+

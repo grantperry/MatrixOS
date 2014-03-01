@@ -73,7 +73,19 @@ void monitor_command(char command[], char arg1[]) {
 	if(!strcmp(command, "cursor")) {
 		if(!strcmp(arg1, "left")) {
 			cursor_x--;
-			move_cursor;
+			move_cursor();
+		}
+		if(!strcmp(arg1, "right")) {
+			cursor_x++;
+			move_cursor();
+		}
+		if(!strcmp(arg1, "up")) {
+			cursor_y--;
+			move_cursor();
+		}
+		if(!strcmp(arg1, "down")) {
+			cursor_y++;
+			move_cursor();
 		}
 	}
 }
