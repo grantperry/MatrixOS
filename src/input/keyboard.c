@@ -9,7 +9,8 @@
 #include "../system/moduleLoading.h"
 
 u8int shift_flag = 0;
-u8int CapsOn = 0;
+u8int CapsOn = 0, NumOn = 0, ScrollOn = 0;
+
 
 s8int init_keyboard() { /////////////////////////////////////////////////////////
 	syscall_monitor_write("Initalizing Keyboard.");
@@ -39,8 +40,6 @@ s32int isSpecialKey(unsigned char keyPressChar)
 			return 4;
 		case 0x1C:
 			return 5;
-		case 0x2A:
-			return 6;
 		case 0x58: /* F12 */
 			doSpecial(12);
 			return -1;
@@ -147,6 +146,9 @@ void keyboard_handler(registers_t *regs) {
 		if(scancode == 42 || scancode - 0x80 == 54) {
 			shift_flag = 1;
 		}
+		if(scancode == 0x3A) {
+			CapsOn = !CapsOn;
+		}
 		if(shift_flag == 0 && CapsOn == 0) {
 			monitor_put(lowerCaseKbdus[scancode]);
 		}
@@ -171,9 +173,6 @@ void keyboard_handler(registers_t *regs) {
 			case 5:
 				monitor_put('\r');
 				break;
-			case 6:
-				toggleCapsLock();
-				break;
 			default:
 				break;
 		}
@@ -182,9 +181,12 @@ void keyboard_handler(registers_t *regs) {
 	}
 }
 
-void toggleCapsLock() {
-	CapsOn = !CapsOn;
+void setLights() {
+	outb(0x60, 0xED); //im sending keyboard status lights...
 	u8int payload = 0;
-	payload |= 1 << 1;
+	/*if(CapsOn) payload |= 1 << 2; syscall_monitor_write("Caps");
+	if(NumOn) payload |= 1 << 1; 
+	if(ScrollOn) payload |= 1 << 0;*/
+	payload = 4;
 	outb(0x60, payload);
 }
