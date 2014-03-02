@@ -9,6 +9,7 @@
 #include "initrd.h"
 #include "task.h"
 #include "syscall.h"
+#include "colour.h"
 
 #include "input/keyboard.h"
 #include "system/moduleLoading.h"
@@ -47,34 +48,18 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 	
+	VGA_init(320, 200, 256);
+	
 	monitor_set_cursor_pos(0, 0);
-	monitor_write("#------------------------------------------------------------------------------#");
-	monitor_set_cursor_pos(0, 1);
-	monitor_write("|");
-	monitor_set_fore_colour(10);
-	monitor_set_cursor_pos(3, 1);
-	monitor_write("Welcome to MatrixOS!!!");
-	monitor_set_fore_colour(15);
-	monitor_set_cursor_pos(70, 1);
+	monitor_set_fore_colour(GREEN);
+	monitor_write("MatrixOS");
+	monitor_set_cursor_pos(10, 0);
 	print_version();
-	monitor_set_cursor_pos(79, 1);
-	monitor_write("|");
-	monitor_write("#------------------------------------------------------------------------------#");
+	monitor_write("\n");
+	monitor_set_fore_colour(WHITE);
+
 
 	init();
-	/*monitor_set_cursor_pos(0, 0);
-	monitor_write("#--------------------------------------#");
-	monitor_set_cursor_pos(0, 1);
-	monitor_write("|");
-	monitor_set_fore_colour(10);
-	monitor_set_cursor_pos(3, 1);
-	monitor_write("Welcome to MatrixOS!!!");
-	monitor_set_fore_colour(15);
-	monitor_set_cursor_pos(70, 1);
-	print_version();
-	monitor_set_cursor_pos(79, 1);
-	monitor_write("|");
-	monitor_write("#--------------------------------------#");*/
 
 	for(;;) {}
 }

@@ -9,6 +9,7 @@
 #include "../system/moduleLoading.h"
 
 u8int shift_flag = 0;
+u8int CapsOn = 0;
 
 s8int init_keyboard() { /////////////////////////////////////////////////////////
 	syscall_monitor_write("Initalizing Keyboard.");
@@ -38,6 +39,8 @@ s32int isSpecialKey(unsigned char keyPressChar)
 			return 4;
 		case 0x1C:
 			return 5;
+		case 0x2A:
+			return 6;
 		case 0x58: /* F12 */
 			doSpecial(12);
 			return -1;
@@ -144,10 +147,10 @@ void keyboard_handler(registers_t *regs) {
 		if(scancode == 42 || scancode - 0x80 == 54) {
 			shift_flag = 1;
 		}
-		if(shift_flag == 0) {
+		if(shift_flag == 0 && CapsOn == 0) {
 			monitor_put(lowerCaseKbdus[scancode]);
 		}
-		if(shift_flag == 1) {
+		if(shift_flag == 1 || CapsOn == 1) {
 			monitor_put(upperCaseKbdus[scancode]);
 		}
 		
@@ -168,10 +171,20 @@ void keyboard_handler(registers_t *regs) {
 			case 5:
 				monitor_put('\r');
 				break;
+			case 6:
+				toggleCapsLock();
+				break;
 			default:
 				break;
 		}
 		
 		}
 	}
+}
+
+void toggleCapsLock() {
+	CapsOn = !CapsOn;
+	u8int payload = 0;
+	payload |= 1 << 1;
+	outb(0x60, payload);
 }

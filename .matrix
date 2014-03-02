@@ -6,10 +6,13 @@ cd $M_HOME
 
 export PATH="$HOME/opt/cross/bin:$PATH"
 
+alias sdb="cd $M_HOME;
+			dd if=MatrixOS.iso of=/dev/sdb; sync;"
+
 alias push="cd src;
 		rm *.o;
 		cd ..;
-		git push MatrixOS master;"
+		git push origin master;"
 alias commit="git checkout *.o;
 				git commit;"
 alias add="git add "
