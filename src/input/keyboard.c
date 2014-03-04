@@ -11,6 +11,8 @@
 u8int shift_flag = 0;
 u8int CapsOn = 0, NumOn = 0, ScrollOn = 0;
 
+char currentKey = 0;
+
 
 s8int init_keyboard() { /////////////////////////////////////////////////////////
 	syscall_monitor_write("Initalizing Keyboard.");
@@ -138,11 +140,12 @@ void keyboard_handler(registers_t *regs) {
 	specialKey = isSpecialKey(scancode);
 	if(scancode & 0x80) {
 		scancode = scancode - 0x80;
-		
+		currentKey = 0;
 		if(scancode == 42 || scancode - 0x80 == 54) {
 			shift_flag = 0;
 		}
 	} else {
+		currentKey = scancode; //set Current Key for key logger.
 		if(scancode == 42 || scancode - 0x80 == 54) {
 			shift_flag = 1;
 		}
@@ -189,4 +192,32 @@ void setLights() {
 	if(ScrollOn) payload |= 1 << 0;*/
 	payload = 4;
 	outb(0x60, payload);
+}
+
+typedef struct keyBuf {
+	char c;
+	struct keyBuf *next;
+} keyBuf_t;
+
+void keyboard_get(char* outStr) {
+	struct keyBuf *root;
+	struct keyBuf *conductor;
+	root = (struct keyBuf *) alloc( sizeof(struct keyBuf) );
+	root->next = 0;
+	conductor = root;
+	while(currentKey != '\r') {
+		if(currentKey != 0) {
+			if ( conductor != 0 ) {
+			while ( conductor->next != 0)
+				{
+					conductor = conductor->next;
+				}
+			}
+			conductor->next = (keyBuf_t*)alloc( sizeof(struct keyBuf) );
+			conductor->c = currentKey; //actually set the key.
+			syscall_monitor_write(currentKey);
+			conductor = conductor->next;
+		}
+	}
+	
 }

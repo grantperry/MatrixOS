@@ -14,6 +14,7 @@
 #include "input/keyboard.h"
 #include "system/moduleLoading.h"
 #include "graphics/graphics.h"
+#include "system/shell.h"
 
 #define VER_MAJOR		1
 #define VER_MINOR		1
@@ -58,8 +59,9 @@ int kernel_main(struct multiboot *mboot_point, u32int initial_stack)
 	monitor_write("\n");
 	monitor_set_fore_colour(WHITE);
 
-
 	init();
+
+	//startShell();
 
 	for(;;) {}
 }
