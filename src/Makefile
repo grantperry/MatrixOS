@@ -35,6 +35,9 @@ clean:
 	-rm *.o ../bin/MatrixOS.bin
 	cd input; rm *.o; cd ..;
 	cd graphics; rm *.o; cd ..;
+	cd fun; rm *.o; cd ..;
+	cd math; rm *.o; cd ..;
+	cd system; rm *.o; cd ..;
 
 clean_code: $(CLEAN_CODE_DIRS)
 	echo "MatrixOS Cleaning code with astyle:"
