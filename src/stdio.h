@@ -4,7 +4,7 @@
 /*
 // std print function takes multiple arguments and prints them.
 */
-void printf(char *c, ...);
+void printf ( char *c, ... );
 
 
 #endif //STDIO_H

@@ -9,15 +9,14 @@
 #define KERNEL_STACK_SIZE 2048       // Use a 2kb kernel stack.
 
 // This structure defines a 'task' - a process.
-typedef struct task
-{
-    int id;                // Process ID.
-    u32int esp, ebp;       // Stack and base pointers.
-    u32int eip;            // Instruction pointer.
-    page_directory_t *page_directory; // Page directory.
-    u32int kernel_stack;   // Kernel stack location.
-    u32int ready_to_run;   //is the process ready to run
-    struct task *next;     // The next task in a linked list.
+typedef struct task {
+	int id;                // Process ID.
+	u32int esp, ebp;       // Stack and base pointers.
+	u32int eip;            // Instruction pointer.
+	page_directory_t *page_directory; // Page directory.
+	u32int kernel_stack;   // Kernel stack location.
+	u32int ready_to_run;   //is the process ready to run
+	struct task *next;     // The next task in a linked list.
 } task_t;
 
 // The currently running task.
@@ -34,7 +33,7 @@ void task_switch();
 int fork();
 
 // Causes the current process' stack to be forcibly moved to a new location.
-void move_stack(void *new_stack_start, u32int size);
+void move_stack ( void *new_stack_start, u32int size );
 
 // Returns the pid of the current process.
 int getpid();

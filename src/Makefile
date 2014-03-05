@@ -20,6 +20,12 @@ ASFLAGS=-felf
 CC=matrix-gcc
 LD=matrix-ld
 
+CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c
+CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h
+CLEAN_CODE_DIRS_C_ORIG=*.c.orig input/*.c.orig system/*.c.orig fun/*.c.orig graphics/*.c.orig math/*.c.orig
+CLEAN_CODE_DIRS_H_ORIG=*.h.orig input/*.h.orig system/*.h.orig fun/*.h.orig graphics/*.h.orig math/*.h.orig
+
+
 all: $(SOURCES) $(MODULES) link
 
 release: clean all
@@ -28,6 +34,11 @@ clean:
 	-rm *.o ../bin/MatrixOS.bin
 	cd input; rm *.o; cd ..;
 	cd graphics; rm *.o; cd ..;
+
+clean_code:
+	echo "MatrixOS Cleaning code with astyle:"
+	astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets $(CLEAN_CODE_DIRS_C) $(CLEAN_CODE_DIRS_H)
+	cp 
 
 link:
 	$(LD) $(LDFLAGS) -o ../bin/MatrixOS.bin $(SOURCES) $(MODULES)

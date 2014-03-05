@@ -6,18 +6,18 @@
 
 #include "common.h"
 
-void init_timer(u32int frequency);
+void init_timer ( u32int frequency );
 
-void sleep(u32int t);
+void sleep ( u32int t );
 
-void system_sleep(u32int t);
+void system_sleep ( u32int t );
 
 u32int getTick();
 u32int getSeconds();
 
-void system_mSleep(u32int t);
+void system_mSleep ( u32int t );
 
-void mSleep(u32int milliseconds);
+void mSleep ( u32int milliseconds );
 
 u8int SLEEP_ENABLED;
 
