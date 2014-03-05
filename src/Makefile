@@ -2,7 +2,7 @@
 
 SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o gdt.o timer.o \
         kheap.o paging.o ordered_array.o fs.o initrd.o task.o process.o syscall.o \
-        v86.o
+        v86.o stdio.o
 
 MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH)
 

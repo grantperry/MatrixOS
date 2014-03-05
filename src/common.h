@@ -28,6 +28,9 @@ typedef struct __attribute__ ((packed)) {
 
 extern void int32(u8int intnum, regs16_t *regs);
 
+void numToAsciChar(char *asciInChar, int integerLength);
+void intToChar(int integer, char *numbersInChar);
+
 #define TRUE    1  //define a few variable
 #define ON      1
 #define FALSE   0

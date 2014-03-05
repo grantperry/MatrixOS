@@ -165,6 +165,38 @@ extern void panic_assert(const char *file, u32int line, const char *desc)
 	for(;;);
 }
 
+void numToAsciChar(char *asciInChar, int integerLength)
+{
+  int x;
+
+  for(x = 0; x < integerLength; x++)
+  {
+    asciInChar[x] = asciInChar[x] + 48; //(only works on integers)
+  }
+
+}
+
+void intToChar(int integer, char *numbersInChar) {
+  s32int integerLength = math_intLength(integer), x, endX;
+  s32int number = integer % 10;
+
+  //~ char *numbersInChar[integerLength];
+
+  for(x = 0; x < integerLength + 1; x++)
+  {
+    if(x != 0)
+    {
+      integer = (integer - number) / 10;
+      number = (integer) % 10;
+    }
+
+    endX = integerLength - x - 1;
+
+    numbersInChar[endX] = number;
+  }
+
+}
+
 void k_save()
 {
   u32int i;
