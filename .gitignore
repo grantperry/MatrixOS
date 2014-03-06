@@ -1,10 +1,11 @@
 .matrix
 .gdbinit
-ia-32developer-manual.pdf
-linux-3.13.2
-JS-OS-master
-JAMESMOLLEY
-PHANTOMEX
+docs/ia-32developer-manual.pdf
+docs/linux-3.13.2
+docs/JS-OS-master
+docs/JAMESMOLLEY
+docs/PHANTOMEX
 astyle
 *.orig
-ISO_C99.pdf
+docs/ISO_C99.pdf
+docs/minix_R3.2.1-972156d.iso

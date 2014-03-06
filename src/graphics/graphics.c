@@ -8,10 +8,16 @@ u32int VGA_width;
 u32int VGA_height;
 u32int VGA_bpp;
 
+extern u8int *vga_mem; //pointer to VESA Linear Frame Buffer
+extern u8int *double_buffer; //double buffer for VESA video
+
 void ( *putPixel ) ( int, int, int );
 extern int font_std[128][8];
 
+extern u32int widthVESA, heightVESA, depthVESA; //size of VESA Screen attributes
+
 u8int isVESAon = 0;
+u8int *double_buffer; //double buffer for VESA video
 
 u16int chars_wide, chars_hight, chars_pos, chars_size;
 
@@ -20,6 +26,18 @@ unsigned char* vram = ( unsigned char* ) 0xA0000;
 void putPixel_simpleStd ( int x, int y, int color ) {
 	int offset = x + VGA_width * y;
 	vram[offset] = color;
+}
+
+void putPixel_VESA(int x, int y, int RGB)
+{
+
+  /*calculates the offset for a specific point on screen*/
+  int offset = x * (depthVESA / 8) + y * (widthVESA * (depthVESA / 8));
+
+  vga_mem[offset + 0] = RGB & 0xff;           //BLUE
+  vga_mem[offset + 1] = (RGB >> 8) & 0xff;    //GREEN
+  vga_mem[offset + 2] = (RGB >> 16) & 0xff;   //RED
+
 }
 
 void putRect ( int x, int y, int width, int height, int fill ) {
@@ -193,19 +211,27 @@ void VGA_init ( int width, int height, int bpp ) {
 	VGA_bpp = bpp;
 
 	if ( VGA_width == 320 && VGA_height == 200 && VGA_bpp == 256 ) { //graphics mode 13
-		/*regs16_t regs;
-		regs.ax = 0x0013; //graphics mode 13
-		int32(0x10, &regs);
-		putPixel = putPixel_simpleStd;
-		chars_wide = 40;
-		chars_hight = 25;
-		chars_pos = 0;
-		chars_size = 8;*/
-
 		write_registers ( mode_320_200_256 );
 		putPixel = putPixel_simpleStd;
 		VGA_clear_screen();
-	}
+	} else if(width == 1024 && height == 768 && bpp == 24)
+  {
+    double_buffer = (u8int*)kmalloc((width * height) * (bpp / 8));
+
+    //~ k_printf("\ndouble buffer: %h\n", double_buffer);
+    
+    memset(double_buffer, 0xff, width * height * (bpp / 8));
+
+    //~ k_printf("double buffer content: %h %h %h %h %h %h %h\n", double_buffer[0], double_buffer[1], double_buffer[2], double_buffer[3], double_buffer[4], double_buffer[5]);
+    //~ k_printf("Double buffer addresses: %h %h %h %h %h %h %h %h\n", &double_buffer[0], &double_buffer[1], &double_buffer[2], &double_buffer[3], &double_buffer[4], &double_buffer[5], &double_buffer[6]);
+
+    //~ while(1);
+
+    isVESAon = ON;
+    setVesa(0x118); //1024x768x24
+    putPixel = putPixel_VESA;
+  
+  }
 
 	VGA = 1;
 	//putRect(10,10,100,100,2);

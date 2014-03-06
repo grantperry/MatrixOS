@@ -48,7 +48,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 
-	VGA_init ( 320, 200, 256 );
+	//VGA_init ( 320, 200, 256 );
+	//VGA_init(1024, 768, 24);
 
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
