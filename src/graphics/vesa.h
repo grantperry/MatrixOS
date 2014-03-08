@@ -7,7 +7,7 @@
 #define MAX_BUTTONS   10
 #define MAX_CHILDREN   100
 
-typedef void (*callback_type_t)(struct *window);
+typedef void (*callback_type_t)(struct window);
 
 typedef struct component
 {
