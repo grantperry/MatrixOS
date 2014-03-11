@@ -13,6 +13,29 @@ u8int CapsOn = 0, NumOn = 0, ScrollOn = 0;
 
 char currentKey = 0;
 
+char getKey() {
+	return currentKey;
+}
+
+typedef struct key_b{
+	char c;
+	struct key_b *next;
+}key_b_t;
+
+void getLine(char poi) {
+	struct key_b *start;
+	struct key_b *conductor;
+	start = (key_b_t*)alloc( sizeof(struct key_b) );
+	conductor = start;
+	while (getKey() != '\n') {
+		if (getKey != 0) {
+			conductor->c = getKey();
+			conductor->next = (key_b_t*)alloc( sizeof(struct key_b) );
+			conductor = conductor->next;
+			printf("Yep");
+		}
+	}
+}
 
 s8int init_keyboard() { /////////////////////////////////////////////////////////
 	syscall_monitor_write ( "Initalizing Keyboard." );
@@ -208,33 +231,4 @@ void setLights() {
 	if(ScrollOn) payload |= 1 << 0;*/
 	payload = 4;
 	outb ( 0x60, payload );
-}
-
-typedef struct keyBuf {
-	char c;
-	struct keyBuf *next;
-} keyBuf_t;
-
-void keyboard_get ( char* outStr ) {
-	struct keyBuf *root;
-	struct keyBuf *conductor;
-	root = ( struct keyBuf * ) alloc ( sizeof ( struct keyBuf ) );
-	root->next = 0;
-	conductor = root;
-
-	while ( currentKey != '\r' ) {
-		if ( currentKey != 0 ) {
-			if ( conductor != 0 ) {
-				while ( conductor->next != 0 ) {
-					conductor = conductor->next;
-				}
-			}
-
-			conductor->next = ( keyBuf_t* ) alloc ( sizeof ( struct keyBuf ) );
-			conductor->c = currentKey; //actually set the key.
-			syscall_monitor_write ( currentKey );
-			conductor = conductor->next;
-		}
-	}
-
 }
