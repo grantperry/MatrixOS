@@ -3,70 +3,104 @@
 #include "task.h"
 #include "paging.h"
 
-/*
-// The currently running task.
-*/
+//The currently running task.
 volatile task_t *current_task;
 
-/*
-// The start of the task linked list.
-*/
+//The start of the task linked list.
 volatile task_t *ready_queue;
-/*
-// Some externs are needed to access members in paging.c...
-*/
+
+//Some externs are needed to access members in paging.c...
 extern page_directory_t *kernel_directory;
 extern page_directory_t *current_directory;
 extern void alloc_frame ( page_t*,int,int );
 extern u32int initial_esp;
 extern u32int read_eip();
 
-/*
-//Set this when tasking enabled!
-*/
-u8int __TASKING_ENABLED = 0;
-
-/*
-// The next available process ID.
-*/
+//The next available process ID.
 u32int next_pid = 1;
+u32int nTasks = 0;
 
-/*
-// Initialise tasking is called by the kernel on startup.
-*/
 s8int initialise_tasking() {
-	syscall_monitor_write ( "Initaling Tasking" );
-	// Rather important stuff happening, no interrupts please!
-	asm volatile ( "cli" );
+	printf ( "Initalizing Tasking." );
 
-	// Relocate the stack so we know where it is.
-	move_stack ( ( void* ) 0xE0000000, 0x2000 );
+	move_stack ( ( void* ) 0x10000000, 0x2000 );
 
-	// Initialise the first task (kernel task)
-	current_task = ready_queue = ( task_t* ) kmalloc ( sizeof ( task_t ) );
-	current_task->id = next_pid++;
-	current_task->esp = current_task->ebp = 0;
-	current_task->eip = 0;
-	current_task->page_directory = current_directory;
-	current_task->next = 0;
-	current_task->kernel_stack = kmalloc_a ( KERNEL_STACK_SIZE );
+	u32int *stack;
+	task_t *task = ( task_t* ) kmalloc ( sizeof ( task_t ) );
+	current_task = ready_queue = task;
+	task->stack = kmalloc ( 0x1000 ) + 0x1000;	// Allocate 4 kilobytes of space
+	task->esp = task->stack;
+	task->originalStack = task->stack - 0x1000; //set the originalStack to its starting location
 
-	__TASKING_ENABLED = 1;
+	// Clone the address space.
+	task->page_directory = current_directory;
 
-	// Reenable interrupts.
+	task->priority = PRIO_LOW;
+	task->time_to_run = 10;
+	task->time_running = 0;
+	task->ready_to_run = TRUE;
+
+	/*for the most part, this process will not be running anything so the average
+	 * burst time will be near 0 */
+	task->burst_time = 0;
+	task->averaged_priority = 0;
+
+	nTasks++;
+
+	stack = ( u32int* ) task->stack;
+
+// processor data (iret)
+	*--stack = 0x202;	// EFLAGS
+	*--stack = 0x08;	// CS
+//~ *--stack = (u32int)func; // EIP
+	*--stack = 0;	// EIP
+	task->eip = 0;
+
+// pusha
+	*--stack = 0;	// EDI
+	*--stack = 0;	// ESI
+	*--stack = 0;	// EBP
+	task->ebp = 0;
+
+	*--stack = 0;	// NULL
+	*--stack = 0;	// EBX
+	*--stack = 0;	// EDX
+	*--stack = 0;	// ECX
+	*--stack = 0;	// EAX
+
+// data segments
+	*--stack = 0x10;	// DS
+	*--stack = 0x10;	// ES
+	*--stack = 0x10;	// FS
+	*--stack = 0x10;	// GS
+
+	task->id = next_pid++;
+//~ task->id = 0;
+	task->stack = ( u32int ) stack;
+	task->thread = 0;
+	task->thread_flags = 0;
+
+	//TODO FIX THIS NAME STUFF
+	//~ u32int name_len = strlen("init");
+	//~ task->name = kmalloc(name_len + 1); //+1 for the \000
+	//~ strcpy((u8int*)task->name, "init");
+	//~ *((u8int*)task->name + name_len) = 0;
+
+	//~ strcpy(task->name, "init");
+
+	task->next = 0;
+
 	asm volatile ( "sti" );
+
 	return 0;
 }
 
-/*
-// Move the stack to 'new_stack_start' and make it 'size'
-*/
 void move_stack ( void *new_stack_start, u32int size ) {
 	u32int i;
 
 	// Allocate some space for the new stack.
 	for ( i = ( u32int ) new_stack_start;
-			i >= ( ( u32int ) new_stack_start-size );
+			i >= ( ( u32int ) new_stack_start - size );
 			i -= 0x1000 ) {
 		// General-purpose stack is in user-mode.
 		alloc_frame ( get_page ( i, 1, current_directory ), 0 /* User mode */, 1 /* Is writable */ );
@@ -84,18 +118,18 @@ void move_stack ( void *new_stack_start, u32int size ) {
 	asm volatile ( "mov %%ebp, %0" : "=r" ( old_base_pointer ) );
 
 	// Offset to add to old stack addresses to get a new stack address.
-	u32int offset			= ( u32int ) new_stack_start - initial_esp;
+	u32int offset = ( u32int ) new_stack_start - initial_esp;
 
 	// New ESP and EBP.
 	u32int new_stack_pointer = old_stack_pointer + offset;
-	u32int new_base_pointer  = old_base_pointer  + offset;
+	u32int new_base_pointer = old_base_pointer + offset;
 
 	// Copy the stack.
 	memcpy ( ( void* ) new_stack_pointer, ( void* ) old_stack_pointer, initial_esp-old_stack_pointer );
 
 	// Backtrace through the original stack, copying new values into
 	// the new stack.
-	for ( i = ( u32int ) new_stack_start; i > ( u32int ) new_stack_start-size; i -= 4 ) {
+	for ( i = ( u32int ) new_stack_start; i > ( u32int ) new_stack_start - size; i -= 4 ) {
 		u32int tmp = * ( u32int* ) i;
 
 		// If the value of tmp is inside the range of the old stack, assume it is a base pointer
@@ -111,28 +145,37 @@ void move_stack ( void *new_stack_start, u32int size ) {
 	// Change stacks.
 	asm volatile ( "mov %0, %%esp" : : "r" ( new_stack_pointer ) );
 	asm volatile ( "mov %0, %%ebp" : : "r" ( new_base_pointer ) );
+
 }
 
-/*
-// Switch to the next task in the list.
-*/
+int getpid() {
+	return current_task->id;
+}
+
 void switch_task() {
 	// If we haven't initialised tasking yet, just return.
+	printf("p");
 	if ( !current_task ) {
+	printf("q");
 		return;
 	}
+	
+	
+	asm volatile ( "cli" );
 
 	// Read esp, ebp now for saving later on.
 	u32int esp, ebp, eip;
 	asm volatile ( "mov %%esp, %0" : "=r" ( esp ) );
 	asm volatile ( "mov %%ebp, %0" : "=r" ( ebp ) );
 
+printf("z");
+
 	// Read the instruction pointer. We do some cunning logic here:
 	// One of two things could have happened when this function exits -
-	//   (a) We called the function and it returned the EIP as requested.
-	//   (b) We have just switched tasks, and because the saved EIP is essentially
-	//	   the instruction after read_eip(), it will seem as if read_eip has just
-	//	   returned.
+	// (a) We called the function and it returned the EIP as requested.
+	// (b) We have just switched tasks, and because the saved EIP is essentially
+	// the instruction after read_eip(), it will seem as if read_eip has just
+	// returned.
 	// In the second case we need to return immediately. To detect it we put a dummy
 	// value in EAX further down at the end of this function. As C returns values in EAX,
 	// it will look like the return value is this dummy value! (0x12345).
@@ -161,127 +204,132 @@ void switch_task() {
 	ebp = current_task->ebp;
 
 	// Make sure the memory manager knows we've changed page directory.
-	current_directory = current_task->page_directory;
+	if ( current_task->page_directory ) {
+		current_directory = current_task->page_directory;
+	}
 
-	// Change our kernel stack over.
-	set_kernel_stack ( current_task->kernel_stack+KERNEL_STACK_SIZE );
 	// Here we:
 	// * Stop interrupts so we don't get interrupted.
 	// * Temporarily put the new EIP location in ECX.
 	// * Load the stack and base pointers from the new task struct.
 	// * Change page directory to the physical address (physicalAddr) of the new directory.
 	// * Put a dummy value (0x12345) in EAX so that above we can recognise that we've just
-	//   switched task.
+	// switched task.
 	// * Restart interrupts. The STI instruction has a delay - it doesn't take effect until after
-	//   the next instruction.
+	// the next instruction.
 	// * Jump to the location in ECX (remember we put the new EIP in there).
-	asm volatile ( "		 \
-	  cli;				 \
-	  mov %0, %%ecx;	   \
-	  mov %1, %%esp;	   \
-	  mov %2, %%ebp;	   \
-	  mov %3, %%cr3;	   \
-	  mov $0x12345, %%eax; \
-	  sti;				 \
-	  jmp *%%ecx		   "
+	asm volatile ( " \
+cli; \
+mov %0, %%ecx; \
+mov %1, %%esp; \
+mov %2, %%ebp; \
+mov %3, %%cr3; \
+mov $0x12345, %%eax; \
+sti; \
+jmp *%%ecx "
 				   : : "r" ( eip ), "r" ( esp ), "r" ( ebp ), "r" ( current_directory->physicalAddr ) );
+
+	asm volatile ( "sti" );
+printf("nt");
 }
 
-/*
-// Create a new thread.
-// TODO: figure out if this is true.
-*/
-int fork() {
-	// We are modifying kernel structures, and so cannot be interrupted.
+u32int start_task ( u32int priority, u32int burst_time, void ( *func ) (), void *arg, char *task_Name ) {
+
 	asm volatile ( "cli" );
 
-	// Take a pointer to this process' task struct for later reference.
-	task_t *parent_task = ( task_t* ) current_task;
+	//Take a pointer to this process' task struct for later reference.
+	//task_t *parent_task = (task_t*)current_task;
+
+	u32int id = next_pid++;
+
+	u32int *stack;
+	task_t *task = ( task_t* ) kmalloc ( sizeof ( task_t ) );
+	task->stack = kmalloc ( 0x1000 ) + 0x1000;	// Allocate 4 kilobytes of space
+	task->esp = task->stack;
+	task->originalStack = task->stack - 0x1000; //set the originalStack to its starting location
 
 	// Clone the address space.
-	page_directory_t *directory = clone_directory ( current_directory );
+	//page_directory_t *directory = clone_directory(current_directory);
+	//task->page_directory = directory;
 
-	// Create a new process.
-	task_t *new_task = ( task_t* ) kmalloc ( sizeof ( task_t ) );
-	new_task->id = next_pid++;
-	new_task->esp = new_task->ebp = 0;
-	new_task->eip = 0;
-	new_task->page_directory = directory;
-	current_task->kernel_stack = kmalloc_a ( KERNEL_STACK_SIZE );
-	new_task->next = 0;
+	//this is a task (process) not a fork, we do not need a cloned address space
+	task->page_directory = 0;
 
-	// Add it to the end of the ready queue.
-	// Find the end of the ready queue...
-	task_t *tmp_task = ( task_t* ) ready_queue;
+	task->priority = priority;
+	task->time_to_run = 0;
+	task->time_running = 0;
+	task->ready_to_run = TRUE;
 
-	while ( tmp_task->next ) {
-		tmp_task = tmp_task->next;
-	}
+	task->burst_time = burst_time;
+	task->averaged_priority = priority + burst_time;
 
-	// ...And extend it.
-	tmp_task->next = new_task;
+	nTasks++;
 
-	// This will be the entry point for the new process.
-	u32int eip = read_eip();
+	stack = ( u32int* ) task->stack;
 
-	// We could be the parent or the child here - check.
-	if ( current_task == parent_task ) {
-		// We are the parent, so set up the esp/ebp/eip for our child.
-		u32int esp;
-		asm volatile ( "mov %%esp, %0" : "=r" ( esp ) );
-		u32int ebp;
-		asm volatile ( "mov %%ebp, %0" : "=r" ( ebp ) );
-		new_task->esp = esp;
-		new_task->ebp = ebp;
-		new_task->eip = eip;
-		// All finished: Reenable interrupts.
-		asm volatile ( "sti" );
+	// processor data (iret)
+	*--stack = 0x202;	// EFLAGS
+	*--stack = 0x08;	// CS
+	*--stack = ( u32int ) func;	// EIP
+	task->eip = ( u32int ) func;
 
-		// And by convention return the PID of the child.
-		return new_task->id;
+	// pusha
+	*--stack = 0;	// EDI
+	*--stack = 0;	// ESI
+	*--stack = 0;	// EBP
+	task->ebp = 0;
+	*--stack = 0;	// NULL
+	*--stack = 0;	// EBX
+	*--stack = 0;	// EDX
+	*--stack = 0;	// ECX
+	*--stack = 0;	// EAX
 
-	} else {
-		// We are the child - by convention return 0.
-		return 0;
-	}
+	// data segments
+	*--stack = 0x10;	// DS
+	*--stack = 0x10;	// ES
+	*--stack = 0x10;	// FS
+	*--stack = 0x10;	// GS
 
+	task->id = id;
+	task->stack = ( u32int ) stack;
+	task->thread = func;
+	task->thread_flags = ( u32int ) arg;
+	//~ strcpy(task->name, task_Name);
+
+	task->next = 0;
+
+	//preempt the task
+	//preempt_task(task);
+
+	asm volatile ( "sti" );
+
+	return id;
 }
 
-/*
-// Return the Process ID of the current running task.
-*/
-int getpid() {
-	return current_task->id;
-}
-/*
-// Switch to user mode.
-*/
-void switch_to_user_mode() {
-	syscall_monitor_write ( "switching to User Mode!!!" );
+
+s8int switch_to_user_mode() {
+	syscall_monitor_write ( "Switching to UserMode" );
 	// Set up our kernel stack.
-	set_kernel_stack ( current_task->kernel_stack+KERNEL_STACK_SIZE );
+	//set_kernel_stack(current_task->kernel_stack+KERNEL_STACK_SIZE);
 
 	// Set up a stack structure for switching to user mode.
-	asm volatile ( "  \
-	  cli; \
-	  mov $0x23, %ax; \
-	  mov %ax, %ds; \
-	  mov %ax, %es; \
-	  mov %ax, %fs; \
-	  mov %ax, %gs; \
-	  \
-	  \
-	  mov %esp, %eax; \
-	  pushl $0x23; \
-	  pushl %esp; \
-	  pushf; \
-	  pop %eax; \
-	  xor %eax, 0x202; \
-	  push %eax ; \
-	  pushl $0x1B; \
-	  push $1f; \
-	  sti; \
-	  iret; \
-	1: \
-	" );
+	asm volatile ( " \
+cli; \
+mov $0x23, %ax; \
+mov %ax, %ds; \
+mov %ax, %es; \
+mov %ax, %fs; \
+mov %ax, %gs; \
+\
+\
+mov %esp, %eax; \
+pushl $0x23; \
+pushl %esp; \
+pushf; \
+pushl $0x1B; \
+push $1f; \
+iret; \
+1: \
+" );
+	return 0;
 }

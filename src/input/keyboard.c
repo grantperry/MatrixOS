@@ -17,22 +17,23 @@ char getKey() {
 	return currentKey;
 }
 
-typedef struct key_b{
+typedef struct key_b {
 	char c;
 	struct key_b *next;
-}key_b_t;
+} key_b_t;
 
-void getLine(char poi) {
+void getLine ( char poi ) {
 	struct key_b *start;
 	struct key_b *conductor;
-	start = (key_b_t*)alloc( sizeof(struct key_b) );
+	start = ( key_b_t* ) alloc ( sizeof ( struct key_b ) );
 	conductor = start;
-	while (getKey() != '\n') {
-		if (getKey != 0) {
+
+	while ( getKey() != '\n' ) {
+		if ( getKey != 0 ) {
 			conductor->c = getKey();
-			conductor->next = (key_b_t*)alloc( sizeof(struct key_b) );
+			conductor->next = ( key_b_t* ) alloc ( sizeof ( struct key_b ) );
 			conductor = conductor->next;
-			printf("Yep");
+			printf ( "Yep" );
 		}
 	}
 }

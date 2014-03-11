@@ -28,15 +28,14 @@ void putPixel_simpleStd ( int x, int y, int color ) {
 	vram[offset] = color;
 }
 
-void putPixel_VESA(int x, int y, int RGB)
-{
+void putPixel_VESA ( int x, int y, int RGB ) {
 
-  /*calculates the offset for a specific point on screen*/
-  int offset = x * (depthVESA / 8) + y * (widthVESA * (depthVESA / 8));
+	/*calculates the offset for a specific point on screen*/
+	int offset = x * ( depthVESA / 8 ) + y * ( widthVESA * ( depthVESA / 8 ) );
 
-  vga_mem[offset + 0] = RGB & 0xff;           //BLUE
-  vga_mem[offset + 1] = (RGB >> 8) & 0xff;    //GREEN
-  vga_mem[offset + 2] = (RGB >> 16) & 0xff;   //RED
+	vga_mem[offset + 0] = RGB & 0xff;           //BLUE
+	vga_mem[offset + 1] = ( RGB >> 8 ) & 0xff;  //GREEN
+	vga_mem[offset + 2] = ( RGB >> 16 ) & 0xff; //RED
 
 }
 
@@ -214,24 +213,24 @@ void VGA_init ( int width, int height, int bpp ) {
 		write_registers ( mode_320_200_256 );
 		putPixel = putPixel_simpleStd;
 		VGA_clear_screen();
-	} else if(width == 1024 && height == 768 && bpp == 24)
-  {
-    double_buffer = (u8int*)kmalloc((width * height) * (bpp / 8));
 
-    //~ k_printf("\ndouble buffer: %h\n", double_buffer);
-    
-    memset(double_buffer, 0xff, width * height * (bpp / 8));
+	} else if ( width == 1024 && height == 768 && bpp == 24 ) {
+		double_buffer = ( u8int* ) kmalloc ( ( width * height ) * ( bpp / 8 ) );
 
-    //~ k_printf("double buffer content: %h %h %h %h %h %h %h\n", double_buffer[0], double_buffer[1], double_buffer[2], double_buffer[3], double_buffer[4], double_buffer[5]);
-    //~ k_printf("Double buffer addresses: %h %h %h %h %h %h %h %h\n", &double_buffer[0], &double_buffer[1], &double_buffer[2], &double_buffer[3], &double_buffer[4], &double_buffer[5], &double_buffer[6]);
+		//~ k_printf("\ndouble buffer: %h\n", double_buffer);
 
-    //~ while(1);
+		memset ( double_buffer, 0xff, width * height * ( bpp / 8 ) );
 
-    isVESAon = ON;
-    setVesa(0x118); //1024x768x24
-    putPixel = putPixel_VESA;
-  
-  }
+		//~ k_printf("double buffer content: %h %h %h %h %h %h %h\n", double_buffer[0], double_buffer[1], double_buffer[2], double_buffer[3], double_buffer[4], double_buffer[5]);
+		//~ k_printf("Double buffer addresses: %h %h %h %h %h %h %h %h\n", &double_buffer[0], &double_buffer[1], &double_buffer[2], &double_buffer[3], &double_buffer[4], &double_buffer[5], &double_buffer[6]);
+
+		//~ while(1);
+
+		isVESAon = ON;
+		setVesa ( 0x118 ); //1024x768x24
+		putPixel = putPixel_VESA;
+
+	}
 
 	VGA = 1;
 	//putRect(10,10,100,100,2);

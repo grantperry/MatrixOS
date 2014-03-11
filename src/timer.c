@@ -4,12 +4,14 @@
 #include "timer.h"
 #include "isr.h"
 #include "monitor.h"
-
-extern u8int __TASKING_ENABLED;
+#include "task.h"
 
 u32int tick = 0, globalFreq, secondTick = 0;
 u32int pass = 0, systemTimePassed = 0;
 unsigned long long int secondsPassed = 0;
+
+extern volatile task_t *current_task;
+
 
 u16int taskTickCount = 0;
 u32int taskTickTime = 3;
@@ -67,10 +69,13 @@ void timer_callback() {
 		secondTick = 0;
 	}
 
-	if ( __TASKING_ENABLED ) {
-		if ( taskTickCount == taskTickTime ) {
-			switch_task();
-		}
+	//Reduce the running tasks time in queue
+	if ( current_task->time_to_run > 0 && current_task->ready_to_run == TRUE ) {
+		current_task->time_to_run--;
+		current_task->time_running++;
+
+	} else {
+		switch_task();
 	}
 
 	return;

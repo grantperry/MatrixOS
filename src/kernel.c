@@ -97,6 +97,10 @@ void print_version() {
 	monitor_set_back_colour ( 0 );
 }
 
+void mehpid() {
+	printf ( "My pid is: %d\n", getpid() );
+}
+
 /*
 // Stick your lowlevel initalisation in here!
 */
@@ -123,13 +127,15 @@ void init() {
 
 	runModule ( &init_keyboard );
 
-#ifdef TASKING_USER
 	// Start multitasking.
-	//runModule ( &initialise_tasking );
-	//runModule ( &switch_to_user_mode );
-#endif
+	runModule ( &initialise_tasking );
 
-	return;
+	mehpid();
+
+	start_task ( 200, 100, mehpid, 0, "T1" );
+
+	//runModule ( &switch_to_user_mode);
+
 }
 
 /*
