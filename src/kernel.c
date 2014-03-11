@@ -60,9 +60,6 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	monitor_set_fore_colour ( WHITE );
 
 	init();
-	
-	char c;
-	getLine(c);
 
 	//startShell();
 
@@ -128,8 +125,8 @@ void init() {
 
 #ifdef TASKING_USER
 	// Start multitasking.
-	runModule ( &initialise_tasking );
-	runModule ( &switch_to_user_mode );
+	//runModule ( &initialise_tasking );
+	//runModule ( &switch_to_user_mode );
 #endif
 
 	return;

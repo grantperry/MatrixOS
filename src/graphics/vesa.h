@@ -7,7 +7,9 @@
 #define MAX_BUTTONS   10
 #define MAX_CHILDREN   100
 
-typedef void (*callback_type_t)(struct *window);
+struct window;
+
+typedef void (*callback_type_t)(struct window);
 
 typedef struct component
 {
@@ -33,5 +35,6 @@ typedef struct window
   char *flag;
   component_t buttons[MAX_BUTTONS];
 } window_t;
+
 
 #endif //VESA_H
