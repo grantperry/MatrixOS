@@ -6,8 +6,7 @@
 void keyboard_handler ( registers_t *regs );
 s8int init_keyboard();
 void toggleCapsLock();
-
-void keyboard_get ( char* outStr );
+char getKey();
 
 
 #endif

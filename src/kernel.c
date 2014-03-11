@@ -125,8 +125,8 @@ void init() {
 
 #ifdef TASKING_USER
 	// Start multitasking.
-	runModule ( &initialise_tasking );
-	runModule ( &switch_to_user_mode );
+	//runModule ( &initialise_tasking );
+	//runModule ( &switch_to_user_mode );
 #endif
 
 	return;
