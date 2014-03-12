@@ -9,6 +9,8 @@ volatile task_t *current_task;
 //The start of the task linked list.
 volatile task_t *ready_queue;
 
+u8int TASKING_ON = 0;
+
 //Some externs are needed to access members in paging.c...
 extern page_directory_t *kernel_directory;
 extern page_directory_t *current_directory;
@@ -154,9 +156,7 @@ int getpid() {
 
 void switch_task() {
 	// If we haven't initialised tasking yet, just return.
-	printf("p");
 	if ( !current_task ) {
-	printf("q");
 		return;
 	}
 	
@@ -168,7 +168,6 @@ void switch_task() {
 	asm volatile ( "mov %%esp, %0" : "=r" ( esp ) );
 	asm volatile ( "mov %%ebp, %0" : "=r" ( ebp ) );
 
-printf("z");
 
 	// Read the instruction pointer. We do some cunning logic here:
 	// One of two things could have happened when this function exits -
@@ -298,12 +297,24 @@ u32int start_task ( u32int priority, u32int burst_time, void ( *func ) (), void 
 
 	task->next = 0;
 
-	//preempt the task
-	//preempt_task(task);
+	task_t *tmp_task;
+      tmp_task = (task_t*)ready_queue;
+      while(tmp_task->next != 0)
+      {
+        tmp_task = tmp_task->next;
+    
+      }
+      
+      // ...And extend it.
+      tmp_task->next = task;
 
 	asm volatile ( "sti" );
 
 	return id;
+}
+
+void enable_tasking() {
+	TASKING_ON = 1;
 }
 
 

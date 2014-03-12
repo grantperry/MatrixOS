@@ -133,6 +133,13 @@ void init() {
 	mehpid();
 
 	start_task ( 200, 100, mehpid, 0, "T1" );
+	start_task ( 200, 100, mehpid, 0, "T2" );
+	start_task ( 200, 100, mehpid, 0, "T3" );
+	start_task ( 200, 100, mehpid, 0, "T4" );
+	start_task ( 200, 100, mehpid, 0, "T5" );
+	start_task ( 200, 100, mehpid, 0, "T6" );
+	start_task ( 200, 100, mehpid, 0, "T7" );
+	enable_tasking();
 
 	//runModule ( &switch_to_user_mode);
 

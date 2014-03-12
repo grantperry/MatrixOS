@@ -12,6 +12,8 @@ unsigned long long int secondsPassed = 0;
 
 extern volatile task_t *current_task;
 
+extern u8int TASKING_ON;
+
 
 u16int taskTickCount = 0;
 u32int taskTickTime = 3;
@@ -69,6 +71,7 @@ void timer_callback() {
 		secondTick = 0;
 	}
 
+	if(TASKING_ON) {
 	//Reduce the running tasks time in queue
 	if ( current_task->time_to_run > 0 && current_task->ready_to_run == TRUE ) {
 		current_task->time_to_run--;
@@ -76,6 +79,7 @@ void timer_callback() {
 
 	} else {
 		switch_task();
+	}
 	}
 
 	return;
