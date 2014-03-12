@@ -17,8 +17,8 @@
 #include "system/shell.h"
 
 #define VER_MAJOR		1
-#define VER_MINOR		1
-#define VER_FIX			1
+#define VER_MINOR		2
+#define VER_FIX			0
 
 //#define TASKING_USER
 
