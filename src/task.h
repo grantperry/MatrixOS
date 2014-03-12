@@ -29,7 +29,7 @@ void move_stack ( void *new_stack_start, u32int size );
 typedef struct task {
 	u32int id; //Process ID
 
-	//~ char name[32]; //Process name
+	char name[32]; //Process name
 	//~ u32int name; //Process name
 
 	u32int esp, ebp; //Stack and base pointers.

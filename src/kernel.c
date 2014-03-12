@@ -98,7 +98,14 @@ void print_version() {
 }
 
 void mehpid() {
-	printf ( "My pid is: %d\n", getpid() );
+	printf ( "%s pid is: %d\n", gettaskname(), getpid() );
+	int i = 0;
+	while (i != 1000) {
+		printf("%d", i);
+		i++;
+		sleep(1);
+	}
+	exit();
 }
 
 /*
@@ -130,13 +137,13 @@ void init() {
 	// Start multitasking.
 	runModule ( &initialise_tasking );
 
-	mehpid();
+	printf ( "%s pid is: %d\n", gettaskname(), getpid() );
 
-	start_task ( 200, 100, mehpid, 0, "T1" );
-	start_task ( 200, 100, mehpid, 0, "T2" );
-	start_task ( 200, 100, mehpid, 0, "T3" );
-	start_task ( 200, 100, mehpid, 0, "T4" );
-	start_task ( 200, 100, mehpid, 0, "T5" );
+	start_task ( 200, 1, mehpid, 0, "TASK THIS IS AWSOME!!!" );
+	start_task ( 200, 1, mehpid, 0, "T2" );
+	start_task ( 200, 1, mehpid, 0, "T3" );
+	start_task ( 200, 1, mehpid, 0, "T4" );
+	start_task ( 200, 1, mehpid, 0, "T5" );
 	start_task ( 200, 100, mehpid, 0, "T6" );
 	start_task ( 200, 100, mehpid, 0, "T7" );
 	enable_tasking();

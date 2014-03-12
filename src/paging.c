@@ -253,6 +253,7 @@ void page_fault ( registers_t *regs ) {
 	monitor_write ( " - EIP: " );
 	monitor_write_hex ( regs->eip );
 	monitor_write ( "\n" );
+	mehpid();
 	PANIC ( "Page fault" );
 }
 
