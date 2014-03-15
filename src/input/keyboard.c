@@ -25,13 +25,13 @@ typedef struct key_b {
 void getLine ( char poi ) {
 	struct key_b *start;
 	struct key_b *conductor;
-	start = ( key_b_t* ) alloc ( sizeof ( struct key_b ) );
+	start = ( key_b_t* ) malloc ( sizeof ( struct key_b ) );
 	conductor = start;
 
 	while ( getKey() != '\n' ) {
 		if ( getKey != 0 ) {
 			conductor->c = getKey();
-			conductor->next = ( key_b_t* ) alloc ( sizeof ( struct key_b ) );
+			conductor->next = ( key_b_t* ) malloc ( sizeof ( struct key_b ) );
 			conductor = conductor->next;
 			printf ( "Yep" );
 		}

@@ -49,6 +49,8 @@ heap_t *create_heap ( u32int start, u32int end, u32int max, u8int supervisor, u8
 **/
 void *alloc ( u32int size, u8int page_align, heap_t *heap );
 
+void *malloc ( u32int size );
+
 /**
    Releases a block allocated with 'alloc'.
 **/

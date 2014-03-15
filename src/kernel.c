@@ -98,19 +98,15 @@ void print_version() {
 }
 
 void mehpid() {
-	printf ( "%s pid is: %d\n", gettaskname(), getpid() );
-	int i = 0;
-	while (i != 1000) {
-		printf("%d", i);
-		i++;
-		sleep(1);
-	}
+	printf ( "%s pidddddddddddddddddddddddddddddddddddddddddddddddddddddddd is: %d\n", gettaskname(), getpid() );
 	exit();
 }
 
 /*
 // Stick your lowlevel initalisation in here!
 */
+extern fs_node_t* fs_root;
+
 void init() {
 	SYSCALL_ENABLED =	0;
 	SLEEP_ENABLED =		0;
@@ -136,17 +132,44 @@ void init() {
 
 	// Start multitasking.
 	runModule ( &initialise_tasking );
-
-	printf ( "%s pid is: %d\n", gettaskname(), getpid() );
-
-	start_task ( 200, 1, mehpid, 0, "TASK THIS IS AWSOME!!!" );
-	start_task ( 200, 1, mehpid, 0, "T2" );
-	start_task ( 200, 1, mehpid, 0, "T3" );
-	start_task ( 200, 1, mehpid, 0, "T4" );
-	start_task ( 200, 1, mehpid, 0, "T5" );
-	start_task ( 200, 100, mehpid, 0, "T6" );
-	start_task ( 200, 100, mehpid, 0, "T7" );
 	enable_tasking();
+	monitor_set_fore_colour ( 12 );
+	printf ( "%s pid is: %d\n", gettaskname(), getpid() );
+	start_task ( 200, 10, mehpid, 0, "TestTask" );
+	sleep ( 1 );
+	monitor_set_fore_colour ( 15 );
+
+	// list the contents of /
+	int i = 0;
+	struct dirent *node = 0;
+
+	while ( ( node = readdir_fs ( fs_root, i ) ) != 0 ) {
+		printf ( "Found file %s" , node->name );
+		fs_node_t *fsnode = finddir_fs ( fs_root, node->name );
+
+		if ( ( fsnode->flags&0x7 ) == FS_DIRECTORY ) {
+			monitor_write ( "\t(directory)\n" );
+
+		} else {
+			monitor_write ( "\n\t contents: \"" );
+			char buf[1024];
+			u32int sz = read_fs ( fsnode, 0, 1024, buf );
+			int j;
+
+			for ( j = 0; j < sz; j++ ) {
+				monitor_put ( buf[j] );
+			}
+
+			monitor_write ( "\"\n\n" );
+		}
+
+		i++;
+	}
+
+
+
+	load_elf ( "elf_test" );
+
 
 	//runModule ( &switch_to_user_mode);
 

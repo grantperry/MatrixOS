@@ -71,15 +71,15 @@ void timer_callback() {
 		secondTick = 0;
 	}
 
-	if(TASKING_ON) {
-	//Reduce the running tasks time in queue
-	if ( current_task->time_to_run > 0 && current_task->ready_to_run == TRUE ) {
-		current_task->time_to_run--;
-		current_task->time_running++;
+	if ( TASKING_ON ) {
+		//Reduce the running tasks time in queue
+		if ( current_task->time_to_run > 0 && current_task->ready_to_run == TRUE ) {
+			current_task->time_to_run--;
+			current_task->time_running++;
 
-	} else {
-		switch_task();
-	}
+		} else {
+			switch_task();
+		}
 	}
 
 	return;

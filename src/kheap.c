@@ -315,6 +315,10 @@ void *alloc ( u32int size, u8int page_align, heap_t *heap ) {
 	return ( void * ) ( ( u32int ) block_header+sizeof ( header_t ) );
 }
 
+void *malloc ( u32int size ) {
+	alloc ( size, 1, 0 );
+}
+
 void free ( void *p, heap_t *heap ) {
 	// Exit gracefully for null pointers.
 	if ( p == 0 ) {

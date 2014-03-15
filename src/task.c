@@ -88,7 +88,7 @@ s8int initialise_tasking() {
 	//~ strcpy((u8int*)task->name, "init");
 	//~ *((u8int*)task->name + name_len) = 0;
 
-	strcpy(task->name, "init");
+	strcpy ( task->name, "init" );
 
 	task->next = 0;
 
@@ -155,52 +155,51 @@ int getpid() {
 }
 
 char gettaskname() {
-	return (int)current_task->name;
+	return ( int ) current_task->name;
 }
 
-void exit()
-{
-  asm volatile("cli");
-  //Just incase the removal doesn't work 100%
-  //we make sure we are using as little time as possible
-  current_task->priority = PRIO_DEAD;
-  current_task->time_to_run = 0;
-  current_task->ready_to_run = 0;
-  
-  //Find previous task
-  task_t *task_prev = 0;
-  task_t *task_r = (task_t*)ready_queue;
-  for(;task_r->next != 0; task_r = task_r->next)
-  {
-    if(task_r->next == current_task)
-    {
-      //We got the previous task
-      task_prev = task_r;
-      break; //Don't bother with the rest of the list
-    }
-  }
-  
-  //We didn't find the task and it is not the ready_queue
-  if(!task_prev && current_task != ready_queue)
-    return;
+void exit() {
+	asm volatile ( "cli" );
+	//Just incase the removal doesn't work 100%
+	//we make sure we are using as little time as possible
+	current_task->priority = PRIO_DEAD;
+	current_task->time_to_run = 0;
+	current_task->ready_to_run = 0;
 
-  //if our current task is the ready_queue then set the starting task as the next task after current_task
-  if(current_task == ready_queue)
-  {
-    ready_queue = current_task->next;
-  }else{
-    task_prev->next = current_task->next;
-  }
-  
-  nTasks--;
-  
-  //Free the memory
-  kfree((void*)current_task);
-  kfree((void*)current_task->originalStack);
-  kfree((void*)current_task->page_directory);
-  
-  asm volatile("sti"); //Restart Interrupts before switching - stop CPU lockup
-  switch_task(); //Don't waste any time
+	//Find previous task
+	task_t *task_prev = 0;
+	task_t *task_r = ( task_t* ) ready_queue;
+
+	for ( ; task_r->next != 0; task_r = task_r->next ) {
+		if ( task_r->next == current_task ) {
+			//We got the previous task
+			task_prev = task_r;
+			break; //Don't bother with the rest of the list
+		}
+	}
+
+	//We didn't find the task and it is not the ready_queue
+	if ( !task_prev && current_task != ready_queue ) {
+		return;
+	}
+
+	//if our current task is the ready_queue then set the starting task as the next task after current_task
+	if ( current_task == ready_queue ) {
+		ready_queue = current_task->next;
+
+	} else {
+		task_prev->next = current_task->next;
+	}
+
+	nTasks--;
+
+	//Free the memory
+	kfree ( ( void* ) current_task );
+	kfree ( ( void* ) current_task->originalStack );
+	kfree ( ( void* ) current_task->page_directory );
+
+	asm volatile ( "sti" ); //Restart Interrupts before switching - stop CPU lockup
+	switch_task(); //Don't waste any time
 }
 
 void switch_task() {
@@ -208,8 +207,8 @@ void switch_task() {
 	if ( !current_task ) {
 		return;
 	}
-	
-	
+
+
 	asm volatile ( "cli" );
 
 	// Read esp, ebp now for saving later on.
@@ -278,7 +277,7 @@ jmp *%%ecx "
 				   : : "r" ( eip ), "r" ( esp ), "r" ( ebp ), "r" ( current_directory->physicalAddr ) );
 
 	asm volatile ( "sti" );
-printf("nt");
+	printf ( "nt" );
 }
 
 u32int start_task ( u32int priority, u32int burst_time, void ( *func ) (), void *arg, char *task_Name ) {
@@ -342,20 +341,20 @@ u32int start_task ( u32int priority, u32int burst_time, void ( *func ) (), void 
 	task->stack = ( u32int ) stack;
 	task->thread = func;
 	task->thread_flags = ( u32int ) arg;
-	strcpy(task->name, task_Name);
+	strcpy ( task->name, task_Name );
 
 	task->next = 0;
 
 	task_t *tmp_task;
-      tmp_task = (task_t*)ready_queue;
-      while(tmp_task->next != 0)
-      {
-        tmp_task = tmp_task->next;
-    
-      }
-      
-      // ...And extend it.
-      tmp_task->next = task;
+	tmp_task = ( task_t* ) ready_queue;
+
+	while ( tmp_task->next != 0 ) {
+		tmp_task = tmp_task->next;
+
+	}
+
+	// ...And extend it.
+	tmp_task->next = task;
 
 	asm volatile ( "sti" );
 

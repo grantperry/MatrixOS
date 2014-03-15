@@ -54,8 +54,7 @@ static struct dirent *initrd_readdir ( fs_node_t *node, u32int index ) {
 // Find a directory and return the pointer.
 */
 static fs_node_t *initrd_finddir ( fs_node_t *node, char *name ) {
-	if ( node == initrd_root &&
-			!strcmp ( name, "dev" ) ) {
+	if ( node == initrd_root && !strcmp ( name, "dev" ) ) {
 		return initrd_dev;
 	}
 

@@ -248,7 +248,7 @@ void page_fault ( registers_t *regs ) {
 		monitor_write ( "reserved " );
 	}
 
-	monitor_write ( ") at 0x" );
+	monitor_write ( ") at " );
 	monitor_write_hex ( faulting_address );
 	monitor_write ( " - EIP: " );
 	monitor_write_hex ( regs->eip );
