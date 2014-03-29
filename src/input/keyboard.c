@@ -151,7 +151,7 @@ void keyboard_handler ( registers_t *regs ) {
 	u8int scancode = inb ( 0x60 );
 	u8int specialKey = 0;
 	specialKey = isSpecialKey ( scancode );
-	//currentKey = 0;
+	currentKey = 0;
 
 	if ( scancode & 0x80 ) {
 		scancode = scancode - 0x80;
@@ -179,7 +179,7 @@ void keyboard_handler ( registers_t *regs ) {
 			setKey(upperCaseKbdus[scancode]); //set Current Key for key logger.
 		}
 		
-		monitor_put(currentKey);
+		//monitor_put(currentKey); //standard print keys to screen
 
 		if ( specialKey != 0 ) {
 			switch ( specialKey ) {

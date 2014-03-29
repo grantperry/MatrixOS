@@ -18,7 +18,7 @@
 
 #define VER_MAJOR		1
 #define VER_MINOR		2
-#define VER_FIX			0
+#define VER_FIX			1
 
 //#define TASKING_USER
 
@@ -65,7 +65,9 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	char c = 0;
 	while(1) {
 	c = getKey();
-		printf(c);
+		if(c != 0) {
+			monitor_put(c);
+		}
 		if(c == 'p') {
 			break;
 		}
