@@ -62,6 +62,14 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	init();
 
 	//startShell();
+	char c = 0;
+	while(1) {
+	c = getKey();
+		printf(c);
+		if(c == 'p') {
+			break;
+		}
+	}
 
 	for ( ;; ) {}
 }
@@ -98,7 +106,7 @@ void print_version() {
 }
 
 void mehpid() {
-	printf ( "%s pidddddddddddddddddddddddddddddddddddddddddddddddddddddddd is: %d\n", gettaskname(), getpid() );
+	printf ( "%s pid is: %d\n", gettaskname(), getpid() );
 	exit();
 }
 

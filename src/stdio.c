@@ -166,7 +166,7 @@ FILE* find ( fs_node_t* dir, char* file_name ) {
  *
  *---------------------------------------------------------------------------*/
 u32int fread ( FILE* file, void* buf, u32int size ) {
-	u32int sz = read_fs ( ( fs_node_t* ) file, file->seek, size, ( u8int* ) buf );
+	u32int sz;// = read_fs ( ( fs_node_t* ) file, file->seek, size, ( u8int* ) buf );
 
 	file->seek += sz;
 

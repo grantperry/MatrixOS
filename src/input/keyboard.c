@@ -11,31 +11,12 @@
 u8int shift_flag = 0;
 u8int CapsOn = 0, NumOn = 0, ScrollOn = 0;
 
-char currentKey = 0;
+volatile char currentKey = 0;
 
 char getKey() {
-	return currentKey;
-}
-
-typedef struct key_b {
-	char c;
-	struct key_b *next;
-} key_b_t;
-
-void getLine ( char poi ) {
-	struct key_b *start;
-	struct key_b *conductor;
-	start = ( key_b_t* ) malloc ( sizeof ( struct key_b ) );
-	conductor = start;
-
-	while ( getKey() != '\n' ) {
-		if ( getKey != 0 ) {
-			conductor->c = getKey();
-			conductor->next = ( key_b_t* ) malloc ( sizeof ( struct key_b ) );
-			conductor = conductor->next;
-			printf ( "Yep" );
-		}
-	}
+	char currKey = currentKey;
+	currentKey = 0;
+	return currKey;
 }
 
 s8int init_keyboard() { /////////////////////////////////////////////////////////
@@ -161,23 +142,25 @@ char upperCaseKbdus[128] = {
 	0,	/* All other keys are undefined */
 };
 
+void setKey(char c) {
+	currentKey = c;
+}
+
 
 void keyboard_handler ( registers_t *regs ) {
 	u8int scancode = inb ( 0x60 );
 	u8int specialKey = 0;
 	specialKey = isSpecialKey ( scancode );
+	//currentKey = 0;
 
 	if ( scancode & 0x80 ) {
 		scancode = scancode - 0x80;
-		currentKey = 0;
 
 		if ( scancode == 42 || scancode - 0x80 == 54 ) {
 			shift_flag = 0;
 		}
 
 	} else {
-		currentKey = scancode; //set Current Key for key logger.
-
 		if ( scancode == 42 || scancode - 0x80 == 54 ) {
 			shift_flag = 1;
 		}
@@ -187,12 +170,16 @@ void keyboard_handler ( registers_t *regs ) {
 		}
 
 		if ( shift_flag == 0 && CapsOn == 0 ) {
-			monitor_put ( lowerCaseKbdus[scancode] );
+			//monitor_put ( lowerCaseKbdus[scancode] );
+			setKey(lowerCaseKbdus[scancode]); //set Current Key for key logger.
 		}
 
 		if ( shift_flag == 1 || CapsOn == 1 ) {
-			monitor_put ( upperCaseKbdus[scancode] );
+			//monitor_put ( upperCaseKbdus[scancode] );
+			setKey(upperCaseKbdus[scancode]); //set Current Key for key logger.
 		}
+		
+		monitor_put(currentKey);
 
 		if ( specialKey != 0 ) {
 			switch ( specialKey ) {
@@ -222,14 +209,4 @@ void keyboard_handler ( registers_t *regs ) {
 
 		}
 	}
-}
-
-void setLights() {
-	outb ( 0x60, 0xED ); //im sending keyboard status lights...
-	u8int payload = 0;
-	/*if(CapsOn) payload |= 1 << 2; syscall_monitor_write("Caps");
-	if(NumOn) payload |= 1 << 1;
-	if(ScrollOn) payload |= 1 << 0;*/
-	payload = 4;
-	outb ( 0x60, payload );
 }
