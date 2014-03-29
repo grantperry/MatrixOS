@@ -61,8 +61,10 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
-	//startShell();
-	char c = 0;
+	startShell();
+
+
+	/*char c = 0;
 	while(1) {
 	c = getKey();
 		if(c != 0) {
@@ -71,7 +73,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 		if(c == 'p') {
 			break;
 		}
-	}
+	}*/
 
 	for ( ;; ) {}
 }
