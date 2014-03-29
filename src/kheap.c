@@ -61,40 +61,36 @@ u32int kmalloc ( u32int sz ) {
 	return kmalloc_int ( sz, 0, 0 );
 }
 
-u32int krealloc(u32int *ptr, u32int old_sz, u32int new_sz)
-{
-  u32int *out;
-  out = (u32int*)kmalloc(new_sz);
-  memcpy(out, ptr, old_sz);
-  kfree(ptr);
-  return (u32int)out;
+u32int krealloc ( u32int *ptr, u32int old_sz, u32int new_sz ) {
+	u32int *out;
+	out = ( u32int* ) kmalloc ( new_sz );
+	memcpy ( out, ptr, old_sz );
+	kfree ( ptr );
+	return ( u32int ) out;
 }
 
-u32int krealloc_a(u32int *ptr, u32int old_sz, u32int new_sz)
-{
-  u32int *out;
-  out = (u32int*)kmalloc_int(new_sz, 1, 0);
-  memcpy(out, ptr, old_sz);
-  kfree(ptr);
-  return (u32int)out;
+u32int krealloc_a ( u32int *ptr, u32int old_sz, u32int new_sz ) {
+	u32int *out;
+	out = ( u32int* ) kmalloc_int ( new_sz, 1, 0 );
+	memcpy ( out, ptr, old_sz );
+	kfree ( ptr );
+	return ( u32int ) out;
 }
 
-u32int krealloc_ap(u32int *ptr, u32int old_sz, u32int new_sz, u32int *phys)
-{
-  u32int *out;
-  out = (u32int*)kmalloc_int(new_sz, 1, phys);
-  memcpy(out, ptr, old_sz);
-  kfree(ptr);
-  return (u32int)out;  
+u32int krealloc_ap ( u32int *ptr, u32int old_sz, u32int new_sz, u32int *phys ) {
+	u32int *out;
+	out = ( u32int* ) kmalloc_int ( new_sz, 1, phys );
+	memcpy ( out, ptr, old_sz );
+	kfree ( ptr );
+	return ( u32int ) out;
 }
 
-u32int krealloc_p(u32int *ptr, u32int old_sz, u32int new_sz, u32int *phys)
-{
-  u32int *out;
-  out = (u32int*)kmalloc_int(new_sz, 0, phys);
-  memcpy(out, ptr, old_sz);
-  kfree(ptr);
-  return (u32int)out;    
+u32int krealloc_p ( u32int *ptr, u32int old_sz, u32int new_sz, u32int *phys ) {
+	u32int *out;
+	out = ( u32int* ) kmalloc_int ( new_sz, 0, phys );
+	memcpy ( out, ptr, old_sz );
+	kfree ( ptr );
+	return ( u32int ) out;
 }
 
 static void expand ( u32int new_size, heap_t *heap ) {

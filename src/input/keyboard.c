@@ -142,7 +142,7 @@ char upperCaseKbdus[128] = {
 	0,	/* All other keys are undefined */
 };
 
-void setKey(char c) {
+void setKey ( char c ) {
 	currentKey = c;
 }
 
@@ -171,14 +171,14 @@ void keyboard_handler ( registers_t *regs ) {
 
 		if ( shift_flag == 0 && CapsOn == 0 ) {
 			//monitor_put ( lowerCaseKbdus[scancode] );
-			setKey(lowerCaseKbdus[scancode]); //set Current Key for key logger.
+			setKey ( lowerCaseKbdus[scancode] ); //set Current Key for key logger.
 		}
 
 		if ( shift_flag == 1 || CapsOn == 1 ) {
 			//monitor_put ( upperCaseKbdus[scancode] );
-			setKey(upperCaseKbdus[scancode]); //set Current Key for key logger.
+			setKey ( upperCaseKbdus[scancode] ); //set Current Key for key logger.
 		}
-		
+
 		//monitor_put(currentKey); //standard print keys to screen
 
 		if ( specialKey != 0 ) {
@@ -201,6 +201,7 @@ void keyboard_handler ( registers_t *regs ) {
 
 			case 5:
 				monitor_put ( '\r' );
+				setKey ( '\r' );
 				break;
 
 			default:

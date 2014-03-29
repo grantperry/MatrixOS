@@ -90,10 +90,10 @@ u32int kmalloc_ap ( u32int sz, u32int *phys );
 **/
 u32int kmalloc ( u32int sz );
 
-u32int krealloc(u32int *ptr, u32int old_sz, u32int new_sz);
-u32int krealloc_a(u32int *ptr, u32int old_sz, u32int new_sz);
-u32int krealloc_ap(u32int *ptr, u32int old_sz, u32int new_sz, u32int *phys);
-u32int krealloc_p(u32int *ptr, u32int old_sz, u32int new_sz, u32int *phys);
+u32int krealloc ( u32int *ptr, u32int old_sz, u32int new_sz );
+u32int krealloc_a ( u32int *ptr, u32int old_sz, u32int new_sz );
+u32int krealloc_ap ( u32int *ptr, u32int old_sz, u32int new_sz, u32int *phys );
+u32int krealloc_p ( u32int *ptr, u32int old_sz, u32int new_sz, u32int *phys );
 
 /**
    General deallocation function.

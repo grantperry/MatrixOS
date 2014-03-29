@@ -55,6 +55,13 @@ void printf ( char *c, ... ) {
 				printf ( charArrayArg );
 				i = i + 2;
 
+			} else if ( c[i+1] == 'c' ) { //user wants to print a char
+				char *charArg;
+				charArg = va_arg ( arguments, char* );
+
+				monitor_put ( charArg );
+				i = i + 2;
+
 			} else if ( c[i+1] == 'h' ) { //user wants to print a hex number
 
 				u32int hexArg = va_arg ( arguments, u32int );
@@ -120,16 +127,14 @@ FILE* fopen ( fs_node_t* dir, char* file_name, char* mode ) {
 		return 0;
 	}
 
-	if (mode[0] == 'w')
-	{
+	if ( mode[0] == 'w' ) {
 		tmpf->permissions.write = 1;
 		tmpf->permissions.read = 0;
 
 		return tmpf;
 	}
 
-	if (mode[0] == 'r')
-	{
+	if ( mode[0] == 'r' ) {
 		tmpf->permissions.write = 0;
 		tmpf->permissions.read = 1;
 

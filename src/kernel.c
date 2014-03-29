@@ -54,7 +54,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
 	monitor_write ( "MatrixOS" );
-	monitor_set_cursor_pos ( 10, 0 );
+	monitor_set_cursor_pos ( 11, 0 );
 	print_version();
 	monitor_write ( "\n" );
 	monitor_set_fore_colour ( WHITE );
@@ -147,8 +147,8 @@ void init() {
 	enable_tasking();
 	monitor_set_fore_colour ( 12 );
 	printf ( "%s pid is: %d\n", gettaskname(), getpid() );
-	start_task ( 200, 10, mehpid, 0, "TestTask" );
-	sleep ( 1 );
+	//start_task ( 200, 10, mehpid, 0, "TestTask" );
+	//sleep ( 1 );
 	monitor_set_fore_colour ( 15 );
 
 	// list the contents of /
