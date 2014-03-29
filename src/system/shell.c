@@ -20,7 +20,7 @@ int resizebuf ( void* ptr, int size ) {
 }
 
 void startShell() {
-	syscall_monitor_write ( "MatrixShell v1.0\n" );
+	syscall_monitor_write ( "MatrixShell v1.1\n" );
 	input = ( char* ) kmalloc ( BUF_SIZE_INIT*sizeof ( char ) );
 	size_input = BUF_SIZE_INIT;
 	shell_running = 1;
@@ -36,7 +36,7 @@ void doShell() {
 		while ( running ) {
 			char tmp = getKey();
 
-			if ( tmp != 0 ) {
+			if ( tmp != 0 && tmp != '\b') {
 				input[i] = tmp;
 				i++;
 
@@ -50,6 +50,12 @@ void doShell() {
 				}
 
 				monitor_put ( tmp );
+			} 
+			if (tmp == '\b') {
+				//monitor_set_cursor_pos ( monitor_getX(), monitor_getY() );
+				monitor_put ( '\b' );
+				i = i - 1;
+				input[i] = 0;
 			}
 		}
 
