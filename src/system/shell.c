@@ -52,7 +52,6 @@ void doShell() {
 				monitor_put ( tmp );
 			} 
 			if (tmp == '\b') {
-				//monitor_set_cursor_pos ( monitor_getX(), monitor_getY() );
 				monitor_put ( '\b' );
 				i = i - 1;
 				input[i] = 0;
@@ -91,13 +90,12 @@ u8int checkstr ( char* str1, char* str2 ) {
 	u32int i = 0;
 	u32int cor = 0;
 	u32int large = 0;
+	if ( strlen ( str1 ) >= strlen ( str2 ) ) {
+		large = strlen ( str1 );
+	}
 
 	if ( strlen ( str1 ) <= strlen ( str2 ) ) {
 		large = strlen ( str2 );
-	}
-
-	if ( strlen ( str1 ) >= strlen ( str2 ) ) {
-		large = strlen ( str1 );
 	}
 
 	while ( ( large-1 ) >= i ) {
@@ -110,8 +108,11 @@ u8int checkstr ( char* str1, char* str2 ) {
 
 		i++;
 	}
-
-	return cor;
+	if (strlen(str1) == strlen(str2)) {
+		return cor;
+	} else {
+		return 0;
+	}
 }
 
 typedef struct buf {
@@ -123,8 +124,7 @@ void process ( char* str ) {
 	buf_t list[64];
 	u32int     x=0,  y=0, spaces = 0, chars = 0, c = 0, i = 0;
 	u32int lastspace = -1, lastchar = -1;
-
-	while ( c <= sizeof ( str ) ) {
+	while ( c <= strlen ( str ) ) {
 		if ( str[c] == ' ' && ( lastchar == c-1 ) || str[c] == '\r' ) {
 			list[i].end = c - 1;
 			i++;
@@ -150,7 +150,6 @@ void process ( char* str ) {
 
 	u32int t = 0;
 	u32int len = list[0].end - list[0].start;
-
 	while ( t <= len ) {
 		command[t] = str[list[0].start + t];
 		t++;
@@ -170,6 +169,7 @@ void process ( char* str ) {
 		shell_running = 0;
 		return;
 	}
-
+	monitor_set_fore_colour(4);
 	printf ( "\ncommand not recognised" );
+	monitor_set_fore_colour(15);
 }
