@@ -215,28 +215,14 @@ void VGA_init ( int width, int height, int bpp ) {
 		VGA_clear_screen();
 
 	} else if ( width == 1024 && height == 768 && bpp == 24 ) {
-		double_buffer = ( u8int* ) kmalloc ( ( width * height ) * ( bpp / 8 ) );
-
-		//~ k_printf("\ndouble buffer: %h\n", double_buffer);
-
-		memset ( double_buffer, 0xff, width * height * ( bpp / 8 ) );
-
-		//~ k_printf("double buffer content: %h %h %h %h %h %h %h\n", double_buffer[0], double_buffer[1], double_buffer[2], double_buffer[3], double_buffer[4], double_buffer[5]);
-		//~ k_printf("Double buffer addresses: %h %h %h %h %h %h %h %h\n", &double_buffer[0], &double_buffer[1], &double_buffer[2], &double_buffer[3], &double_buffer[4], &double_buffer[5], &double_buffer[6]);
-
-		//~ while(1);
-
-		isVESAon = ON;
-		setVesa ( 0x118 ); //1024x768x24
-		putPixel = putPixel_VESA;
-
+		
 	}
 
 	VGA = 1;
 	//putRect(10,10,100,100,2);
 	//putRect(20,20,80,80,3);
 
-	//putGraphicString("abcdefghijklmnopqrstuvwxyz {|}~asdfghjkl", 0, 0, 3, 8);
+	putGraphicString("abcdefghijklmnopqrstuvwxyz {|}~asdfghjkl", 0, 0, 3, 8);
 	//putGraphicString("abcdefghijklmnop", 0, 0, 2, 8);
 	//putGraphicString("qrstuvwxyzABCDEF", 0, 8, 2, 8);
 	//putGraphicString("GHIJKLMNOPQRSTUV", 0, 16, 2, 8);

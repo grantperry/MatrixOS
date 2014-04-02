@@ -102,6 +102,7 @@ void setBank ( int bankNo ) {
 
 }
 
+
 //sets up VESA for mode
 void setVesa ( u32int mode ) {
 	//stop any task switching, but do not stop interupts
@@ -126,9 +127,9 @@ void setVesa ( u32int mode ) {
 	memcpy ( &info, buffer, sizeof ( VESA_INFO ) ); //copies info from the buffer to the info typedef struct
 
 	//print VESA information
-	//~ k_printf("\n\nVesa Signature: %s\n", info.VESASignature);
-	//~ k_printf("\n\nVesa Version: %h\n", info.VESAVersion);
-	//~ k_printf("\n\nVesa Video Modes: %h\n", info.VideoModePtr);
+	printf("\n\nVesa Signature: %s\n", info.VESASignature);
+	printf("\n\nVesa Version: %h\n", info.VESAVersion);
+	printf("\n\nVesa Video Modes: %h\n", info.VideoModePtr);
 
 	/**Gests VESA mode information**/
 

@@ -169,6 +169,11 @@ void process ( char* str ) {
 		shell_running = 0;
 		return;
 	}
+	
+	if( checkstr ( command, "vesa")) {
+		VGA_init(320 ,200, 256);
+		return;
+	}
 	monitor_set_fore_colour(4);
 	printf ( "\ncommand not recognised" );
 	monitor_set_fore_colour(15);
