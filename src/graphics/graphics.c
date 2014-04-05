@@ -3,11 +3,6 @@
 #include "font.h"
 #include "../math/math.h"
 
-//the vga identifiers
-u32int VGA_width;
-u32int VGA_height;
-u32int VGA_bpp;
-
 extern u8int *vga_mem; //pointer to VESA Linear Frame Buffer
 extern u8int *double_buffer; //double buffer for VESA video
 

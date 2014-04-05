@@ -1,5 +1,6 @@
 #include "shell.h"
 #include "../stdio.h"
+#include "../graphics/gui.h"
 
 #define BUF_SIZE_INIT 64
 
@@ -172,6 +173,15 @@ void process ( char* str ) {
 	
 	if( checkstr ( command, "vesa")) {
 		VGA_init(320 ,200, 256);
+		return;
+	}
+	if( checkstr ( command, "gui")) {
+		startgui(1); //start gui look 0;
+		return;
+	}
+	if( checkstr ( command, "g")) {
+		VGA_init(320 ,200, 256);
+		startgui(1); //start gui look 0;
 		return;
 	}
 	monitor_set_fore_colour(4);

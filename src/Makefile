@@ -11,7 +11,7 @@ MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH)
 INPUT=input/i8042.o input/keyboard.o input/special_keys.o
 SYSTEM=system/moduleLoading.o system/shell.o
 FUN=fun/fun.o
-GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o
+GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o graphics/gui.o
 MATH=math/math.o
 
 CFLAGS=-nostdlib -ffreestanding -nostdinc -g
