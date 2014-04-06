@@ -29,7 +29,7 @@ u32int num_syscalls = 6;
 // Initialise syscalls by registereing the handler.
 */
 s8int initialise_syscalls() {
-	monitor_write ( "Initalizing System Calls" );
+	printf ( "Initalizing System Calls" );
 	// Register our syscall handler.
 	register_interrupt_handler ( 0x80, &syscall_handler );
 	SYSCALL_ENABLED = 1;
