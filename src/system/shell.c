@@ -87,7 +87,7 @@ void info() {
 // Returns -1 if length unequal
 // Returns true or 1 if equal
 */
-u8int checkstr ( char* str1, char* str2 ) {
+/*u8int checkstr ( char* str1, char* str2 ) {
 	u32int i = 0;
 	u32int cor = 0;
 	u32int large = 0;
@@ -114,7 +114,7 @@ u8int checkstr ( char* str1, char* str2 ) {
 	} else {
 		return 0;
 	}
-}
+}*/
 
 typedef struct buf {
 	u32int start;
