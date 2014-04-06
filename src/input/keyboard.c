@@ -20,7 +20,7 @@ char getKey() {
 }
 
 s8int init_keyboard() { /////////////////////////////////////////////////////////
-	syscall_monitor_write ( "Initalizing Keyboard." );
+	printf ( "Initalizing Keyboard." );
 	register_interrupt_handler ( IRQ1, &keyboard_handler );
 	i8042_disable_devices();
 	i8042_flush_output_buffer();
