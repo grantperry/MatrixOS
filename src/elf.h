@@ -134,10 +134,10 @@ typedef struct {
 	Elf32_Off	p_offset;	/* Program header offset */
 	Elf32_Addr	p_vaddr;	/* Program header virtual address */
 	Elf32_Addr	p_paddr;
-	Elf32_Word	p_filesz;	/* Number bytes in file image segment  */
-	Elf32_Word	p_memsz;
+	Elf32_Word	p_fileSize;	/* Number bytes in file image segment  */
+	Elf32_Word	p_memSize;
 	Elf32_Word	p_flags;
-	Elf32_Word	p_align;
+	Elf32_Word	p_alignment;
 
 } Elf32_Phdr;
 
