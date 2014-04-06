@@ -23,9 +23,7 @@ void isr_handler ( registers_t regs ) {
 		handler ( &regs );
 
 	} else {
-		monitor_write ( "unhandled interrupt: " );
-		monitor_write_hex ( int_no );
-		monitor_put ( '\n' );
+		printf ( "unhandled interrupt: %h\n", int_no );
 
 		for ( ;; );
 	}
