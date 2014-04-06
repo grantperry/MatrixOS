@@ -15,6 +15,7 @@
 #include "system/moduleLoading.h"
 #include "graphics/graphics.h"
 #include "system/shell.h"
+#include "elf_loader.h"
 
 #define VER_MAJOR		1
 #define VER_MINOR		2
@@ -53,10 +54,10 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
-	monitor_write ( "MatrixOS" );
+	printf ( "MatrixOS" );
 	monitor_set_cursor_pos ( 11, 0 );
 	print_version();
-	monitor_write ( "\n" );
+	printf ( "\n" );
 	monitor_set_fore_colour ( WHITE );
 
 	init();
@@ -68,7 +69,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	while(1) {
 	c = getKey();
 		if(c != 0) {
-			monitor_put(c);
+			printf("%c", c);
 		}
 		if(c == 'p') {
 			break;
@@ -95,14 +96,14 @@ void print_version() {
 		monitor_set_back_colour ( 4 );
 	}
 
-	monitor_write ( "v" );
+	printf ( "v" );
 	monitor_set_fore_colour ( 10 ); //green
 	monitor_write_dec ( VER_MAJOR );
-	monitor_write ( "." );
+	printf ( "." );
 	monitor_set_fore_colour ( 14 ); //yellow
 	monitor_write_dec ( VER_MINOR );
 	monitor_set_fore_colour ( 10 ); //green
-	monitor_write ( "." );
+	printf ( "." );
 	monitor_set_fore_colour ( 12 ); //red
 	monitor_write_dec ( VER_FIX );
 	monitor_set_fore_colour ( 15 );
@@ -180,7 +181,7 @@ void init() {
 
 
 
-	load_elf ( "elf_test" );
+	load_elf ( "elf_test", 0 );
 
 
 	//runModule ( &switch_to_user_mode);
@@ -191,7 +192,7 @@ void init() {
 // Find the Initrd and remeber where it is!
 */
 s8int locate_initrd() {
-	syscall_monitor_write ( "Locating Initrd." );
+	printf ( "Locating Initrd." );
 	// Find the location of our initial ramdisk.
 	ASSERT ( mboot_ptr->mods_count > 0 );
 	u32int initrd_location = * ( ( u32int* ) mboot_ptr->mods_addr );
@@ -208,7 +209,7 @@ void General_Protection_Fault ( registers_t *regs ) {
 }
 
 s8int init_Interupts() {
-	syscall_monitor_write ( "Initalizing Interupts." );
+	printf ( "Initalizing Interupts." );
 	register_interrupt_handler ( 13, General_Protection_Fault );
 	return 0;
 }
