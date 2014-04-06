@@ -21,7 +21,7 @@ int resizebuf ( void* ptr, int size ) {
 }
 
 void startShell() {
-	syscall_monitor_write ( "MatrixShell v1.1\n" );
+	printf ( "MatrixShell v1.1\n" );
 	input = ( char* ) kmalloc ( BUF_SIZE_INIT*sizeof ( char ) );
 	size_input = BUF_SIZE_INIT;
 	shell_running = 1;
@@ -31,7 +31,7 @@ void startShell() {
 
 void doShell() {
 	while ( shell_running ) {
-		syscall_monitor_write ( "> " );
+		printf ( "> " );
 		int i = 0;
 
 		while ( running ) {
