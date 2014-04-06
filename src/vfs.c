@@ -49,7 +49,7 @@ u32int read_fs ( fs_node_t *node, u32int offset, u32int size, u8int *buffer ) {
 
 		//we did not find the file desc in the list
 		if ( !fdesc ) {
-			k_printf ( "Error: file not in file descriptor list\n" );
+			printf ( "Error: file not in file descriptor list\n" );
 			return 1;
 		}
 
@@ -58,7 +58,7 @@ u32int read_fs ( fs_node_t *node, u32int offset, u32int size, u8int *buffer ) {
 			return node->read ( node, offset, size, buffer );
 
 		} else {
-			k_printf ( "Error: reading from an unprivilaged file\n" );
+			printf ( "Error: reading from an unprivilaged file\n" );
 		}
 	}
 
@@ -74,7 +74,7 @@ u32int write_fs ( fs_node_t *node, u32int offset, u32int size, u8int *buffer ) {
 
 		//we did not find the file desc in the list
 		if ( !fdesc ) {
-			k_printf ( "Error: file not in file descriptor list\n" );
+			printf ( "Error: file not in file descriptor list\n" );
 			return 1;
 		}
 
@@ -83,7 +83,7 @@ u32int write_fs ( fs_node_t *node, u32int offset, u32int size, u8int *buffer ) {
 			return node->write ( node, offset, size, buffer );
 
 		} else {
-			k_printf ( "Error: writing to an unprivilaged file\n" );
+			printf ( "Error: writing to an unprivilaged file\n" );
 		}
 	}
 
@@ -565,7 +565,7 @@ fs_node_t *vfs_createDirectory ( fs_node_t *parentNode, char *name ) {
 
 		for ( i = 0; i < length; i++ )
 			if ( * ( name + i ) == '/' ) {
-				k_printf ( "The directory name: \"%s\" may not contain any \"/\" characters\n", name );
+				printf ( "The directory name: \"%s\" may not contain any \"/\" characters\n", name );
 
 				//error!
 				return 0;
@@ -878,7 +878,7 @@ u32int vfs_free_data_blocks ( fs_node_t *directory, fs_node_t *node ) {
 fs_node_t *vfs_register_blkdev ( char *name, vfs_blkdev_t *data ) {
 	if ( program_cd ( "/dev" ) ) {
 		//error!
-		k_printf ( "Cannot register block device, /dev does not exist!\n" );
+		printf ( "Cannot register block device, /dev does not exist!\n" );
 		return 0;
 	}
 
