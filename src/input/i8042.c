@@ -36,7 +36,7 @@ static inline void i8042_write_command ( int val ) {
 ////////////////////////////////////////////////////////
 u8int i8042_disable_devices() {	//1
 	if ( DEBUG ) {
-		syscall_monitor_write ( "disabling devices..." );
+		printf ( "disabling devices..." );
 	}
 
 	i8042_write_command ( 0xAD );
@@ -46,7 +46,7 @@ u8int i8042_disable_devices() {	//1
 
 u8int i8042_flush_output_buffer() {	//2
 	if ( DEBUG ) {
-		syscall_monitor_write ( "flushing output buffer" );
+		printf ( "flushing output buffer" );
 	}
 
 	u8int i = 0;
@@ -62,7 +62,7 @@ u8int i8042_flush_output_buffer() {	//2
 
 u8int i8042_set_controller_config_byte() {	//3
 	if ( DEBUG ) {
-		syscall_monitor_write ( "setting controller config byte" );
+		printf ( "setting controller config byte" );
 	}
 
 	i8042_write_command ( 0x20 );
@@ -74,7 +74,7 @@ u8int i8042_set_controller_config_byte() {	//3
 	i8042_write_data ( status );
 
 	if ( DEBUG && ! ( status & ( 1 << 5 ) ) ) {
-		syscall_monitor_write ( "DUAL PS/2 = YES\n" );    //TODO check if this is right
+		printf ( "DUAL PS/2 = YES\n" );    //TODO check if this is right
 	}
 
 	return 0;
@@ -82,7 +82,7 @@ u8int i8042_set_controller_config_byte() {	//3
 
 u8int i8042_controller_self_test() {	//4
 	if ( DEBUG ) {
-		syscall_monitor_write ( "controller self test" );
+		printf ( "controller self test" );
 	}
 
 	i8042_write_command ( 0xAA );
@@ -91,11 +91,11 @@ u8int i8042_controller_self_test() {	//4
 
 	if ( DEBUG ) {
 		if ( resp == 0x55 ) {
-			syscall_monitor_write ( "PASS\n" );
+			printf ( "PASS\n" );
 		}
 
 		if ( resp == 0xFC ) {
-			syscall_monitor_write ( "FAIL\n" );
+			printf ( "FAIL\n" );
 		}
 	}
 
@@ -104,7 +104,7 @@ u8int i8042_controller_self_test() {	//4
 
 u8int i8042_two_channels() {	//5
 	if ( DEBUG ) {
-		syscall_monitor_write ( "finding channels" );
+		printf ( "finding channels" );
 	}
 
 	return 0;
@@ -112,7 +112,7 @@ u8int i8042_two_channels() {	//5
 
 u8int i8042_interface_test() {	//6
 	if ( DEBUG ) {
-		syscall_monitor_write ( "checking peripherals" );
+		printf ( "checking peripherals" );
 	}
 
 	return 0;
@@ -121,7 +121,7 @@ u8int i8042_interface_test() {	//6
 
 u8int i8042_enable_devices() {	//7
 	if ( DEBUG ) {
-		syscall_monitor_write ( "enabling devices..." );
+		printf ( "enabling devices..." );
 	}
 
 	i8042_write_command ( 0xAE );
@@ -137,7 +137,7 @@ u8int i8042_enable_devices() {	//7
 
 u8int i8042_reset_devices() {	//8
 	if ( DEBUG ) {
-		syscall_monitor_write ( "resetting devices" );
+		printf ( "resetting devices" );
 	}
 
 	return 0;
@@ -145,7 +145,7 @@ u8int i8042_reset_devices() {	//8
 
 u8int i8042_lable_devices() {	//9
 	if ( DEBUG ) {
-		syscall_monitor_write ( "name devices" );
+		printf ( "name devices" );
 	}
 
 	return 0;
