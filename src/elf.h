@@ -92,53 +92,50 @@ typedef		unsigned int		Elf32_Word;
  * 		ELF header
  *---------------------------------------------------------------------------*/
 typedef	struct {
-	unsigned char	e_ident[EI_NIDENT];	/* ELF identification data */
-	Elf32_Half		e_type;				/* Type of object file */
-	Elf32_Half		e_mashine;			/* Architecture type  */
-	Elf32_Word		e_version;			/* Object file version  */
-	Elf32_Addr		e_entry;			/* Entry point to process */
-	Elf32_Off		e_phoff;			/* Program header offset */
-	Elf32_Off		e_shoff;			/* Section table header offset */
-	Elf32_Word		e_flags;			/* Processor-specific flags */
-	Elf32_Half		e_ehsize;			/* ELF header size */
-	Elf32_Half		e_phentsize;		/* Size of program header entry */
-	Elf32_Half		e_phnum;			/* Number of program header entries */
-	Elf32_Half		e_shentsize;		/* Section header entry size */
-	Elf32_Half		e_shnum;			/* Section header entries number */
-	Elf32_Half		e_shstrndx;			/*  */
-
+	unsigned char	ident[EI_NIDENT];	/* ELF identification data */
+	Elf32_Half		type;				/* Type of object file */
+	Elf32_Half		mashine;			/* Architecture type  */
+	Elf32_Word		version;			/* Object file version  */
+	Elf32_Addr		entry;				/* Entry point to process */
+	Elf32_Off		phoff;				/* Program header offset */
+	Elf32_Off		shoff;				/* Section table header offset */
+	Elf32_Word		flags;				/* Processor-specific flags */
+	Elf32_Half		ehsize;				/* ELF header size */
+	Elf32_Half		phentsize;			/* Size of program header entry */
+	Elf32_Half		phnum;				/* Number of program header entries */
+	Elf32_Half		shentsize;			/* Section header entry size */
+	Elf32_Half		shnum;				/* Section header entries number */
+	Elf32_Half		shstrndx;			/*  */
 } Elf32_Ehdr;
 
 /*-----------------------------------------------------------------------------
  * 		Section header
  *---------------------------------------------------------------------------*/
 typedef	struct {
-	Elf32_Word	sh_name;		/* Index into section header stirng table */
-	Elf32_Word	sh_type;		/* Section type */
-	Elf32_Word	sh_flags;		/* Section attribute flags */
-	Elf32_Addr	sh_addr;		/* Section virtual address in process image */
-	Elf32_Off	sh_offset;		/* Section offset in file */
-	Elf32_Word	sh_size;		/* Section size */
-	Elf32_Word	sh_link;		/*  */
-	Elf32_Word	sh_info;		/* Extra information */
-	Elf32_Word	sh_addralign;	/* Section address alingment */
-	Elf32_Word	sh_entsize;		/* */
-
+	Elf32_Word	name;					/* Index into section header stirng table */
+	Elf32_Word	type;					/* Section type */
+	Elf32_Word	flags;					/* Section attribute flags */
+	Elf32_Addr	addr;					/* Section virtual address in process image */
+	Elf32_Off	offset;					/* Section offset in file */
+	Elf32_Word	size;					/* Section size */
+	Elf32_Word	link;					/*  */
+	Elf32_Word	info;					/* Extra information */
+	Elf32_Word	addralign;				/* Section address alingment */
+	Elf32_Word	entsize;				/* */
 } Elf32_Shdr;
 
 /*-----------------------------------------------------------------------------
  * 		Program header
  *---------------------------------------------------------------------------*/
 typedef struct {
-	Elf32_Word	p_type;		/* Program header type */
-	Elf32_Off	p_offset;	/* Program header offset */
-	Elf32_Addr	p_vaddr;	/* Program header virtual address */
-	Elf32_Addr	p_paddr;
-	Elf32_Word	p_filesz;	/* Number bytes in file image segment  */
-	Elf32_Word	p_memsz;
-	Elf32_Word	p_flags;
-	Elf32_Word	p_align;
-
+	Elf32_Word	type;					/* Program header type */
+	Elf32_Off	offset;					/* Program header offset */
+	Elf32_Addr	vaddr;					/* Program header virtual address */
+	Elf32_Addr	paddr;
+	Elf32_Word	filesz;					/* Number bytes in file image segment  */
+	Elf32_Word	memsz;
+	Elf32_Word	flags;
+	Elf32_Word	align;
 } Elf32_Phdr;
 
 

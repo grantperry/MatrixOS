@@ -27,6 +27,8 @@ typedef struct __attribute__ ( ( packed ) ) {
 }
 regs16_t;
 
+u8int checkstr ( char* str1, char* str2 );
+
 extern void int32 ( u8int intnum, regs16_t *regs );
 
 void numToAsciChar ( char *asciInChar, int integerLength );

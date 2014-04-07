@@ -152,13 +152,12 @@ void init() {
 	monitor_set_fore_colour ( 15 );
 
 	// list the contents of /
-	int i = 0;
+	/*int i = 0;
 	struct dirent *node = 0;
-
+	fs_node_t *elf_node = 0;
 	while ( ( node = readdir_fs ( fs_root, i ) ) != 0 ) {
-		printf ( "Found file %s" , node->name );
+		printf ( "Found file %s\n" , node->name );
 		fs_node_t *fsnode = finddir_fs ( fs_root, node->name );
-
 		if ( ( fsnode->flags&0x7 ) == FS_DIRECTORY ) {
 			monitor_write ( "\t(directory)\n" );
 
@@ -177,7 +176,7 @@ void init() {
 
 		i++;
 	}
-
+*/
 
 
 	load_elf ( "elf_test" );

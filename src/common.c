@@ -62,6 +62,40 @@ void memset ( u8int *dest, u8int val, u32int len ) {
 }
 
 /*
+// Checks lenght and chars to see if str1 == str2/
+// Returns -1 if length unequal
+// Returns true or 1 if equal
+*/
+u8int checkstr ( char* str1, char* str2 ) {
+	u32int i = 0;
+	u32int cor = 0;
+	u32int large = 0;
+	if ( strlen ( str1 ) >= strlen ( str2 ) ) {
+		large = strlen ( str1 );
+	}
+
+	if ( strlen ( str1 ) <= strlen ( str2 ) ) {
+		large = strlen ( str2 );
+	}
+
+	while ( ( large-1 ) >= i ) {
+		if ( str1[i] != str2[i] ) {
+			return 0;
+
+		} else {
+			cor++;
+		}
+
+		i++;
+	}
+	if (strlen(str1) == strlen(str2)) {
+		return cor;
+	} else {
+		return 0;
+	}
+}
+
+/*
 // Compare two strings. Should return -1 if
 // str1 < str2, 0 if they are equal or 1 otherwise.
 */

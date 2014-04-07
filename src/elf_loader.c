@@ -13,40 +13,45 @@ extern fs_node_t* fs_root;
  *
  *---------------------------------------------------------------------------*/
 elf_sections_t* load_elf ( char* name ) {
-	u32int sz = 0;
-
-	/* Allocate ELF file structure */
-	elf_sections_t* elf = ( elf_sections_t* ) kmalloc_a ( sizeof ( elf_sections_t ) );
-
-	/* Open ELF file */
-	FILE* file_elf = fopen ( fs_root, name, "r" );
-
-	printf ( "[load_elf] Called for inode  -  bytes of data allocated\n", file_elf->inode );
-
-	/* Read ELF header */
-	elf->elf_header = ( Elf32_Ehdr* ) kmalloc_a ( sizeof ( Elf32_Ehdr ) );
-
-	sz = fread ( file_elf, elf->elf_header, sizeof ( Elf32_Ehdr ) );
-
-	/* Read program header */
-	Elf32_Half proc_entries = elf->elf_header->e_phnum;
-
-	elf->p_header = ( Elf32_Phdr* ) kmalloc_a ( sizeof ( Elf32_Phdr ) *proc_entries );
-
-	//fseek ( file_elf, elf->elf_header->e_phoff );
-
-	//sz = fread ( file_elf, elf->p_header, sizeof ( Elf32_Phdr ) *proc_entries );
-
-	/* Read ELF sections */
-	//Elf32_Half sec_entries = elf->elf_header->e_shnum;
-
-	//elf->section = ( Elf32_Shdr* ) kmalloc_a ( sizeof ( Elf32_Shdr ) *sec_entries );
-
-	//fseek ( file_elf, elf->elf_header->e_shoff );
-
-	//sz = fread ( file_elf, elf->section, sizeof ( Elf32_Shdr ) *sec_entries );
-
-	//elf->file = file_elf;
-
-	//return elf;
+	int i = 0;
+	struct dirent *node = 0;
+	fs_node_t *elf_node = 0;
+	while ( ( node = readdir_fs ( fs_root, i ) ) != 0 ) {
+		//printf ( "Found file %s\n" , node->name );
+		fs_node_t *fsnode = finddir_fs ( fs_root, node->name );
+		if(checkstr(node->name, name)) {
+			printf("[ELF] Found %s\n", node->name);
+			elf_node = fsnode;
+		}
+		i++;
+	}
+	u32int inode = elf_node->inode;
+	u32int size = elf_node->length;
+	printf("[ELF] Called for inode %d - %d bytes of data allocated\n", inode, size);
+	char *elf_name = fs_root[inode + 2].name; // plus two because initrd and dev take up two inodes for some reason
+	printf("[ELF] %s == %s\n", name, elf_name);
+	if(!checkstr(name, elf_name)) {
+		printf("[ELF] inode file not correct file\n");
+		return 0;
+	}
+	//printf("[ELF] ");
+	FILE *modulenode;
+	//tests if this module exist in the root
+	if(!(modulenode = finddir_fs(fs_root, elf_name)))
+		return (elf_sections_t*)0;
+	else{ //the module exists
+		printf("[load_elf] Directory entry read correctly\n");
+		printf("[load_elf] Looking for \"%s\"\n", elf_name);
+		
+		printf("[load_elf] Reading file\n");
+		//create the actuall module buffer 
+		char *modulebuffer = (char*)kmalloc(size);
+    
+		//open the file
+		FILE *modulenode_file;
+		//modulenode_file = f_open(modulenode->name, fs_root, "r");
+		
+		
+	}
+	
 }
