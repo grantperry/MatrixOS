@@ -1,6 +1,7 @@
 #include "shell.h"
 #include "../stdio.h"
 #include "../graphics/gui.h"
+#include "../cpu.h"
 
 #define BUF_SIZE_INIT 64
 
@@ -187,6 +188,11 @@ void process ( char* str ) {
 	if ( checkstr ( command, "g" ) ) {
 		VGA_init ( 320 ,200, 256 );
 		startgui ( 1 ); //start gui look 0;
+		return;
+	}
+
+	if ( checkstr ( command, "reboot" ) ) {
+		cpu_reboot();
 		return;
 	}
 
