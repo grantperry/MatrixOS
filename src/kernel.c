@@ -181,7 +181,7 @@ void init() {
 
 
 	//load_elf ( "elf_test" );
-	load_elf ( "testbin" );
+	//load_elf ( "testbin" );
 
 	//runModule ( &switch_to_user_mode);
 
