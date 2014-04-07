@@ -367,7 +367,7 @@ void enable_tasking() {
 
 
 s8int switch_to_user_mode() {
-	syscall_monitor_write ( "Switching to UserMode" );
+	printf ( "Switching to UserMode" );
 	// Set up our kernel stack.
 	//set_kernel_stack(current_task->kernel_stack+KERNEL_STACK_SIZE);
 

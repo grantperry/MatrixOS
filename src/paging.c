@@ -13,9 +13,34 @@ page_directory_t *current_directory=0;
 u32int *frames;
 u32int nframes;
 
+volatile u32int memsize = 0; //size of paging memory
+
 // Defined in kheap.c
 extern u32int placement_address;
 extern heap_t *kheap;
+
+void virtual_map_pages(long addr, long size, u32int rw, u32int user)
+{
+  long i = addr;
+  while (i < (addr + size + 0x1000))
+  {
+    if(i + size < memsize)
+    {
+      //Find first free frame
+      set_frame(first_frame());
+      //Then we set the space to taken anyway
+      kmalloc(0x1000);
+    }
+    
+    page_t *page = get_page(i, 1, current_directory);
+    page->present = 1;
+    page->rw = rw;
+    page->user = user;
+    page->frame = i / 0x1000;
+    i += 0x1000;
+  }
+  return;
+}
 
 // Macros used in the bitset algorithms.
 #define INDEX_FROM_BIT(a) (a/(8*4))
@@ -114,10 +139,12 @@ void free_frame ( page_t *page ) {
 // Register Interupts for page faults.
 */
 s8int initialise_paging() {
-	syscall_monitor_write ( "Initalizing Paging." );
+	printf ( "Initalizing Paging." );
 	// The size of physical memory. For the moment we
 	// assume it is 16MB big.
 	u32int mem_end_page = 0x1000000;
+	
+	memsize = mem_end_page;
 
 	nframes = mem_end_page / 0x1000;
 	frames = ( u32int* ) kmalloc ( INDEX_FROM_BIT ( nframes ) );
@@ -230,29 +257,25 @@ void page_fault ( registers_t *regs ) {
 	int id = regs->err_code & 0x10;		  // Caused by an instruction fetch?
 
 	// Output an error message.
-	monitor_write ( "Page fault! ( " );
+	printf ( "Page fault! ( " );
 
 	if ( present ) {
-		monitor_write ( "present " );
+		printf ( "present " );
 	}
 
 	if ( rw ) {
-		monitor_write ( "read-only " );
+		printf ( "read-only " );
 	}
 
 	if ( us ) {
-		monitor_write ( "user-mode " );
+		printf ( "user-mode " );
 	}
 
 	if ( reserved ) {
-		monitor_write ( "reserved " );
+		printf ( "reserved " );
 	}
 
-	monitor_write ( ") at " );
-	monitor_write_hex ( faulting_address );
-	monitor_write ( " - EIP: " );
-	monitor_write_hex ( regs->eip );
-	monitor_write ( "\n" );
+	printf ( ") at %h - EIP: %h\n", faulting_address, regs->eip );
 	mehpid();
 	PANIC ( "Page fault" );
 }

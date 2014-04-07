@@ -12,7 +12,7 @@ void runModule ( s8int ( *func ) ( void ) ) {
 	monitor_set_cursor_pos ( 0, y );
 
 	if ( SYSCALL_ENABLED ) {
-		syscall_monitor_write ( "[....] " );
+		printf ( "[....] " );
 	}
 
 	if ( !SYSCALL_ENABLED ) {
