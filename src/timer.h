@@ -21,4 +21,17 @@ void mSleep ( u32int milliseconds );
 
 u8int SLEEP_ENABLED;
 
+typedef struct {
+	unsigned char sec;
+	unsigned char min;
+	unsigned char hour;
+	unsigned char day;
+	unsigned char month;
+	unsigned char year;
+} datetime_t;
+
+datetime_t getDatetime();
+
+int mktime ( datetime_t time );
+
 #endif

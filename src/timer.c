@@ -112,3 +112,62 @@ void init_timer ( u32int frequency ) {
 
 	SLEEP_ENABLED = 1;
 }
+
+#define BCD2BIN(bcd) ((((bcd)&15) + ((bcd)>>4)*10))
+#define MINUTE 60
+#define HOUR (60*MINUTE)
+#define DAY (24*HOUR)
+#define YEAR (365*DAY)
+
+//Gets CMOS actual time
+datetime_t getDatetime() {
+	datetime_t now;
+
+	cpu_cli();
+	now.sec = BCD2BIN ( readCMOS ( 0x0 ) );
+	now.min = BCD2BIN ( readCMOS ( 0x2 ) );
+	now.hour = BCD2BIN ( readCMOS ( 0x4 ) );
+	now.day = BCD2BIN ( readCMOS ( 0x7 ) );
+	now.month = BCD2BIN ( readCMOS ( 0x8 ) );
+	now.year = BCD2BIN ( readCMOS ( 0x9 ) );
+	cpu_sti();
+
+	return now;
+}
+
+/* Seconds since 01/01/1970 */
+int mktime ( datetime_t time ) {
+	long res;
+	int year;
+
+	int month[12] = {
+		0,
+		DAY* ( 31 ),
+		DAY* ( 31+29 ),
+		DAY* ( 31+29+31 ),
+		DAY* ( 31+29+31+30 ),
+		DAY* ( 31+29+31+30+31 ),
+		DAY* ( 31+29+31+30+31+30 ),
+		DAY* ( 31+29+31+30+31+30+31 ),
+		DAY* ( 31+29+31+30+31+30+31+31 ),
+		DAY* ( 31+29+31+30+31+30+31+31+30 ),
+		DAY* ( 31+29+31+30+31+30+31+31+30+31 ),
+		DAY* ( 31+29+31+30+31+30+31+31+30+31+30 )
+	};
+
+	year = time.year - 70;
+	/* magic offsets (y+1) needed to get leapyears right.*/
+	res = YEAR*year + DAY* ( ( year+1 ) /4 );
+	res += month[time.month];
+
+	/* and (y+2) here. If it wasn't a leap-year, we have to adjust */
+	if ( time.month>1 && ( ( year+2 ) %4 ) ) {
+		res -= DAY;
+	}
+
+	res += DAY* ( time.day-1 );
+	res += HOUR*time.hour;
+	res += MINUTE*time.min;
+	res += time.sec;
+	return res;
+}
