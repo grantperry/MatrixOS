@@ -5,10 +5,10 @@
 #include "stdio.h"
 
 //Read CMOS clock
-unsigned char readCMOS(unsigned char addr);
+unsigned char readCMOS ( unsigned char addr );
 
 //Write CMOS clock
-void writeCMOS(unsigned char addr, unsigned int value);
+void writeCMOS ( unsigned char addr, unsigned int value );
 
 void cpu_reboot();
 

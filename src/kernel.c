@@ -143,6 +143,10 @@ void init() {
 
 	runModule ( &init_keyboard );
 
+	datetime_t system_time = getDatetime();
+
+	printf ( "[Time] is %d:%d:%d %d/%d/%d\n", system_time.sec, system_time.min, system_time.hour, system_time.day, system_time.month, system_time.year );
+
 	// Start multitasking.
 	runModule ( &initialise_tasking );
 	enable_tasking();
