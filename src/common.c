@@ -70,6 +70,7 @@ u8int checkstr ( char* str1, char* str2 ) {
 	u32int i = 0;
 	u32int cor = 0;
 	u32int large = 0;
+
 	if ( strlen ( str1 ) >= strlen ( str2 ) ) {
 		large = strlen ( str1 );
 	}
@@ -88,8 +89,10 @@ u8int checkstr ( char* str1, char* str2 ) {
 
 		i++;
 	}
-	if (strlen(str1) == strlen(str2)) {
+
+	if ( strlen ( str1 ) == strlen ( str2 ) ) {
 		return cor;
+
 	} else {
 		return 0;
 	}
@@ -166,7 +169,7 @@ extern void panic ( const char *message, const char *file, u32int line ) {
 	// We encountered a massive problem and have to stop.
 	asm volatile ( "cli" ); // Disable interrupts.
 
-	printf( "PANIC(%s) at %s:%d\n", message, file, line );
+	printf ( "PANIC(%s) at %s:%d\n", message, file, line );
 
 	// Halt by going into an infinite loop.
 	for ( ;; );

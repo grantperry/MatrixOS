@@ -210,14 +210,14 @@ void VGA_init ( int width, int height, int bpp ) {
 		VGA_clear_screen();
 
 	} else if ( width == 1024 && height == 768 && bpp == 24 ) {
-		
+
 	}
 
 	VGA = 1;
 	//putRect(10,10,100,100,2);
 	//putRect(20,20,80,80,3);
 
-	putGraphicString("abcdefghijklmnopqrstuvwxyz {|}~asdfghjkl", 0, 0, 3, 8);
+	putGraphicString ( "abcdefghijklmnopqrstuvwxyz {|}~asdfghjkl", 0, 0, 3, 8 );
 	//putGraphicString("abcdefghijklmnop", 0, 0, 2, 8);
 	//putGraphicString("qrstuvwxyzABCDEF", 0, 8, 2, 8);
 	//putGraphicString("GHIJKLMNOPQRSTUV", 0, 16, 2, 8);
