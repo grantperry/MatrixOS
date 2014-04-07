@@ -151,31 +151,38 @@ u32int openModule_elf(char *name, u32int offset)
 /*-----------------------------------------------------------------------------
  *
  *---------------------------------------------------------------------------*/
- 
+
 elf_sections_t* load_elf ( char* name ) {
 	int i = 0;
 	struct dirent *node = 0;
 	fs_node_t *elf_node = 0;
+
 	while ( ( node = readdir_fs ( fs_root, i ) ) != 0 ) {
 		//printf ( "Found file %s\n" , node->name );
 		fs_node_t *fsnode = finddir_fs ( fs_root, node->name );
-		if(checkstr(node->name, name)) {
-			printf("[ELF] Found %s\n", node->name);
+
+		if ( checkstr ( node->name, name ) ) {
+			printf ( "[ELF] Found %s\n", node->name );
 			elf_node = fsnode;
 		}
+
 		i++;
 	}
+
 	u32int inode = elf_node->inode;
 	u32int size = elf_node->length;
-	printf("[ELF] Called for inode %d - %d bytes of data allocated\n", inode, size);
+	printf ( "[ELF] Called for inode %d - %d bytes of data allocated\n", inode, size );
 	char *elf_name = fs_root[inode + 2].name; // plus two because initrd and dev take up two inodes for some reason
-	printf("[ELF] %s == %s\n", name, elf_name);
-	if(!checkstr(name, elf_name)) {
-		printf("[ELF] inode file not correct file\n");
+	printf ( "[ELF] %s == %s\n", name, elf_name );
+
+	if ( !checkstr ( name, elf_name ) ) {
+		printf ( "[ELF] inode file not correct file\n" );
 		return 0;
 	}
+
 	//printf("[ELF] ");
 	FILE *modulenode;
+
 	//tests if this module exist in the root
 	if(!(modulenode = finddir_fs(fs_root, elf_name)))
 		return (elf_sections_t*)0;

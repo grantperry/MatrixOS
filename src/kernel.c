@@ -177,7 +177,7 @@ void init() {
 
 		i++;
 	}
-*/
+	*/
 
 
 	//load_elf ( "elf_test" );

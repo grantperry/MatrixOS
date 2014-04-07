@@ -19,27 +19,26 @@ volatile u32int memsize = 0; //size of paging memory
 extern u32int placement_address;
 extern heap_t *kheap;
 
-void virtual_map_pages(long addr, long size, u32int rw, u32int user)
-{
-  long i = addr;
-  while (i < (addr + size + 0x1000))
-  {
-    if(i + size < memsize)
-    {
-      //Find first free frame
-      set_frame(first_frame());
-      //Then we set the space to taken anyway
-      kmalloc(0x1000);
-    }
-    
-    page_t *page = get_page(i, 1, current_directory);
-    page->present = 1;
-    page->rw = rw;
-    page->user = user;
-    page->frame = i / 0x1000;
-    i += 0x1000;
-  }
-  return;
+void virtual_map_pages ( long addr, long size, u32int rw, u32int user ) {
+	long i = addr;
+
+	while ( i < ( addr + size + 0x1000 ) ) {
+		if ( i + size < memsize ) {
+			//Find first free frame
+			set_frame ( first_frame() );
+			//Then we set the space to taken anyway
+			kmalloc ( 0x1000 );
+		}
+
+		page_t *page = get_page ( i, 1, current_directory );
+		page->present = 1;
+		page->rw = rw;
+		page->user = user;
+		page->frame = i / 0x1000;
+		i += 0x1000;
+	}
+
+	return;
 }
 
 // Macros used in the bitset algorithms.
@@ -143,7 +142,7 @@ s8int initialise_paging() {
 	// The size of physical memory. For the moment we
 	// assume it is 16MB big.
 	u32int mem_end_page = 0x1000000;
-	
+
 	memsize = mem_end_page;
 
 	nframes = mem_end_page / 0x1000;

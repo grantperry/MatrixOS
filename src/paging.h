@@ -45,7 +45,7 @@ static u32int test_frame ( u32int frame_addr );
 static u32int first_frame();
 void alloc_frame ( page_t *page, int is_kernel, int is_writeable );
 
-void virtual_map_pages(long addr, long size, u32int rw, u32int user);
+void virtual_map_pages ( long addr, long size, u32int rw, u32int user );
 
 /*
    Sets up the environment, page directories etc and

@@ -3,7 +3,7 @@
 #include "../stdio.h"
 #include "../common.h"
 
-void startgui( int look );
+void startgui ( int look );
 
 void drawBackground();
 

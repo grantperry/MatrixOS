@@ -127,9 +127,9 @@ void setVesa ( u32int mode ) {
 	memcpy ( &info, buffer, sizeof ( VESA_INFO ) ); //copies info from the buffer to the info typedef struct
 
 	//print VESA information
-	printf("\n\nVesa Signature: %s\n", info.VESASignature);
-	printf("\n\nVesa Version: %h\n", info.VESAVersion);
-	printf("\n\nVesa Video Modes: %h\n", info.VideoModePtr);
+	printf ( "\n\nVesa Signature: %s\n", info.VESASignature );
+	printf ( "\n\nVesa Version: %h\n", info.VESAVersion );
+	printf ( "\n\nVesa Video Modes: %h\n", info.VideoModePtr );
 
 	/**Gests VESA mode information**/
 

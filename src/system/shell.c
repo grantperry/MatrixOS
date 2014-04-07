@@ -37,7 +37,7 @@ void doShell() {
 		while ( running ) {
 			char tmp = getKey();
 
-			if ( tmp != 0 && tmp != '\b') {
+			if ( tmp != 0 && tmp != '\b' ) {
 				input[i] = tmp;
 				i++;
 
@@ -51,8 +51,9 @@ void doShell() {
 				}
 
 				monitor_put ( tmp );
-			} 
-			if (tmp == '\b') {
+			}
+
+			if ( tmp == '\b' ) {
 				monitor_put ( '\b' );
 				i = i - 1;
 				input[i] = 0;
@@ -125,6 +126,7 @@ void process ( char* str ) {
 	buf_t list[64];
 	u32int     x=0,  y=0, spaces = 0, chars = 0, c = 0, i = 0;
 	u32int lastspace = -1, lastchar = -1;
+
 	while ( c <= strlen ( str ) ) {
 		if ( str[c] == ' ' && ( lastchar == c-1 ) || str[c] == '\r' ) {
 			list[i].end = c - 1;
@@ -151,6 +153,7 @@ void process ( char* str ) {
 
 	u32int t = 0;
 	u32int len = list[0].end - list[0].start;
+
 	while ( t <= len ) {
 		command[t] = str[list[0].start + t];
 		t++;
@@ -170,21 +173,24 @@ void process ( char* str ) {
 		shell_running = 0;
 		return;
 	}
-	
-	if( checkstr ( command, "vesa")) {
-		VGA_init(320 ,200, 256);
+
+	if ( checkstr ( command, "vesa" ) ) {
+		VGA_init ( 320 ,200, 256 );
 		return;
 	}
-	if( checkstr ( command, "gui")) {
-		startgui(1); //start gui look 0;
+
+	if ( checkstr ( command, "gui" ) ) {
+		startgui ( 1 ); //start gui look 0;
 		return;
 	}
-	if( checkstr ( command, "g")) {
-		VGA_init(320 ,200, 256);
-		startgui(1); //start gui look 0;
+
+	if ( checkstr ( command, "g" ) ) {
+		VGA_init ( 320 ,200, 256 );
+		startgui ( 1 ); //start gui look 0;
 		return;
 	}
-	monitor_set_fore_colour(4);
+
+	monitor_set_fore_colour ( 4 );
 	printf ( "\ncommand not recognised" );
-	monitor_set_fore_colour(15);
+	monitor_set_fore_colour ( 15 );
 }
