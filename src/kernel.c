@@ -19,7 +19,7 @@
 
 #define VER_MAJOR		1
 #define VER_MINOR		2
-#define VER_FIX			1
+#define VER_FIX			2
 
 //#define TASKING_USER
 
@@ -59,6 +59,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	print_version();
 	printf ( "\n" );
 	monitor_set_fore_colour ( WHITE );
+	
+	printf("Address: %h\n", mboot_ptr->addr);
 
 	init();
 
@@ -186,7 +188,10 @@ void init() {
 
 	//load_elf ( "elf_test" );
 	//load_elf ( "testbin" );
-
+	//load_elf("hello");
+	
+	printf("FINISHED!\n");
+	
 	//runModule ( &switch_to_user_mode);
 
 }
