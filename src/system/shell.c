@@ -3,7 +3,7 @@
 #include "../graphics/gui.h"
 #include "../cpu.h"
 
-#define BUF_SIZE_INIT 64
+#define BUF_SIZE_INIT 1024*2 //2KB of buffer for input should do
 
 char *input;
 u32int size_input = 0;
@@ -11,15 +11,6 @@ u8int running = 0;
 u8int shell_running = 0;
 
 void process ( char* str );
-
-/*
-//Returns positive if failed(no space left)
-*/
-int resizebuf ( void* ptr, int size ) {
-	ptr = ( void* ) krealloc ( ptr, size_input, size );
-	size_input = size_input + BUF_SIZE_INIT;
-	printf ( "resized" );
-}
 
 void startShell() {
 	printf ( "MatrixShell v1.1\n" );
@@ -43,8 +34,7 @@ void doShell() {
 				i++;
 
 				if ( size_input == i ) {
-					printf ( "resizeing..." );
-					resizebuf ( input, size_input = BUF_SIZE_INIT*sizeof ( char ) );
+					PANIC("SHELL STACK OVERFLOW!");
 				}
 
 				if ( tmp == 0xd ) {
@@ -66,15 +56,16 @@ void doShell() {
 }
 
 void help() {
-	monitor_set_back_colour ( 10 );
-	monitor_set_fore_colour ( 0 );
+	monitor_set_fore_colour ( 10 );
 	printf ( "This is MatrixOS HELP!\n" );
 	printf ( "Commands:\n" );
-	printf ( "help - displays this text\n" );
-	printf ( "info - infomation about MatixOS\n" );
-	printf ( "exit - quit this terminal session\n" );
+	printf ( "help   - displays this text\n" );
+	printf ( "info   - infomation about MatixOS\n" );
+	printf ( "reboot - Reset the computer\n" );
+	printf ( "vga    - Start vga mode in 320x200x256\n" );
+	printf ( "gui    - Start the Matrix GUI (must be in vga mode)\n" );
+	printf ( "exit   - quit this terminal session\n" );
 	monitor_set_fore_colour ( 15 );
-	monitor_set_back_colour ( 0 );
 }
 
 void info() {
@@ -175,7 +166,7 @@ void process ( char* str ) {
 		return;
 	}
 
-	if ( checkstr ( command, "vesa" ) ) {
+	if ( checkstr ( command, "vga" ) ) {
 		VGA_init ( 320 ,200, 256 );
 		return;
 	}
