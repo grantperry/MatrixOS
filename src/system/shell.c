@@ -34,7 +34,7 @@ void doShell() {
 				i++;
 
 				if ( size_input == i ) {
-					PANIC("SHELL STACK OVERFLOW!");
+					PANIC ( "SHELL STACK OVERFLOW!" );
 				}
 
 				if ( tmp == 0xd ) {
