@@ -8,4 +8,4 @@ Features
 
 + Multitasking system
 + Command Line
-+ More coming soon
++ **More coming soon**
