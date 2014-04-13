@@ -117,6 +117,20 @@ void mehpid() {
 	exit();
 }
 
+void clock() {
+	while ( 1 ) {
+		u8int oldX = monitor_getX();
+		u8int oldY = monitor_getY();
+		monitor_set_cursor_pos ( 70, 0 );
+		datetime_t system_time = getLocaltime ( "sydney" );
+		printf ( "%d:%d:%d  ", system_time.hour, system_time.min, system_time.sec );
+		monitor_set_cursor_pos ( oldX, oldY );
+		sleep ( 1 );
+	}
+
+	exit();
+}
+
 /*
 // Stick your lowlevel initalisation in here!
 */
@@ -154,7 +168,7 @@ void init() {
 	enable_tasking();
 	monitor_set_fore_colour ( 12 );
 	printf ( "%s pid is: %d\n", gettaskname(), getpid() );
-	//start_task ( 200, 10, mehpid, 0, "TestTask" );
+	start_task ( 200, 10, clock, 0, "UserClock" );
 	//sleep ( 1 );
 	monitor_set_fore_colour ( 15 );
 

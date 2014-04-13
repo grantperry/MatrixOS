@@ -135,6 +135,21 @@ datetime_t getDatetime() {
 	return now;
 }
 
+datetime_t getLocaltime ( char *place ) {
+	datetime_t now = getDatetime();
+
+	if ( checkstr ( place, "sydney" ) ) {
+		now.hour = now.hour + 10;
+
+		if ( now.hour > 24 ) {
+			now.day = now.day + 1;
+			now.hour = now.hour - 24;
+		}
+
+		return now;
+	}
+}
+
 /* Seconds since 01/01/1970 */
 int mktime ( datetime_t time ) {
 	long res;

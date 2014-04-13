@@ -32,6 +32,8 @@ typedef struct {
 
 datetime_t getDatetime();
 
+datetime_t getLocaltime ( char *place );
+
 int mktime ( datetime_t time );
 
 #endif

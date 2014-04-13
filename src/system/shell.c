@@ -2,6 +2,7 @@
 #include "../stdio.h"
 #include "../graphics/gui.h"
 #include "../cpu.h"
+#include "../timer.h" //Time
 
 #define BUF_SIZE_INIT 1024*2 //2KB of buffer for input should do
 
@@ -23,7 +24,7 @@ void startShell() {
 
 void doShell() {
 	while ( shell_running ) {
-		printf ( "> " );
+		printf ( "\n> " );
 		int i = 0;
 
 		while ( running ) {
@@ -74,6 +75,7 @@ void info() {
 	printf ( "\nMatrixOS is written by Grant Perry and is a learning\nproject\
 	that he started writing in the early\nmonths of 2014.\n" );
 }
+
 
 /*
 // Checks lenght and chars to see if str1 == str2/
@@ -184,6 +186,12 @@ void process ( char* str ) {
 
 	if ( checkstr ( command, "reboot" ) ) {
 		cpu_reboot();
+		return;
+	}
+
+	if ( checkstr ( command, "time" ) ) {
+		datetime_t system_time = getDatetime();
+		printf ( "[Time] is %d:%d:%d %d/%d/%d", system_time.sec, system_time.min, system_time.hour, system_time.day, system_time.month, system_time.year );
 		return;
 	}
 
