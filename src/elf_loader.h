@@ -24,6 +24,6 @@ typedef struct elf_sections {
 
 } elf_sections_t;
 
-elf_sections_t* load_elf ( char* name );
+void start_elf ( char* name );
 
 #endif
