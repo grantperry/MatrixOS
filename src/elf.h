@@ -94,7 +94,7 @@ typedef		unsigned int		Elf32_Word;
 typedef	struct {
 	unsigned char	ident[EI_NIDENT];	/* ELF identification data */
 	Elf32_Half		type;				/* Type of object file */
-	Elf32_Half		mashine;			/* Architecture type  */
+	Elf32_Half		machine;			/* Architecture type  */
 	Elf32_Word		version;			/* Object file version  */
 	Elf32_Addr		entry;				/* Entry point to process */
 	Elf32_Off		phoff;				/* Program header offset */

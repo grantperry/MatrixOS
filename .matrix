@@ -20,7 +20,7 @@ alias pages="git checkout gh-pages"
 
 alias matrix="cd $M_HOME
 			  . ./.matrix"
-alias run="qemu-system-i386 -monitor stdio -m 1512 -cdrom  $M_HOME/MatrixOS.iso"
+alias run="qemu-system-i386 -monitor stdio -m 1024 -cdrom  $M_HOME/MatrixOS.iso"
 alias kern="qemu-system-i386 -monitor stdio -kernel"
 alias build="sh $M_HOME/kernel.sh"
 alias bld="build; run"
