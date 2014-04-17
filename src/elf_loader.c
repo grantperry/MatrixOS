@@ -18,14 +18,13 @@ u32int relocate_elf ( Elf32_Ehdr *header, u32int offset ) {
 
 		case PT_LOAD:
 			printf ( "[reloc_elf] Program header #%d Type:LOAD Offset:%h Vaddr:%h, Paddr:%h, Size:%h, MEM:%h, Align:%h!\n", i, pHeader->offset, pHeader->vaddr, pHeader->paddr, pHeader->filesz, pHeader->memsz, pHeader->align );
-			virtual_map_pages(pHeader->vaddr, pHeader->filesz, 1, 1);
-			memcpy((char*)pHeader->vaddr, (char*)offset + pHeader->offset, pHeader->filesz);
-			
-			if(pHeader->filesz < pHeader->memsz)
-        {
-          /* memset() the remaining memory with zeroes - stack */
-          memset((char*)pHeader->vaddr + pHeader->filesz, 0, pHeader->memsz - pHeader->filesz);
-        }
+			virtual_map_pages ( pHeader->vaddr, pHeader->filesz, 1, 1 );
+			memcpy ( ( char* ) pHeader->vaddr, ( char* ) offset + pHeader->offset, pHeader->filesz );
+
+			if ( pHeader->filesz < pHeader->memsz ) {
+				/* memset() the remaining memory with zeroes - stack */
+				memset ( ( char* ) pHeader->vaddr + pHeader->filesz, 0, pHeader->memsz - pHeader->filesz );
+			}
 
 			break;
 
@@ -69,57 +68,65 @@ u32int open_elf ( char *name, u32int offset ) {
 	Elf32_Ehdr *header;
 	header = ( Elf32_Ehdr* ) offset; //point the header structure at the header.
 
-	if (header->ident[0] == 0x7f && header->ident[1] == 'E' && header->ident[2] == 'L' && header->ident[3] == 'F' ) {} else {
-		printf("[LoadELF] file not ELF");
+	if ( header->ident[0] == 0x7f && header->ident[1] == 'E' && header->ident[2] == 'L' && header->ident[3] == 'F' ) {} else {
+		printf ( "[LoadELF] file not ELF" );
 		return 1;
 	}
+
 	u32int bits = 0;
-	if(header->ident[4] == 1) {
+
+	if ( header->ident[4] == 1 ) {
 		bits = 32; //32bit archtype
 	}
-	if(header->ident[4] == 2) {
+
+	if ( header->ident[4] == 2 ) {
 		bits = 64; //64bit archtype
 	}
-	if(header->ident[4] == 0) {
-		printf("[LoadELF] archtype not found!\n");
+
+	if ( header->ident[4] == 0 ) {
+		printf ( "[LoadELF] archtype not found!\n" );
 		return 1;
 	}
-	if(header->ident[6] != EV_CURRENT && header->version != EV_CURRENT) { //if not current version of elf
-		printf("[LoadELF] ELF Version incorrect\n");
+
+	if ( header->ident[6] != EV_CURRENT && header->version != EV_CURRENT ) { //if not current version of elf
+		printf ( "[LoadELF] ELF Version incorrect\n" );
 		return 1;
 	}
-	if(header->machine != EM_386) {
-		printf("[LoadELF] ELF Machine type incorrect\n");
+
+	if ( header->machine != EM_386 ) {
+		printf ( "[LoadELF] ELF Machine type incorrect\n" );
 		return 1;
 	}
-	
+
 	if ( header->ident[5] != 1 ) { //1 = little, 2 = big
 		printf ( "[LoadELF] ELF architecture endianess incorrect\n" );
 		return 1;
 	}
-	printf("[ELF] %s\'s:\n\
-[ELF] Bit Type: %dbit\n\
-[ELF] Version: 1\n", name, bits);
 
-	u32int err = relocate_elf(header, offset);
-	
-	printf("relocate: %d\n", err);
-	
-	printf("[openModule_elf] Calling executable at %h\n",header->entry);
-     
-     /* Call the program */    
-    // asm volatile("call *%0" : : "a" (header->entry));
+	printf ( "[ELF] %s\'s:\n\
+[ELF] Bit Type: %dbit\n\
+[ELF] Version: 1\n", name, bits );
+
+	u32int err = relocate_elf ( header, offset );
+
+	printf ( "relocate: %d\n", err );
+
+	printf ( "[openModule_elf] Calling executable at %h\n",header->entry );
+
+	/* Call the program */
+	// asm volatile("call *%0" : : "a" (header->entry));
 
 	return 0;
 }
 
 void start_elf ( char* name ) {
-	
+
 	FILE *modulenode;
 
 	//tests if this module exist in the root
 	if ( ! ( modulenode = finddir_fs ( fs_root, name ) ) ) {
 		return ;
+
 	} else { //the module exists
 		printf ( "[ELF] Found %s\n", modulenode->name );
 
@@ -152,6 +159,6 @@ void start_elf ( char* name ) {
 		kfree ( ( u32int* ) moduleptr );
 		//TODO f_finddir_close(modulenode);
 	}
-	
+
 
 }

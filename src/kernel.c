@@ -200,14 +200,14 @@ void init() {
 	*/
 
 
-	start_elf ( "elf_test" );
+	//start_elf ( "elf_test" );
 	//load_elf ( "testbin" );
 	//load_elf("hello");
 
-	printf ( "FINISHED!\n" );
+	//printf ( "FINISHED!\n" );
 
 	//runModule ( &switch_to_user_mode);
- 
+
 }
 
 /*
