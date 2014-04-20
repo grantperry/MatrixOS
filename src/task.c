@@ -3,6 +3,8 @@
 #include "task.h"
 #include "paging.h"
 
+#define KERNEL_PROC_NAME "kernel"
+
 //The currently running task.
 volatile task_t *current_task;
 
@@ -88,7 +90,7 @@ s8int initialise_tasking() {
 	//~ strcpy((u8int*)task->name, "init");
 	//~ *((u8int*)task->name + name_len) = 0;
 
-	strcpy ( task->name, "init" );
+	strcpy ( task->name, KERNEL_PROC_NAME );
 
 	task->next = 0;
 
