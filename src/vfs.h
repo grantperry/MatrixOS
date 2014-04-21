@@ -28,7 +28,7 @@ typedef struct permissions {
 	u8int exec;
 } permissions_t;
 
-typedef struct fs_node {
+struct fs_node {
 	char name[128];     // The filename.
 	u32int mask;        // The permissions mask.
 	u32int uid;         // The owning user.
@@ -47,7 +47,9 @@ typedef struct fs_node {
 	u32int num_nodes;		/* Number of child nodes */
 	u32int seek;
 	struct fs_node *ptr; // Used by mountpoints and symlinks.
-} fs_node_t;
+};
+
+typedef struct fs_node fs_node_t;
 
 struct dirent {
 	char name[128]; // Filename.
