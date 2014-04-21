@@ -66,7 +66,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	init();
 	
 	
-	/*int i = 4;
+	int i = 2;
 	struct dirent *node = 0;
 	fs_node_t *elf_node = 0;
 	node = readdir_fs ( fs_root, i );
@@ -86,7 +86,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 			}
 
 			monitor_write ( "\"\n" );
-		}*/
+		}
 
 	startShell();
 

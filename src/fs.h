@@ -4,6 +4,17 @@
 #include "common.h"
 #include "vfs.h"
 
+//for the file descriptor
+#define FDESC_CLEAR   0b1000
+#define FDESC_READ    0b100
+#define FDESC_WRITE   0b10
+#define FDESC_APPEND  0b1
+
+//formats
+#define M_UNKNOWN       0
+#define M_VFS           1
+#define M_EXT2          2
+
 ///node type values
 enum 
 {
@@ -46,6 +57,6 @@ typedef struct file_desc FILE;
 
 file_desc_t *lookup_file_desc(void *node);
 
-u32int f_read(FILE file, u32int offset, u32int size, u8int *buffer);
+u32int f_read(file_desc_t *file, u32int offset, u32int size, u8int *buffer);
 
 #endif
