@@ -8,8 +8,6 @@
 */
 void printf ( char *c, ... );
 
-typedef	fs_node_t	FILE;
-
 /* Open file */
 FILE* fopen ( fs_node_t* dir, char* file_name, char* mode );
 

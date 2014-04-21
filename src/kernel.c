@@ -61,12 +61,12 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	printf ( "\n" );
 	monitor_set_fore_colour ( WHITE );
 
-	printf ( "Address: %h\n", mboot_ptr->addr );
+	//printf ( "Address: %h\n", mboot_ptr->addr );
 
 	init();
 	
 	
-	int i = 4;
+	/*int i = 4;
 	struct dirent *node = 0;
 	fs_node_t *elf_node = 0;
 	node = readdir_fs ( fs_root, i );
@@ -86,7 +86,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 			}
 
 			monitor_write ( "\"\n" );
-		}
+		}*/
 
 	startShell();
 
