@@ -6,6 +6,7 @@
 #include "paging.h"
 #include "multiboot.h"
 #include "fs.h"
+#include "vfs.h"
 #include "initrd.h"
 #include "task.h"
 #include "syscall.h"
@@ -63,6 +64,29 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	printf ( "Address: %h\n", mboot_ptr->addr );
 
 	init();
+	
+	
+	int i = 4;
+	struct dirent *node = 0;
+	fs_node_t *elf_node = 0;
+	node = readdir_fs ( fs_root, i );
+		printf ( "Found file %s\n" , node->name );
+		fs_node_t *fsnode = finddir_fs ( fs_root, node->name );
+		if ( ( fsnode->flags&0x7 ) == FS_DIRECTORY ) {
+			monitor_write ( "\t(directory)\n" );
+
+		} else {
+			monitor_write ( "\t contents: \"" );
+			char *buf = (char*) kmalloc(sizeof(char) * fsnode->length);
+			u32int sz = read_fs ( fsnode, 0, fsnode->length, buf );
+			int j;
+
+			for ( j = 0; j < sz; j++ ) {
+				monitor_put ( buf[j] );
+			}
+
+			monitor_write ( "\"\n" );
+		}
 
 	startShell();
 
