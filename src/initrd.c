@@ -14,7 +14,7 @@ struct dirent dirent;
 /*
 // place the data specified in the memory specified.
 */
-static u32int initrd_read ( fs_node_t *node, u32int offset, u32int size, u8int *buffer ) {
+u32int initrd_read ( fs_node_t *node, u32int offset, u32int size, u8int *buffer ) {
 	initrd_file_header_t header = file_headers[node->inode];
 
 	if ( offset > header.length ) {
@@ -32,7 +32,7 @@ static u32int initrd_read ( fs_node_t *node, u32int offset, u32int size, u8int *
 /*
 // Read a directory of the initrd file
 */
-static struct dirent *initrd_readdir ( fs_node_t *node, u32int index ) {
+struct dirent *initrd_readdir ( fs_node_t *node, u32int index ) {
 	if ( node == initrd_root && index == 0 ) {
 		strcpy ( dirent.name, "dev" );
 		dirent.name[3] = 0;
@@ -53,7 +53,7 @@ static struct dirent *initrd_readdir ( fs_node_t *node, u32int index ) {
 /*
 // Find a directory and return the pointer.
 */
-static fs_node_t *initrd_finddir ( fs_node_t *node, char *name ) {
+fs_node_t *initrd_finddir ( fs_node_t *node, char *name ) {
 	if ( node == initrd_root && !strcmp ( name, "dev" ) ) {
 		return initrd_dev;
 	}
@@ -104,7 +104,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	initrd_dev->ptr = 0;
 	initrd_dev->impl = 0;
 
-	root_nodes = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) * initrd_header->nfiles );
+	root_nodes = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) * initrd_header->nfiles+sizeof(fs_node_t));
 	nroot_nodes = initrd_header->nfiles;
 
 	// For every file...
@@ -129,6 +129,20 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].close = 0;
 		root_nodes[i].impl = 0;
 	}
+	u32int n = findOpenNode();
+	printf("\nfolder: %d\n", n);
+	strcpy ( root_nodes[n].name, "testf" );
+		root_nodes[n].mask = root_nodes[i].uid = root_nodes[i].gid = 0;
+		root_nodes[n].length = 16;//may need changing
+		root_nodes[n].inode = i;
+		root_nodes[n].flags = FS_DIRECTORY;
+		root_nodes[n].read = 0;
+		root_nodes[n].write = 0;
+		root_nodes[n].readdir = &initrd_readdir;
+		root_nodes[n].finddir = &initrd_finddir;
+		root_nodes[n].open = 0;
+		root_nodes[n].close = 0;
+		root_nodes[n].impl = 0;
 
 	return initrd_root;
 }

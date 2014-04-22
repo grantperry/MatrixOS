@@ -2,7 +2,6 @@
 #define FS_H
 
 #include "common.h"
-#include "vfs.h"
 
 //for the file descriptor
 #define FDESC_CLEAR   0b1000
@@ -58,5 +57,19 @@ typedef struct file_desc FILE;
 file_desc_t *lookup_file_desc(void *node);
 
 u32int f_read(file_desc_t *file, u32int offset, u32int size, u8int *buffer);
+
+u32int f_write(FILE *node, u32int offset, u32int size, u8int *buffer);
+
+static u8int __open_fs_mask_to_u32int__(char *mask);
+
+FILE *__open__(void *node, char *name, char *mask, u8int open);
+
+FILE *f_open(char *filename, void *dir, char *mask);
+
+FILE *f_finddir(void *node, char *name);
+
+u32int node_type(void *node);
+
+char *name_of_dir(void *node);
 
 #endif

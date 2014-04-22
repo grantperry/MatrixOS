@@ -2,6 +2,7 @@
 #define VFS_H
 
 #include "common.h"
+#include "initrd.h"
 
 #define FS_FILE        0x01
 #define FS_DIRECTORY   0x02
@@ -10,6 +11,8 @@
 #define FS_PIPE        0x05
 #define FS_SYMLINK     0x06
 #define FS_MOUNTPOINT  0x08 // Is the file an active mountpoint?
+
+#define DIR_LEN 16
 
 struct fs_node;
 
@@ -28,6 +31,12 @@ typedef struct permissions {
 	u8int exec;
 } permissions_t;
 
+typedef struct fs_block{
+	u32int length;
+	char pointer;
+	struct fs_block *next;
+} fs_block_t;
+
 struct fs_node {
 	char name[128];     // The filename.
 	u32int mask;        // The permissions mask.
@@ -35,8 +44,13 @@ struct fs_node {
 	u32int gid;         // The owning group.
 	u32int flags;       // Includes the node type. See #defines above.
 	u32int inode;       // This is device-specific - provides a way for a filesystem to identify files.
-	u32int length;      // Size of the file, in bytes.
 	u32int impl;        // An implementation-defined number.
+	u32int node_type;
+	
+	u32int length;      // Size of the file, in bytes. add up lengths in linked list to check...
+	struct fs_block *pointer; //for files
+	struct dirent *dpointer; //for directories
+	
 	permissions_t permissions;
 	read_type_t read;
 	write_type_t write;
@@ -52,8 +66,11 @@ struct fs_node {
 typedef struct fs_node fs_node_t;
 
 struct dirent {
-	char name[128]; // Filename.
+	u32int file_type;
+	u32int rec_len;
+	u32int name_len;
 	u32int ino;     // Inode number. Required by POSIX.
+	char *name; // Filename.
 };
 
 // Standard read/write/open/close functions. Note that these are all suffixed with
@@ -65,6 +82,9 @@ void open_fs ( fs_node_t *node, u8int read, u8int write );
 void close_fs ( fs_node_t *node );
 struct dirent *readdir_fs ( fs_node_t *node, u32int index );
 fs_node_t *finddir_fs ( fs_node_t *node, char *name );
+fs_node_t *vfs_createFile(fs_node_t *parentNode, char *name, u32int size);
+int findOpenNode();
+u32int *block_of_set(fs_node_t *node, u32int block_number);
 
 extern fs_node_t *fs_root; // The root of the filesystem.
 

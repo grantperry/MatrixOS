@@ -121,7 +121,7 @@ u32int open_elf ( char *name, u32int offset ) {
 
 void start_elf ( char* name ) {
 
-	FILE *modulenode;
+	fs_node_t *modulenode;
 
 	//tests if this module exist in the root
 	if ( ! ( modulenode = finddir_fs ( fs_root, name ) ) ) {
