@@ -65,42 +65,12 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 	
-	//fs_node_t *fi = vfs_createFile(fs_root, "test.txt", 16);
-
-	struct dirent *dev =  readdir_fs(fs_root,5); //dev
-	printf("inode %d's name is: %s\n", dev->ino, dev->name);
-	fs_node_t *devf    =  finddir_fs(fs_root, dev->name);
-	printf("inode %d's name is: %s\n", devf->inode, devf->name);
-	struct dirent *dev1 = readdir_fs(devf, 0);
-	if(dev1 == 0) {
-		printf("no file at inode 0 in dev\n");
-		for(;;){}
-	}
-	fs_node_t *devf1 =    finddir_fs(devf, dev1->name);
-
 	
 	
-	int i = 2;
-	struct dirent *node = 0;
-	fs_node_t *elf_node = 0;
-	node = readdir_fs ( fs_root, i );
-	/*printf ( "Found file %s\n" , node->name );*/
-	fs_node_t *fsnode = finddir_fs ( fs_root, "4" );
-	if ( ( fsnode->flags&0x7 ) == FS_DIRECTORY ) {
-		monitor_write ( "\t(directory)\n" );
-
-	} else {
-		monitor_write ( "\t contents: \"" );
-		char *buf = (char*) kmalloc(sizeof(char) * fsnode->length);
-		u32int sz = read_fs ( fsnode, 0, fsnode->length, buf );
-		int j;
-
-		for ( j = 0; j < sz; j++ ) {
-			monitor_put ( buf[j] );
-		}
-
-		monitor_write ( "\"\n" );
-		}
+	FILE *file = f_open("1", fs_root, "dr");
+	char *buf = (char*)kmalloc(sizeof(char) * 2);
+	
+	f_read(file, 0, 2, buf);
 
 	startShell();
 

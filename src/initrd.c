@@ -104,7 +104,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	initrd_dev->ptr = 0;
 	initrd_dev->impl = 0;
 
-	root_nodes = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) * initrd_header->nfiles+sizeof(fs_node_t));
+	root_nodes = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) * initrd_header->nfiles+ 8 * sizeof(fs_node_t)); //8 extra files////////////////////////////////////////////////////////////////////
 	nroot_nodes = initrd_header->nfiles;
 
 	// For every file...
@@ -130,7 +130,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].impl = 0;
 	}
 	u32int n = findOpenNode();
-	printf("\nfolder: %d\n", n);
+	printf("folder: %d\n", n);
 	strcpy ( root_nodes[n].name, "testf" );
 		root_nodes[n].mask = root_nodes[i].uid = root_nodes[i].gid = 0;
 		root_nodes[n].length = 16;//may need changing
