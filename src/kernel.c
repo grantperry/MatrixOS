@@ -55,7 +55,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
-	printf ( "MatrixOS" );
+	kprintf ( "MatrixOS" );
 	monitor_set_cursor_pos ( 11, 0 );
 	print_version();
 	printf ( "\n" );
@@ -66,7 +66,19 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	init();
 	
 	
-	init_serial();
+	init_serial(2);
+	int p = 0;
+	while(1) {
+		char o = read_serial();
+		printf("%c", o);
+		write_serial(o);
+		p++;
+		if (o == '\r') {
+		write_serial('\n');
+			break;
+		}
+	}
+	kprintf("END %h %d %s\n", 32, 32, "Hello there");
 	
 	startShell();
 
