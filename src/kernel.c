@@ -20,7 +20,7 @@
 
 #define VER_MAJOR		1
 #define VER_MINOR		2
-#define VER_FIX			2
+#define VER_FIX			3
 
 //#define TASKING_USER
 
@@ -78,7 +78,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 			break;
 		}
 	}
-	kprintf("END %h %d %s\n", 32, 32, "Hello there");
+	kprintf("END %h %d %s\n", 32, 32, "Hello there\n");
 	
 	startShell();
 
