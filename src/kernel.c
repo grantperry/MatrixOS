@@ -66,12 +66,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	init();
 	
 	
+	init_serial();
 	
-	FILE *file = f_open("1", fs_root, "dr");
-	char *buf = (char*)kmalloc(sizeof(char) * 2);
-	
-	f_read(file, 0, 2, buf);
-
 	startShell();
 
 
