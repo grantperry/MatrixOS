@@ -7,9 +7,10 @@ My hobby OS!
 Features
 ========
 
-+ Multitasking system
-+ Command Line
-+ CMOS clock with translation to:
-+ + Sydney
-+ + Welcome to add your own.
-+ **More coming soon**
+- [x] Multitasking system
+- [x] Command Line
+- [x] CMOS clock with translation to: 
+  - [x] Sydney
+  - [ ] Welcome to add your own.
+
+**More coming soon**
