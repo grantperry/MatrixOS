@@ -19,8 +19,8 @@ CFLAGS=-nostdlib -ffreestanding -nostdinc -g
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
-CC=matrix-gcc
-LD=matrix-ld
+CC=i686-elf-gcc
+LD=i686-elf-ld
 
 CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c
 CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h

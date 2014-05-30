@@ -2,7 +2,6 @@
 
 void init_serial(u16int divisor) {
 	u16int rate = 115200 / divisor;
-	printf("[COM1] setting rate: %d %d %d\n", rate, (rate & 0xFF), ((rate >> 8) & 0xFF));
 	outb(PORT_COM1 + 1, 0x00);    // Disable all interrupts
 	outb(PORT_COM1 + 3, 0x80);    // Enable DLAB (set baud rate divisor)
 	outb(PORT_COM1 + 0, (rate & 0xFF)); //(lo byte) MAY BE IN WRONG ORDER
@@ -31,3 +30,5 @@ void write_serial(char a) {
  
    outb(PORT_COM1, a);
 }
+
+

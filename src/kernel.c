@@ -49,13 +49,15 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	monitor_clear();
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
+	
+	init_serial(9);
 
 	//VGA_init ( 320, 200, 256 );
 	//VGA_init(1024, 768, 24);
 
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
-	kprintf ( "MatrixOS" );
+	kprintf ( "MatrixOS\n" );
 	monitor_set_cursor_pos ( 11, 0 );
 	print_version();
 	printf ( "\n" );
@@ -66,33 +68,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	init();
 	
 	
-	init_serial(2);
-	int p = 0;
-	while(1) {
-		char o = read_serial();
-		printf("%c", o);
-		write_serial(o);
-		p++;
-		if (o == '\r') {
-		write_serial('\n');
-			break;
-		}
-	}
-	kprintf("END %h %d %s\n", 32, 32, "Hello there\n");
-	
 	startShell();
-
-
-	/*char c = 0;
-	while(1) {
-	c = getKey();
-		if(c != 0) {
-			printf("%c", c);
-		}
-		if(c == 'p') {
-			break;
-		}
-	}*/
 
 	for ( ;; ) {}
 }
@@ -196,7 +172,7 @@ void init() {
 	//printf ( "FINISHED!\n" );
 
 	//runModule ( &switch_to_user_mode);
-
+	
 }
 
 /*

@@ -3,8 +3,7 @@
 MATRIX="/home/grant/MatrixOS/"
 
 cd $MATRIX
-cd src
-
+cd src;
 make
 
 cd $MATRIX

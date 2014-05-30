@@ -4,7 +4,7 @@
 // stdio.h
 #include "stdio.h"
 #include "common.h"
-#include "/usr/lib/gcc/i486-linux-gnu/4.6/include/stdarg.h"
+#include "/usr/lib/gcc/i486-linux-gnu/4.7.2/include/stdarg.h"
 #include "task.h"
 
 extern volatile task_t *current_task;

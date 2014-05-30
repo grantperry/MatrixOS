@@ -2,6 +2,7 @@
 .gdbinit
 astyle
 *.orig
+*~
 docs/ExampleOS/*
 docs/ExampleOS/minix_R3.2.1-972156d.iso
 docs/ExampleOS/CakeOS
