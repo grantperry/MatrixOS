@@ -12,5 +12,6 @@ Features
 - [x] CMOS clock with translation to: 
   - [x] Sydney
   - [ ] Welcome to add your own.
+- [x] Serial Com Port Support
 
 **More coming soon**
