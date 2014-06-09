@@ -15,3 +15,7 @@ Features
 - [x] Serial Com Port Support
 
 **More coming soon**
+
+Building
+========
+for instructions on how to build Matrix OS go [here](https://github.com/teenHack42/MatrixOS/wiki/Build)
