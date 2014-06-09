@@ -367,6 +367,10 @@ void enable_tasking() {
 	TASKING_ON = 1;
 }
 
+void disable_tasking() {
+	TASKING_ON = 0;
+}
+
 
 s8int switch_to_user_mode() {
 	printf ( "Switching to UserMode" );

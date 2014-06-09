@@ -21,7 +21,7 @@ alias matrix="cd $M_HOME
 alias run="qemu-system-i386 -serial stdio -m 1024 -cdrom  $M_HOME/MatrixOS.iso"
 alias kern="qemu-system-i386 -monitor stdio -kernel"
 alias build="sh $M_HOME/kernel.sh"
-alias bld="build; run"
+alias bld="cd ~/MatrixOS && build; run"
 alias release="cd $M_HOME/src;
 				make release;"
 
