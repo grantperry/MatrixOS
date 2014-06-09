@@ -192,6 +192,7 @@ s8int locate_initrd() {
 }
 
 void General_Protection_Fault ( registers_t *regs ) {
+	disable_tasking()
 	PANIC ( "General Protection Fault" );
 }
 
