@@ -1,0 +1,9 @@
+#!/usr/bin/make
+
+BASE=~/MatrixOS
+all:
+	@mkdir -p $(BASE)/isodir/boot/grub
+	@cp $(BASE)/bin/MatrixOS.bin $(BASE)/isodir/MatrixOS.bin
+	@cp $(BASE)/initrd/initrd.img       $(BASE)/isodir/initrd
+	@cp $(BASE)/grub/grub.cfg $(BASE)/isodir/boot/grub/grub.cfg
+	@grub-mkrescue -o MatrixOS.iso isodir

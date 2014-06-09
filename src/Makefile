@@ -19,8 +19,9 @@ CFLAGS=-nostdlib -ffreestanding -nostdinc -g
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
-CC=i686-elf-gcc
-LD=i686-elf-ld
+EX_DIR=~/opt/cross/bin
+CC=$(EX_DIR)/i686-elf-gcc
+LD=$(EX_DIR)/i686-elf-ld
 
 CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c
 CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h
@@ -32,7 +33,7 @@ all: $(SOURCES) $(MODULES) link
 release: clean all
 
 clean:
-	-rm *.o ../bin/MatrixOS.bin
+	-rm *.o $(MATRIX_BASE)/bin/MatrixOS.bin
 	cd input; rm *.o; cd ..;
 	cd graphics; rm *.o; cd ..;
 	cd fun; rm *.o; cd ..;
@@ -40,11 +41,12 @@ clean:
 	cd system; rm *.o; cd ..;
 
 clean_code: $(CLEAN_CODE_DIRS)
-	echo "MatrixOS Cleaning code with astyle:"
+	@echo "[*] MatrixOS Cleaning code with astyle:"
 	astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets $(CLEAN_CODE_DIRS_C) $(CLEAN_CODE_DIRS_H)
 
 link:
-	$(LD) $(LDFLAGS) -o ../bin/MatrixOS.bin $(SOURCES) $(MODULES)
+	@echo "[*] Linking"
+	@$(LD) $(LDFLAGS) -o $(MATRIX_BASE)/bin/MatrixOS.bin $(SOURCES) $(MODULES)
 
 .s.o:
 	nasm $(ASFLAGS) $<
