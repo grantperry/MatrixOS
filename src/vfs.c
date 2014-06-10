@@ -176,9 +176,3 @@ int addFileToDir(fs_node_t *dirNode, fs_node_t *fileNode)
   //success!
   return 0;
 }
-
-//This may be difficult to understand due to lack of explaining comments
-u32int *block_of_set(fs_node_t *node, u32int block_number)
-{
-  return 0;
-}

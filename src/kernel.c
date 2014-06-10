@@ -67,19 +67,6 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 	
-	
-	struct dirent *d;
-	d = (struct dirent*)initrd_readdir(fs_root, 4);
-	printf("%s\n", d->name);
-	struct fs_node *e;
-	e = (struct fs_node*)initrd_finddir(fs_root, d->name);
-	printf("%s\n", e->name);
-	struct dirent *f;
-	f = (struct dirent*)initrd_readdir(e, 5);
-	if (f != 0) {
-		printf("%s\n", f->name);
-	}
-	
 	startShell();
 
 	for ( ;; ) {}

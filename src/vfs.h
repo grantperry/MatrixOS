@@ -12,7 +12,6 @@
 #define FS_SYMLINK     0x06
 #define FS_MOUNTPOINT  0x08 // Is the file an active mountpoint?
 
-#define DIR_LEN 16
 
 struct fs_node;
 

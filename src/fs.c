@@ -22,6 +22,7 @@ file_desc_t *lookup_file_desc(void *node) {
 	return temp_desc;
 }
 
+//TODO actually read the file
 u32int f_read(file_desc_t *file, u32int offset, u32int size, u8int *buffer) {
 	file_desc_t *fdesc;
 	fdesc = (file_desc_t*) lookup_file_desc(file->node);
@@ -29,31 +30,12 @@ u32int f_read(file_desc_t *file, u32int offset, u32int size, u8int *buffer) {
 	//we did not find the file desc in the list
 	if(!fdesc)
 	{
-		printf("ERROR: file not in file descriptor list\n");
 		return 0; //error
 	}
 	if(!(fdesc->permisions & FDESC_READ)) {
-		printf("ERROR: you dont have permisions to read that!\n");
 		return 0;
 	}
 	
-	switch(fdesc->fs_type) {
-		case M_UNKNOWN:
-			return 0; //error
-		case M_VFS:
-			//check if this node has a callback
-			if(((fs_node_t*)fdesc->node)->read) {
-				return ((fs_node_t*)fdesc->node)->read(fdesc->node, offset, size, buffer);
-			} else {
-				break;
-			}
-		case M_EXT2:
-			//return ext2_read(fdesc->node, offset, size, buffer);
-			printf("TODO Support ext2-4\n");
-			break;
-		default:
-			return 0; //error
-    }
 }
 
 u32int f_write(FILE *node, u32int offset, u32int size, u8int *buffer)
@@ -292,35 +274,7 @@ FILE *f_open(char *filename, void *dir, char *mask)
   //a file already exists to be opened
   if(file)
   {
-    //if the user wants to write to a blank file
-    if((__open_fs_mask_to_u32int__(mask) & (FDESC_CLEAR | FDESC_WRITE)) == (FDESC_CLEAR | FDESC_WRITE))
-    {
-      FILE *open = __open__(file->node, filename, mask, TRUE);
-      
-      //clear the contents of the file
-      u8int *buf;
-      buf = (u8int*)kmalloc(sizeof(u8int) * open->size);
-      memset(buf, 0x0, open->size);
-      f_write(open, 0, open->size, buf);
-
-      kfree(buf);
-      return open;
-    }else
-      return __open__(file->node, filename, mask, TRUE);
-  }else //see if we can create a new file
-    //the mask must have w set inorder to create the new file
-    if(__open_fs_mask_to_u32int__(mask) & FDESC_WRITE)
-      switch(((FILE*)currentDirectory)->node_type)
-      {
-      case M_UNKNOWN:
-        return 0; //error
-      case M_VFS:
-        return (FILE *)__open__((void *)vfs_createFile(dir, filename, 0), filename, mask, TRUE);
-      /*case M_EXT2:
-        return __open__(ext2_create_file(dir, filename, 0), filename, mask, TRUE);*/
-      default:
-        return 0; //error
-      }
+	}
 
   //if we are outside, return an error
   return 0;
