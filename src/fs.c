@@ -23,7 +23,8 @@ file_desc_t *lookup_file_desc ( void *node ) {
 	return temp_desc;
 }
 
-u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer ) {
+//TODO actually read the file
+u32int f_read(file_desc_t *file, u32int offset, u32int size, u8int *buffer) {
 	file_desc_t *fdesc;
 	fdesc = ( file_desc_t* ) lookup_file_desc ( file->node );
 
@@ -302,52 +303,22 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 	}
 }
 
-FILE *f_open ( char *filename, void *dir, char *mask ) {
-	if ( !dir ) {
-		return 0;    //error
+FILE *f_open(char *filename, void *dir, char *mask)
+{
+  if(!dir)
+    return 0; //error
+
+  FILE *file;
+  file = (FILE *)f_finddir(dir, filename);
+
+  //a file already exists to be opened
+  if(file)
+  {
 	}
 
-	FILE *file;
-	file = ( FILE * ) f_finddir ( dir, filename );
+  //if we are outside, return an error
+  return 0;
 
-	//a file already exists to be opened
-	if ( file ) {
-		//if the user wants to write to a blank file
-		if ( ( __open_fs_mask_to_u32int__ ( mask ) & ( FDESC_CLEAR | FDESC_WRITE ) ) == ( FDESC_CLEAR | FDESC_WRITE ) ) {
-			FILE *open = __open__ ( file->node, filename, mask, TRUE );
-
-			//clear the contents of the file
-			u8int *buf;
-			buf = ( u8int* ) kmalloc ( sizeof ( u8int ) * open->size );
-			memset ( buf, 0x0, open->size );
-			f_write ( open, 0, open->size, buf );
-
-			kfree ( buf );
-			return open;
-
-		} else {
-			return __open__ ( file->node, filename, mask, TRUE );
-		}
-
-	} else //see if we can create a new file
-
-		//the mask must have w set inorder to create the new file
-		if ( __open_fs_mask_to_u32int__ ( mask ) & FDESC_WRITE )
-			switch ( ( ( FILE* ) currentDirectory )->node_type ) {
-			case M_UNKNOWN:
-				return 0; //error
-
-			case M_VFS:
-				return ( FILE * ) __open__ ( ( void * ) vfs_createFile ( dir, filename, 0 ), filename, mask, TRUE );
-
-			/*case M_EXT2:
-			  return __open__(ext2_create_file(dir, filename, 0), filename, mask, TRUE);*/
-			default:
-				return 0; //error
-			}
-
-	//if we are outside, return an error
-	return 0;
 }
 
 FILE *f_finddir ( void *node, char *name ) {
