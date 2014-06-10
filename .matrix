@@ -26,3 +26,4 @@ alias loc="cd ~/MatrixOS/src && make && cd ..; make -f Makefile-iso;run"
 alias release="cd $M_HOME/src;
 				make release;"
 
+alias clean="cd ~/MatrixOS/src;make clean; cd .."
