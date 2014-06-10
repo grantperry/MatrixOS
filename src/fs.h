@@ -28,6 +28,11 @@ enum {
 	nTYPE_MOUNTPOINT
 };
 
+typedef u32int ( *read_fs_t ) ( void*, u32int, u32int, u8int* );
+typedef u32int ( *write_fs_t ) ( void*, u32int, u32int, u8int* );
+typedef u32int ( *finddir_fs_t ) ( void*, char* );
+typedef u32int ( *readdir_fs_t ) ( void*, u32int );
+
 /*for the file desctptor*/
 typedef struct file_desc {
 	char *name;
@@ -41,10 +46,10 @@ typedef struct file_desc {
 
 	//callback operations
 	//~ u32int (*_close)(void*);
-	u32int ( *read ) ( void*, u32int, u32int, u8int* );
-	u32int ( *write ) ( void*, u32int, u32int, u8int* );
-	u32int ( *finddir ) ( void*, char* );
-	u32int ( *readdir ) ( void*, u32int );
+	read_fs_t *read;
+	write_fs_t *write;
+	finddir_fs_t *finddir;
+	readdir_fs_t *readdir;
 
 	//pointing to the next structure of the list
 	struct file_desc *next;

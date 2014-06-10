@@ -173,9 +173,12 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 		//TODO set NODE TYPE!
 		new_desc->permisions = read_mask ( mask );
 		new_desc->next = 0; //so we dont walk of the end.
-		
-		new_desc->read = (readdir_type_t*)read_fs;
-		
+		if (read_mask(mask) & (FDESC_READ)) {
+			new_desc->read = (read_fs_t*)read_fs;
+		}
+		if (read_mask(mask) & (FDESC_WRITE)) {
+			new_desc->write = (write_fs_t*)write_fs;
+		}
 		if(open == TRUE) {
 			tmp_desc->next = (file_desc_t*)new_desc;
 		}
@@ -201,17 +204,12 @@ FILE *f_open ( char *filename, void *dir, char *mask ) {
 		return 0;    //error
 	}
 
-	printf ( "Opening file \"%s\"\n", filename );
 	FILE *file;
 	file = ( FILE * ) f_finddir ( dir, filename );
 
 	//a file already exists to be opened
 	if ( file ) {
-		if (read_mask(mask) & (FDESC_READ)) {
-			printf("Opening Read-Only: ");
-			__open__(file->node, filename, mask, TRUE);
-			printf("Opened\n");
-		}
+		__open__(file->node, filename, mask, TRUE);
 	}
 
 	//if we are outside, return an error
