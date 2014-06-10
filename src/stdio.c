@@ -118,7 +118,7 @@ void printf ( char *c, ... ) {
 	va_end ( arguments );
 }
 
-void kprintf( char *c, ... ) {
+void kprintf ( char *c, ... ) {
 	va_list arguments;
 
 	int i, numberOfArgs = 0, stringLength = strlen ( c );
@@ -152,7 +152,7 @@ void kprintf( char *c, ... ) {
 
 				for ( x = 0; x < numberLength; x++ ) {
 					monitor_put ( integer[x] );
-					write_serial(integer[x]);
+					write_serial ( integer[x] );
 				}
 
 				i = i + 2;
@@ -178,8 +178,8 @@ void kprintf( char *c, ... ) {
 				s32int tmp;
 
 				printf ( "0x" );
-				write_serial('0');
-				write_serial('x');
+				write_serial ( '0' );
+				write_serial ( 'x' );
 
 				char noZeroes = 1;
 
@@ -195,12 +195,12 @@ void kprintf( char *c, ... ) {
 					if ( tmp >= 0xA ) {
 						noZeroes = 0;
 						monitor_put ( tmp-0xA+'a' );
-						write_serial( tmp-0xA+'a' );
+						write_serial ( tmp-0xA+'a' );
 
 					} else {
 						noZeroes = 0;
 						monitor_put ( tmp+'0' );
-						write_serial( tmp+'0' );
+						write_serial ( tmp+'0' );
 					}
 				}
 
@@ -208,11 +208,11 @@ void kprintf( char *c, ... ) {
 
 				if ( tmp >= 0xA ) {
 					monitor_put ( tmp - 0xA + 'a' );
-					write_serial( tmp - 0xA + 'a' );
+					write_serial ( tmp - 0xA + 'a' );
 
 				} else {
 					monitor_put ( tmp+'0' );
-					write_serial( tmp+'0' );
+					write_serial ( tmp+'0' );
 				}
 
 				i = i + 2;
@@ -224,7 +224,7 @@ void kprintf( char *c, ... ) {
 				break;
 
 			} else {
-				write_serial( c[i] );
+				write_serial ( c[i] );
 				monitor_put ( c[i] );
 				i++;
 			}

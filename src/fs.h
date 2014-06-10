@@ -15,61 +15,59 @@
 #define M_EXT2          2
 
 ///node type values
-enum 
-{
-  nTYPE_UNKOWN,
-  nTYPE_FILE,
-  nTYPE_DIRECTORY,
-  nTYPE_CHARD_DEV,
-  nTYPE_BLOCK_DEV,
-  nTYPE_FIFO,
-  nTYPE_SOCKET,
-  nTYPE_SYMLINK,
-  nTYPE_HARDLINK,
-  nTYPE_MOUNTPOINT
+enum {
+	nTYPE_UNKOWN,
+	nTYPE_FILE,
+	nTYPE_DIRECTORY,
+	nTYPE_CHARD_DEV,
+	nTYPE_BLOCK_DEV,
+	nTYPE_FIFO,
+	nTYPE_SOCKET,
+	nTYPE_SYMLINK,
+	nTYPE_HARDLINK,
+	nTYPE_MOUNTPOINT
 };
 
 /*for the file desctptor*/
-typedef struct file_desc
-{
-  char *name;
-  u32int name_length;
-  void *node;
-  u32int fs_type;     //is it VFS, EXT2, etc.
-  u32int node_type;   //is it a file, directory, ect.
-  u8int permisions;
-  s8int inode;
-  u32int size;
+typedef struct file_desc {
+	char *name;
+	u32int name_length;
+	void *node;
+	u32int fs_type;     //is it VFS, EXT2, etc.
+	u32int node_type;   //is it a file, directory, ect.
+	u8int permisions;
+	s8int inode;
+	u32int size;
 
-  //callback operations
-  //~ u32int (*_close)(void*);
-  u32int (*_read)(void*, u32int, u32int, u8int*);
-  u32int (*_write)(void*, u32int, u32int, u8int*);
-  u32int (*_finddir)(void*, char*);
-  u32int (*_readdir)(void*, u32int);
+	//callback operations
+	//~ u32int (*_close)(void*);
+	u32int ( *_read ) ( void*, u32int, u32int, u8int* );
+	u32int ( *_write ) ( void*, u32int, u32int, u8int* );
+	u32int ( *_finddir ) ( void*, char* );
+	u32int ( *_readdir ) ( void*, u32int );
 
-  //pointing to the next structure of the list
-  struct file_desc *next;
+	//pointing to the next structure of the list
+	struct file_desc *next;
 } file_desc_t;
 
 typedef struct file_desc FILE;
 
-file_desc_t *lookup_file_desc(void *node);
+file_desc_t *lookup_file_desc ( void *node );
 
-u32int f_read(file_desc_t *file, u32int offset, u32int size, u8int *buffer);
+u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer );
 
-u32int f_write(FILE *node, u32int offset, u32int size, u8int *buffer);
+u32int f_write ( FILE *node, u32int offset, u32int size, u8int *buffer );
 
-static u8int __open_fs_mask_to_u32int__(char *mask);
+static u8int __open_fs_mask_to_u32int__ ( char *mask );
 
-FILE *__open__(void *node, char *name, char *mask, u8int open);
+FILE *__open__ ( void *node, char *name, char *mask, u8int open );
 
-FILE *f_open(char *filename, void *dir, char *mask);
+FILE *f_open ( char *filename, void *dir, char *mask );
 
-FILE *f_finddir(void *node, char *name);
+FILE *f_finddir ( void *node, char *name );
 
-u32int node_type(void *node);
+u32int node_type ( void *node );
 
-char *name_of_dir(void *node);
+char *name_of_dir ( void *node );
 
 #endif

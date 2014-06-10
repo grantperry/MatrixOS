@@ -26,11 +26,11 @@ typedef void ( *close_type_t ) ( struct fs_node* );
 typedef struct dirent * ( *readdir_type_t ) ( struct fs_node*,u32int );
 typedef struct fs_node * ( *finddir_type_t ) ( struct fs_node*,char *name );
 
-typedef struct permision{
+typedef struct permision {
 	u8int read;
 	u8int write;
 	u8int execute;
-}permission_t;
+} permission_t;
 
 typedef struct fs_node {
 	u32int name_len;	//lenght of the file name
@@ -40,14 +40,14 @@ typedef struct fs_node {
 	u32int gid;         // The owning group.
 	u32int flags;       // Includes the node type. See #defines above.
 	u32int inode;       // This is device-specific - provides a way for a filesystem to identify files.
-	
+
 	permission_t permissions; //TODO Remove this
-	
+
 	u32int *pointer;
-	
+
 	u32int length;      // Size of the file, in bytes.
 	u32int impl;        // An implementation-defined number.
-	
+
 	read_type_t read;
 	write_type_t write;
 	open_type_t open;
@@ -56,7 +56,7 @@ typedef struct fs_node {
 	finddir_type_t finddir;
 	u32int num_nodes;		/* Number of child nodes */
 	u32int seek;
-	
+
 	struct fs_node *ptr; // Used by mountpoints and symlinks.
 } fs_node_t;
 
