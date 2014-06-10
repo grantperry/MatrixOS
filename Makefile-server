@@ -8,7 +8,7 @@ EXTF = $(SSH) $(EXT)
 LOCALHOST=`hostname`
 
 BASEDIR = MatrixOS
-DIRS = src grub initrd bin
+DIRS = src grub initrd bin include
 FILES = kernel.sh Makefile-iso
 
 all:
@@ -18,11 +18,14 @@ all:
 	@echo "Sending code to $(EXT)"
 	@cd ~/MatrixOS && scp ./tar.tar $(EXT):~/MatrixOS
 	@echo "UnTaring code"
-	@$(EXTF) "cd $(BASEDIR); rm -r $(DIRS); tar -xf tar.tar;"
+	@$(EXTF) "cd $(BASEDIR); rm -r $(DIRS); tar -xf tar.tar --atime-preserve;"
 	@echo "Compiling code"
 	@$(EXTF) "$PATH='$HOME/opt/cross/bin:$PATH'; cd $(BASEDIR)/src; make"
 	@echo "Making CD image"
 	@$(EXTF) "cd $(BASEDIR) && make -f Makefile-iso"
 	@echo "Sending back result"
-	scp $(EXT):~/$(BASEDIR)/MatrixOS.iso ~/$(BASEDIR)
+	@scp $(EXT):~/$(BASEDIR)/MatrixOS.iso ~/$(BASEDIR)
+	@$(EXTF) 'cd ~/MatrixOS && tar -cf tar.tar src'
+	@scp $(EXT):~/MatrixOS/tar.tar .
+	@tar -xf tar.tar
 	@echo "DONE!"

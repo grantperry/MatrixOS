@@ -62,5 +62,7 @@ u32int start_task ( u32int priority, u32int burst_time, void ( *func ) (), void 
 
 void enable_tasking();
 
+void disable_tasking();
+
 s8int switch_to_user_mode();
 #endif
