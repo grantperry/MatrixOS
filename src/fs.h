@@ -41,16 +41,18 @@ typedef struct file_desc {
 
 	//callback operations
 	//~ u32int (*_close)(void*);
-	u32int ( *_read ) ( void*, u32int, u32int, u8int* );
-	u32int ( *_write ) ( void*, u32int, u32int, u8int* );
-	u32int ( *_finddir ) ( void*, char* );
-	u32int ( *_readdir ) ( void*, u32int );
+	u32int ( *read ) ( void*, u32int, u32int, u8int* );
+	u32int ( *write ) ( void*, u32int, u32int, u8int* );
+	u32int ( *finddir ) ( void*, char* );
+	u32int ( *readdir ) ( void*, u32int );
 
 	//pointing to the next structure of the list
 	struct file_desc *next;
 } file_desc_t;
 
 typedef struct file_desc FILE;
+
+s8int init_file_system();
 
 file_desc_t *lookup_file_desc ( void *node );
 
@@ -69,5 +71,7 @@ FILE *f_finddir ( void *node, char *name );
 u32int node_type ( void *node );
 
 char *name_of_dir ( void *node );
+
+void print_desc();
 
 #endif

@@ -67,6 +67,12 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
+	FILE *f;
+	f = (FILE*) f_open("1", fs_root, "r");
+	print_desc();
+	f = (FILE*) f_open("3", fs_root, "r");
+	print_desc();
+	
 	startShell();
 
 	for ( ;; ) {}
@@ -142,6 +148,8 @@ void init() {
 	// Initialise the PIT to 50Hz
 	asm volatile ( "sti" );
 	init_timer ( 50 );
+
+	runModule ( &init_file_system );
 
 	runModule ( &locate_initrd );
 
