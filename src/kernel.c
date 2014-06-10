@@ -49,8 +49,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	monitor_clear();
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
-	
-	init_serial(9);
+
+	init_serial ( 9 );
 
 	//VGA_init ( 320, 200, 256 );
 	//VGA_init(1024, 768, 24);
@@ -66,7 +66,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	//printf ( "Address: %h\n", mboot_ptr->addr );
 
 	init();
-	
+
 	startShell();
 
 	for ( ;; ) {}
@@ -163,7 +163,7 @@ void init() {
 	//sleep ( 1 );
 	monitor_set_fore_colour ( 15 );
 
-	
+
 	//start_elf ( "elf_test" );
 	//load_elf ( "testbin" );
 	//load_elf("hello");
@@ -171,7 +171,7 @@ void init() {
 	//printf ( "FINISHED!\n" );
 
 	//runModule ( &switch_to_user_mode);
-	
+
 }
 
 /*

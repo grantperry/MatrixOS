@@ -86,93 +86,92 @@ fs_node_t *finddir_fs ( fs_node_t *node, char *name ) {
 	}
 }
 
-fs_node_t *vfs_createFile(fs_node_t *parentNode, char *name, u32int size)
-{
-  u32int n = findOpenNode();
-  printf("");
+fs_node_t *vfs_createFile ( fs_node_t *parentNode, char *name, u32int size ) {
+	u32int n = findOpenNode();
+	printf ( "" );
 
-  // Create a new file node.
-  strcpy(root_nodes[n].name, name);
-  root_nodes[n].node_type = M_VFS;
-  root_nodes[n].mask = 0b110110100; //user rw, group rw, other r
-  root_nodes[n].uid = root_nodes[n].gid = 0;
-  root_nodes[n].inode = n;
-  root_nodes[n].length = size;
+	// Create a new file node.
+	strcpy ( root_nodes[n].name, name );
+	root_nodes[n].node_type = M_VFS;
+	root_nodes[n].mask = 0b110110100; //user rw, group rw, other r
+	root_nodes[n].uid = root_nodes[n].gid = 0;
+	root_nodes[n].inode = n;
+	root_nodes[n].length = size;
 
-  //set the pointers to singly, doubly, triply to 0
-  root_nodes[n].pointer = 0;
+	//set the pointers to singly, doubly, triply to 0
+	root_nodes[n].pointer = 0;
 
-  root_nodes[n].flags = FS_FILE;
-  root_nodes[n].read = &initrd_read;
-  //~ root_nodes[n].write = 0;
-  //root_nodes[n].write = &initrd_write;
-  root_nodes[n].readdir = 0;
-  root_nodes[n].finddir = 0;
-  root_nodes[n].impl = 0;
-  
-  printf("1\n");
+	root_nodes[n].flags = FS_FILE;
+	root_nodes[n].read = &initrd_read;
+	//~ root_nodes[n].write = 0;
+	//root_nodes[n].write = &initrd_write;
+	root_nodes[n].readdir = 0;
+	root_nodes[n].finddir = 0;
+	root_nodes[n].impl = 0;
 
-  root_nodes[n].pointer = (fs_block_t*)kmalloc(sizeof(fs_block_t));//pointer to first block node.
-  root_nodes[n].pointer->length = size;// size of the block pointed to.
-  root_nodes[n].pointer->pointer = kmalloc(size*sizeof(char));//the actuall pointer to the block
-  memset(root_nodes[n].pointer->pointer, 0x0, size*sizeof(char)); //set the block area to 0's
-  root_nodes[n].pointer->next = 0;//pointer to the next block in the file.
-  
-printf("2\n");
-  addFileToDir(parentNode, &root_nodes[n]);
-printf("6\n");
-  return &root_nodes[n];
+	printf ( "1\n" );
+
+	root_nodes[n].pointer = ( fs_block_t* ) kmalloc ( sizeof ( fs_block_t ) ); //pointer to first block node.
+	root_nodes[n].pointer->length = size;// size of the block pointed to.
+	root_nodes[n].pointer->pointer = kmalloc ( size*sizeof ( char ) ); //the actuall pointer to the block
+	memset ( root_nodes[n].pointer->pointer, 0x0, size*sizeof ( char ) ); //set the block area to 0's
+	root_nodes[n].pointer->next = 0;//pointer to the next block in the file.
+
+	printf ( "2\n" );
+	addFileToDir ( parentNode, &root_nodes[n] );
+	printf ( "6\n" );
+	return &root_nodes[n];
 
 }
 
-int findOpenNode()
-{
-  int i;
+int findOpenNode() {
+	int i;
 
-  for(i = 0; i < nroot_nodes; i++)
-    //if all of those headers are not used, then there is no file
-    if(!*(root_nodes[i].name) && !root_nodes[i].inode && !root_nodes[i].mask && !root_nodes[i].flags)
-      return i;
+	for ( i = 0; i < nroot_nodes; i++ )
 
-  nroot_nodes++;
-  return nroot_nodes - 1;
+		//if all of those headers are not used, then there is no file
+		if ( !* ( root_nodes[i].name ) && !root_nodes[i].inode && !root_nodes[i].mask && !root_nodes[i].flags ) {
+			return i;
+		}
+
+	nroot_nodes++;
+	return nroot_nodes - 1;
 }
 
-int addFileToDir(fs_node_t *dirNode, fs_node_t *fileNode)
-{
-  u32int fileINode = fileNode->inode;
+int addFileToDir ( fs_node_t *dirNode, fs_node_t *fileNode ) {
+	u32int fileINode = fileNode->inode;
 
-  struct dirent dirent;
+	struct dirent dirent;
 
-  u32int lengthOfName = strlen(fileNode->name);
-  dirent.ino = fileINode;
-  
-  dirent.file_type = fileNode->node_type;
+	u32int lengthOfName = strlen ( fileNode->name );
+	dirent.ino = fileINode;
 
-  //The size of this whole struct basically
-  dirent.rec_len = sizeof(dirent.ino) + sizeof(dirent.rec_len) + sizeof(dirent.name) + sizeof(dirent.file_type) + sizeof(dirent.name_len) + lengthOfName; 
-  
-  dirent.name_len = (u8int)lengthOfName;
-  dirent.file_type = fileNode->flags;
-  printf("3\n");
-  
-  //+1 being the \000 NULL termination 0 byte at the end of the string
-	dirent.name = (char*)kmalloc(lengthOfName + 1);
-  
-  //copy the name of the file (fileNode->name) to the dirent.name
-  //TODO make fs_node_t use dynamic name sizes
-  memcpy(dirent.name, fileNode->name, lengthOfName + 1); //fileNode->name already had a \000 termination zero
-  printf("4\n");
-  *(dirent.name + lengthOfName) = 0; //Just in case add a \000 at the end
+	dirent.file_type = fileNode->node_type;
 
-  dirNode->dpointer = (struct dirent*)kmalloc(sizeof(dirent));
-  memcpy(dirNode->dpointer, &dirent, sizeof(dirent));
-  
-  strcpy((char*)(*(u32int*)dirNode->dpointer + sizeof(dirent.ino) + sizeof(dirent.rec_len) 
-                 + sizeof(dirent.name_len) + sizeof(dirent.file_type)), dirent.name);
+	//The size of this whole struct basically
+	dirent.rec_len = sizeof ( dirent.ino ) + sizeof ( dirent.rec_len ) + sizeof ( dirent.name ) + sizeof ( dirent.file_type ) + sizeof ( dirent.name_len ) + lengthOfName;
 
-  kfree(dirent.name);
+	dirent.name_len = ( u8int ) lengthOfName;
+	dirent.file_type = fileNode->flags;
+	printf ( "3\n" );
 
-  //success!
-  return 0;
+	//+1 being the \000 NULL termination 0 byte at the end of the string
+	dirent.name = ( char* ) kmalloc ( lengthOfName + 1 );
+
+	//copy the name of the file (fileNode->name) to the dirent.name
+	//TODO make fs_node_t use dynamic name sizes
+	memcpy ( dirent.name, fileNode->name, lengthOfName + 1 ); //fileNode->name already had a \000 termination zero
+	printf ( "4\n" );
+	* ( dirent.name + lengthOfName ) = 0; //Just in case add a \000 at the end
+
+	dirNode->dpointer = ( struct dirent* ) kmalloc ( sizeof ( dirent ) );
+	memcpy ( dirNode->dpointer, &dirent, sizeof ( dirent ) );
+
+	strcpy ( ( char* ) ( * ( u32int* ) dirNode->dpointer + sizeof ( dirent.ino ) + sizeof ( dirent.rec_len )
+						 + sizeof ( dirent.name_len ) + sizeof ( dirent.file_type ) ), dirent.name );
+
+	kfree ( dirent.name );
+
+	//success!
+	return 0;
 }

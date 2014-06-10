@@ -30,7 +30,7 @@ typedef struct permissions {
 	u8int exec;
 } permissions_t;
 
-typedef struct fs_block{
+typedef struct fs_block {
 	u32int length;
 	char pointer;
 	struct fs_block *next;
@@ -45,11 +45,11 @@ struct fs_node {
 	u32int inode;       // This is device-specific - provides a way for a filesystem to identify files.
 	u32int impl;        // An implementation-defined number.
 	u32int node_type;
-	
+
 	u32int length;      // Size of the file, in bytes. add up lengths in linked list to check...
 	struct fs_block *pointer; //for files
 	struct dirent *dpointer; //for directories
-	
+
 	permissions_t permissions;
 	read_type_t read;
 	write_type_t write;
@@ -81,9 +81,9 @@ void open_fs ( fs_node_t *node, u8int read, u8int write );
 void close_fs ( fs_node_t *node );
 struct dirent *readdir_fs ( fs_node_t *node, u32int index );
 fs_node_t *finddir_fs ( fs_node_t *node, char *name );
-fs_node_t *vfs_createFile(fs_node_t *parentNode, char *name, u32int size);
+fs_node_t *vfs_createFile ( fs_node_t *parentNode, char *name, u32int size );
 int findOpenNode();
-u32int *block_of_set(fs_node_t *node, u32int block_number);
+u32int *block_of_set ( fs_node_t *node, u32int block_number );
 
 extern fs_node_t *fs_root; // The root of the filesystem.
 

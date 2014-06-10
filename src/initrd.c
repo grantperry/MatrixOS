@@ -104,7 +104,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	initrd_dev->ptr = 0;
 	initrd_dev->impl = 0;
 
-	root_nodes = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) * initrd_header->nfiles+ 8 * sizeof(fs_node_t)); //8 extra files////////////////////////////////////////////////////////////////////
+	root_nodes = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) * initrd_header->nfiles+ 8 * sizeof ( fs_node_t ) ); //8 extra files////////////////////////////////////////////////////////////////////
 	nroot_nodes = initrd_header->nfiles;
 
 	// For every file...
@@ -129,6 +129,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].close = 0;
 		root_nodes[i].impl = 0;
 	}
+	
 	/*u32int n = findOpenNode();
 	strcpy ( root_nodes[n].name, "testf" );
 	root_nodes[n].mask = root_nodes[n].uid = root_nodes[n].gid = 0;
@@ -142,6 +143,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	root_nodes[n].open = 0;
 	root_nodes[n].close = 0;
 	root_nodes[n].impl = 0;*/
+
 
 	return initrd_root;
 }
