@@ -13,6 +13,10 @@ Features
   - [x] Sydney
   - [ ] Welcome to add your own.
 - [x] Serial Com Port Support
+- [ ] Filesystem support
+  - [ ] ext2
+  - [ ] ext3-4
+  - [ ] fat12
 
 **More coming soon**
 
