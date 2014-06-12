@@ -130,20 +130,6 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].close = 0;
 		root_nodes[i].impl = 0;
 	}
-	
-	/*u32int n = findOpenNode();
-	strcpy ( root_nodes[n].name, "testf" );
-	root_nodes[n].mask = root_nodes[n].uid = root_nodes[n].gid = 0;
-	root_nodes[n].length = 0;//may need changing
-	root_nodes[n].inode = n;
-	root_nodes[n].flags = FS_DIRECTORY;
-	root_nodes[n].read = 0;
-	root_nodes[n].write = 0;
-	root_nodes[n].readdir = &initrd_readdir;
-	root_nodes[n].finddir = &initrd_finddir;
-	root_nodes[n].open = 0;
-	root_nodes[n].close = 0;
-	root_nodes[n].impl = 0;*/
 
 
 	return initrd_root;
