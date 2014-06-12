@@ -50,18 +50,19 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 
-	init_serial ( 9 );
+	init_serial ( 1, 9 );
 
 	//VGA_init ( 320, 200, 256 );
 	//VGA_init(1024, 768, 24);
 
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
-	kprintf ( "MatrixOS\n" );
+	kprintf ( "MatrixOS " );
 	monitor_set_cursor_pos ( 11, 0 );
 	print_version();
-	printf ( "\n" );
+	kprintf ( "\n" );
 	monitor_set_fore_colour ( WHITE );
+
 
 	//printf ( "Address: %h\n", mboot_ptr->addr );
 
@@ -99,16 +100,16 @@ void print_version() {
 		monitor_set_back_colour ( 4 );
 	}
 
-	printf ( "v" );
+	kprintf ( "v" );
 	monitor_set_fore_colour ( 10 ); //green
-	monitor_write_dec ( VER_MAJOR );
-	printf ( "." );
+	kprintf ( "%d", VER_MAJOR );
+	kprintf ( "." );
 	monitor_set_fore_colour ( 14 ); //yellow
-	monitor_write_dec ( VER_MINOR );
+	kprintf ( "%d", VER_MINOR );
 	monitor_set_fore_colour ( 10 ); //green
-	printf ( "." );
+	kprintf ( "." );
 	monitor_set_fore_colour ( 12 ); //red
-	monitor_write_dec ( VER_FIX );
+	kprintf ( "%d", VER_FIX );
 	monitor_set_fore_colour ( 15 );
 	monitor_set_back_colour ( 0 );
 }
