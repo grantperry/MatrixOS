@@ -15,7 +15,7 @@
 #define IRQ_COM3 4
 #define IRQ_COM4 3
 
-void init_serial ( u16int divisor );
+void init_serial ( u8int, u16int divisor );
 
 int serial_received();
 
@@ -25,6 +25,6 @@ int is_transmit_empty();
 
 void write_serial ( char a );
 
-
+void serialf(char *c, ...);
 
 #endif//SERIAL_H
