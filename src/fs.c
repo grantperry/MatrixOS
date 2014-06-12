@@ -22,9 +22,12 @@ file_desc_t *lookup_file_desc ( void *node ) {
 	file_desc_t *temp_desc;
 	temp_desc = initial_file_desc; //make a copy so we dont muck it up.
 
-	for ( ; temp_desc != node && temp_desc; temp_desc = temp_desc->next ) {}
+	for ( ; temp_desc->node != node && temp_desc; temp_desc = temp_desc->next ) {
+	printf(".");
+	}
 
 	if ( !temp_desc ) {
+		printf("File lookup failed!\n");
 		return 0; //descriptor is null, return 0.
 	}
 
@@ -38,8 +41,10 @@ u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer ) {
 
 	//we did not find the file desc in the list
 	if ( !fdesc ) {
+		printf("File Not Opened!\n");
 		return 0; //error
 	}
+	printf("Reading File %s\n", fdesc->name);
 
 	if ( ! ( fdesc->permisions & FDESC_READ ) ) {
 		return 0;
@@ -52,7 +57,7 @@ u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer ) {
 	case M_VFS:
 
 		//check if this node has a callback
-		if ( ( ( fs_node_t* ) fdesc->node )->read ) {
+		if ( ( ( fs_node_t* ) fdesc->node )->read ) { //does have read callback?
 			return ( ( fs_node_t* ) fdesc->node )->read ( fdesc->node, offset, size, buffer );
 
 		} else {
@@ -76,7 +81,7 @@ u32int f_write ( FILE *node, u32int offset, u32int size, u8int *buffer ) {
 
 	//we did not find the file desc in the list
 	if ( !fdesc ) {
-		return 1; //error
+		return 0; //error
 	}
 
 	//if the size writing to the node is larger than its size + offset, expand it
@@ -209,7 +214,7 @@ FILE *f_open ( char *filename, void *dir, char *mask ) {
 
 	//a file already exists to be opened
 	if ( file ) {
-		__open__(file->node, filename, mask, TRUE);
+		return __open__(file->node, filename, mask, TRUE);
 	}
 
 	//if we are outside, return an error
@@ -222,5 +227,5 @@ FILE *f_finddir ( void *node, char *name ) {
 }
 
 char *name_of_dir ( void *node ) {
-
+	return ((fs_node_t*)node)->name;
 }
