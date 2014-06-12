@@ -79,6 +79,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	// Initialise the root directory.
 	initrd_root = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) );
 	strcpy ( initrd_root->name, "initrd" );
+	strcpy ( initrd_root->name + sizeof("initrd"), '\000');
 	initrd_root->mask = initrd_root->uid = initrd_root->gid = initrd_root->inode = initrd_root->length = 0;
 	initrd_root->flags = FS_DIRECTORY;
 	initrd_root->read = 0;
