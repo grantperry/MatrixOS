@@ -16,7 +16,7 @@ all:
 	@echo "Taring code"
 	@cd ~/MatrixOS && tar -cf tar.tar $(DIRS) $(FILES)
 	@echo "Sending code to $(EXT)"
-	@cd ~/MatrixOS && scp ./tar.tar $(EXT):~/MatrixOS
+	@cd ~/MatrixOS && scp -C ./tar.tar $(EXT):~/MatrixOS
 	@echo "UnTaring code"
 	@$(EXTF) "cd $(BASEDIR); rm -r $(DIRS); tar -xf tar.tar --atime-preserve;"
 	@echo "Compiling code"
@@ -24,8 +24,8 @@ all:
 	@echo "Making CD image"
 	@$(EXTF) "cd $(BASEDIR) && make -f Makefile-iso"
 	@echo "Sending back result"
-	@scp $(EXT):~/$(BASEDIR)/MatrixOS.iso ~/$(BASEDIR)
+	@scp -C $(EXT):~/$(BASEDIR)/MatrixOS.iso ~/$(BASEDIR)
 	@$(EXTF) 'cd ~/MatrixOS && tar -cf tar.tar src'
-	@scp $(EXT):~/MatrixOS/tar.tar .
+	@scp -C $(EXT):~/MatrixOS/tar.tar . &
 	@tar -xf tar.tar
 	@echo "DONE!"

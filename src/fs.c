@@ -8,10 +8,11 @@ void *currentDirectory;
 file_desc_t *initial_file_desc;
 
 s8int init_file_system() {
-	printf("Initalizing File System.");
-	initial_file_desc = (file_desc_t*)kmalloc(sizeof(file_desc_t));
-	strcpy(initial_file_desc->name, "root");
+	printf ( "Initalizing File System." );
+	initial_file_desc = ( file_desc_t* ) kmalloc ( sizeof ( file_desc_t ) );
+	strcpy ( initial_file_desc->name, "root" );
 	initial_file_desc->next = 0;
+	
 	return 0;
 }
 
@@ -21,13 +22,21 @@ s8int init_file_system() {
 file_desc_t *lookup_file_desc ( void *node ) {
 	file_desc_t *temp_desc;
 	temp_desc = initial_file_desc; //make a copy so we dont muck it up.
+	serialf("[FS] file name: %s and node: %d\n", temp_desc->next->next->name, temp_desc->next->next->inode);
 
 	for ( ; temp_desc->node != node && temp_desc; temp_desc = temp_desc->next ) {
-	printf(".");
 	}
+	int i = 1;
+	while ( i ) {
+		if (temp_desc->node == node && !temp_desc) {
+			break;
+		}
+		temp_desc = temp_desc->next;
+	}
+	//serialf("[FS] file name: %s and node: %d\n", temp_desc->name, temp_desc->inode);
 
 	if ( !temp_desc ) {
-		printf("File lookup failed!\n");
+		serialf ( "[FS] File lookup failed!\n" );
 		return 0; //descriptor is null, return 0.
 	}
 
@@ -41,37 +50,39 @@ u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer ) {
 
 	//we did not find the file desc in the list
 	if ( !fdesc ) {
-		printf("File Not Opened!\n");
+		serialf ( "[FS] File Not Opened!\n" );
 		return 0; //error
 	}
-	printf("Reading File %s\n", fdesc->name);
+
+	serialf ( "[FS] Reading File %s\n", fdesc->name );
 
 	if ( ! ( fdesc->permisions & FDESC_READ ) ) {
+		serialf ( "[FS] No Read Permisions\n" );
 		return 0;
 	}
 
-	switch ( fdesc->fs_type ) {
-	case M_UNKNOWN:
-		return 0; //error
+	if ( fdesc->fs_type == M_UNKNOWN ) {
+		serialf ( "[FS] node has no known callbacks!\n" );
+		return 0;
+	}
 
-	case M_VFS:
+	if ( fdesc->fs_type == M_VFS ) {
+		serialf ( "[FS] Reading from VFS\n" );
 
-		//check if this node has a callback
-		if ( ( ( fs_node_t* ) fdesc->node )->read ) { //does have read callback?
-			return ( ( fs_node_t* ) fdesc->node )->read ( fdesc->node, offset, size, buffer );
-
-		} else {
-			break;
+		if ( ! ( ( ( fs_node_t* ) fdesc->node )->read ) ) {
+			serialf ( "[FS] FAILED. No callback\n" );
 		}
 
-	case M_EXT2:
-		//return ext2_read(fdesc->node, offset, size, buffer);
-		printf ( "TODO Support ext2-4\n" );
-		break;
-
-	default:
-		return 0; //error
+		serialf ( "[FS] Callback found!\n" );
 	}
+
+	if ( fdesc->fs_type == M_EXT2 ) {
+		//return ext2_read(fdesc->node, offset, size, buffer);
+		serialf ( "[FS] TODO Support ext2-4\n" );
+	}
+
+	serialf ( "[FS] File is not linked to a Filesystem" );
+	return 0; //error
 }
 
 u32int f_write ( FILE *node, u32int offset, u32int size, u8int *buffer ) {
@@ -112,7 +123,7 @@ u32int f_write ( FILE *node, u32int offset, u32int size, u8int *buffer ) {
 			}
 
 		} else {
-			printf ( "Error: writing to an unprivilaged file\n" );
+			serialf ( "[FS] Error: writing to an unprivilaged file\n" );
 		}
 
 	//if we have not exited yet, it is an error
@@ -144,6 +155,7 @@ u8int read_mask ( char *mask ) {
 				break;
 			}
 		}
+
 		return flags;
 	}
 
@@ -154,18 +166,22 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 	if ( node ) {
 		file_desc_t *tmp_desc;
 		tmp_desc = initial_file_desc;
-		if (!tmp_desc) {
-			printf("no file descriptor ");
+
+		if ( !tmp_desc ) {
+			serialf ( "[FS] no file descriptor " );
 			return 0;
 		}
+
 		for ( ; tmp_desc->next; tmp_desc = tmp_desc->next ) {
-			if (&tmp_desc == 0) {
+			if ( &tmp_desc == 0 ) {
 				break;
 			}
+
 			if ( tmp_desc->node == node ) {
 				return tmp_desc; //no point in returning error
 			}
 		}
+
 		file_desc_t *new_desc; //new descriptor for the list
 		new_desc = ( file_desc_t* ) kmalloc ( sizeof ( file_desc_t ) );
 		u16int new_name_len;
@@ -175,18 +191,25 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 		new_desc->name_length = new_name_len; //save the length...
 		new_desc->node = node; //save the directory node
 		//TODO set FS TYPE!
+		new_desc->fs_type = M_VFS; //TODO set real FS Type
 		//TODO set NODE TYPE!
 		new_desc->permisions = read_mask ( mask );
 		new_desc->next = 0; //so we dont walk of the end.
-		if (read_mask(mask) & (FDESC_READ)) {
-			new_desc->read = (read_fs_t*)read_fs;
+
+		if ( read_mask ( mask ) & ( FDESC_READ ) ) {
+			serialf ( "[FS][OPEN] %s Read callback set\n", new_desc->name );
+			new_desc->read = ( read_fs_t* ) read_fs;
 		}
-		if (read_mask(mask) & (FDESC_WRITE)) {
-			new_desc->write = (write_fs_t*)write_fs;
+
+		if ( read_mask ( mask ) & ( FDESC_WRITE ) ) {
+			serialf ( "[FS][OPEN] %s Write callback set\n", new_desc->name );
+			new_desc->write = ( write_fs_t* ) write_fs;
 		}
-		if(open == TRUE) {
-			tmp_desc->next = (file_desc_t*)new_desc;
+
+		if ( open == TRUE ) {
+			tmp_desc->next = ( file_desc_t* ) new_desc;
 		}
+
 		return new_desc;
 	}
 
@@ -209,12 +232,17 @@ FILE *f_open ( char *filename, void *dir, char *mask ) {
 		return 0;    //error
 	}
 
-	FILE *file;
-	file = ( FILE * ) f_finddir ( dir, filename );
+	struct dirent *d;
+	d = (struct dirent*) readdir_fs(fs_root, 1);
+	serialf("name1: %s\n", d->name);
 
+	FILE *file;
+	file = ( FILE * ) f_finddir ( (fs_node_t*) dir, filename );
+	
+	
 	//a file already exists to be opened
 	if ( file ) {
-		return __open__(file->node, filename, mask, TRUE);
+		return __open__ ( file->node, filename, mask, TRUE );
 	}
 
 	//if we are outside, return an error
@@ -223,9 +251,9 @@ FILE *f_open ( char *filename, void *dir, char *mask ) {
 }
 
 FILE *f_finddir ( void *node, char *name ) {
-
+	return (FILE*)finddir_fs(node, name);
 }
 
 char *name_of_dir ( void *node ) {
-	return ((fs_node_t*)node)->name;
+	return ( ( fs_node_t* ) node )->name;
 }

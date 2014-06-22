@@ -68,15 +68,24 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
-	FILE *f, *e;
+
+	struct dirent *d;
+	d = (struct dirent*) readdir_fs(fs_root, 1);
+	serialf("name: %s\n", d->name);
+	struct fs_node *t;
+	t = (struct fs_node*) finddir_fs(fs_root, d->name);
+	serialf("inode: %d\n", t->inode);
+	char *but = (char*)kmalloc(sizeof(char) * 67);
+	read_fs(t, 0, 66, but);
+	serialf("out: %s\n", but);
+
+	FILE *f, *e, *g;
 	f = (FILE*) f_open("1", fs_root, "r");
-	print_desc();
-	e = (FILE*) f_open("3", fs_root, "rw");
-	print_desc();
+	g = (FILE*) f_open("2", fs_root, "rw");
+	e = (FILE*) f_open("3", fs_root, "rwa");
 	char *buf = (char*)kmalloc(sizeof(char) * 32);
 	f_read(f, 0, 2, buf); //TODO start reading files;
 	printf(buf);
-	printf("%s\n", name_of_dir(fs_root));
 	
 	startShell();
 
