@@ -1,6 +1,5 @@
 #include "fs.h"
 #include "vfs.h"
-#include "initrd.h"
 
 //the curent directory node
 void *currentDirectory;
@@ -14,12 +13,6 @@ s8int init_file_system() {
 	strcpy ( initial_file_desc->name, "root" );
 	initial_file_desc->next = 0;
 	// We need to load initrd files to the init_file_desc.
-	
-	return 0;
-}
-
-s8int init_initrd_desc() {
-	printf("Initializing Initrd Descriptors.");
 	
 	return 0;
 }
