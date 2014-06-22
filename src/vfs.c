@@ -8,6 +8,8 @@ extern fs_node_t *initrd_dev;              // Root dir
 extern fs_node_t *root_nodes;              // List of file nodes.
 extern int nroot_nodes;                    // Number of file nodes.
 
+
+
 /*
 // Read a section of data from node
 // TODO make shure this makes sense...

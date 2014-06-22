@@ -167,6 +167,8 @@ void init() {
 
 	runModule ( &locate_initrd );
 
+	runModule ( &init_initrd_desc );
+
 	// Start paging.
 	runModule ( &initialise_paging );
 

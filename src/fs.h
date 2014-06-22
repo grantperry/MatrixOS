@@ -59,6 +59,8 @@ typedef struct file_desc FILE;
 
 s8int init_file_system();
 
+s8int init_initrd_desc();
+
 file_desc_t *lookup_file_desc ( void *node );
 
 u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer );
