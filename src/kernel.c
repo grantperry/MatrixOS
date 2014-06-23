@@ -79,13 +79,16 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	read_fs(t, 0, 66, but);
 	serialf("out: %s\n", but);
 
-	FILE *f, *e, *g;
+	/*FILE *f, *e, *g;
 	f = (FILE*) f_open("1", fs_root, "r");
 	g = (FILE*) f_open("2", fs_root, "rw");
 	e = (FILE*) f_open("3", fs_root, "rwa");
 	char *buf = (char*)kmalloc(sizeof(char) * 32);
 	f_read(f, 0, 2, buf); //TODO start reading files;
-	printf(buf);
+	printf(buf);*/
+	
+	FILE *q;
+	q = (FILE*) f_open("4", fs_root, "r");
 	
 	startShell();
 

@@ -4,6 +4,7 @@
 #include "common.h"
 #include "initrd.h"
 
+// used for the flags in "fs_node_t"
 #define FS_FILE        0x01
 #define FS_DIRECTORY   0x02
 #define FS_CHARDEVICE  0x03

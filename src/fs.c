@@ -164,22 +164,23 @@ u8int read_mask ( char *mask ) {
 }
 
 FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
+	serialf("[FS] Starting open\n");
 	if ( node ) {
 		file_desc_t *tmp_desc;
 		tmp_desc = initial_file_desc;
 
 		if ( !tmp_desc ) {
-			serialf ( "[FS] no file descriptor " );
+			serialf ( "[FS] ERROR file descriptor has not been initalized\n" );
 			return 0;
 		}
 
-		for ( ; tmp_desc->next; tmp_desc = tmp_desc->next ) {
+		for ( ; tmp_desc->next; tmp_desc = tmp_desc->next ) { //either locate the end of the list or find the old descriptor.
 			if ( &tmp_desc == 0 ) {
-				break;
+				break; //we found the end so we can make a new descriptor.
 			}
 
 			if ( tmp_desc->node == node ) {
-				return tmp_desc; //no point in returning error
+				return tmp_desc; //it has already been opened
 			}
 		}
 
@@ -194,6 +195,7 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 		//TODO set FS TYPE!
 		new_desc->fs_type = M_VFS; //TODO set real FS Type
 		//TODO set NODE TYPE!
+		new_desc->node_type = 
 		new_desc->permisions = read_mask ( mask );
 		new_desc->next = 0; //so we dont walk of the end.
 
@@ -235,7 +237,6 @@ FILE *f_open ( char *filename, void *dir, char *mask ) {
 
 	struct dirent *d;
 	d = (struct dirent*) readdir_fs(fs_root, 1);
-	serialf("name1: %s\n", d->name);
 
 	FILE *file;
 	file = ( FILE * ) f_finddir ( (fs_node_t*) dir, filename );
@@ -243,6 +244,7 @@ FILE *f_open ( char *filename, void *dir, char *mask ) {
 	
 	//a file already exists to be opened
 	if ( file ) {
+		serialf("[FS] File Exists and is being opened\n");
 		return __open__ ( file->node, filename, mask, TRUE );
 	}
 
