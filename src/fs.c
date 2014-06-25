@@ -172,9 +172,10 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 				return tmp;    //no need to open, just return it
 			}
 		}
+		//we have the next pointer in the list.
+		
 	}
 	serialf("[FS] __open__ failed\n");
-	kfree(tmp);
 	return 0; //cause your a fail!
 }
 
