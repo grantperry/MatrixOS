@@ -23,7 +23,6 @@ s8int init_file_system() {
 file_desc_t *lookup_file_desc ( void *node ) {
 	file_desc_t *temp_desc;
 	temp_desc = initial_file_desc; //make a copy so we dont muck it up.
-	serialf("[FS] file name: %s and node: %d\n", temp_desc->next->next->name, temp_desc->next->next->inode);
 
 	for ( ; temp_desc->node != node && temp_desc; temp_desc = temp_desc->next ) {
 	}
@@ -164,58 +163,18 @@ u8int read_mask ( char *mask ) {
 }
 
 FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
-	serialf("[FS] Starting open\n");
-	if ( node ) {
-		file_desc_t *tmp_desc;
-		tmp_desc = initial_file_desc;
-
-		if ( !tmp_desc ) {
-			serialf ( "[FS] ERROR file descriptor has not been initalized\n" );
-			return 0;
-		}
-
-		for ( ; tmp_desc->next; tmp_desc = tmp_desc->next ) { //either locate the end of the list or find the old descriptor.
-			if ( &tmp_desc == 0 ) {
-				break; //we found the end so we can make a new descriptor.
-			}
-
-			if ( tmp_desc->node == node ) {
-				return tmp_desc; //it has already been opened
+	file_desc_t *tmp, *new;
+	if (node) {
+		tmp = initial_file_desc;
+		for ( ; tmp->next; tmp = tmp->next ) {
+			//if we already have this file node in the list
+			if ( tmp->node == node ) {
+				return tmp;    //no need to open, just return it
 			}
 		}
-
-		file_desc_t *new_desc; //new descriptor for the list
-		new_desc = ( file_desc_t* ) kmalloc ( sizeof ( file_desc_t ) );
-		u16int new_name_len;
-		new_name_len = strlen ( name ); //get the name and transfer it.
-		new_desc->name = ( char* ) kmalloc ( new_name_len + 1 ); // +1 for the \000
-		memcpy ( new_desc->name, name, new_name_len + 1 ); // save the name
-		new_desc->name_length = new_name_len; //save the length...
-		new_desc->node = node; //save the directory node
-		//TODO set FS TYPE!
-		new_desc->fs_type = M_VFS; //TODO set real FS Type
-		//TODO set NODE TYPE!
-		new_desc->node_type = 
-		new_desc->permisions = read_mask ( mask );
-		new_desc->next = 0; //so we dont walk of the end.
-
-		if ( read_mask ( mask ) & ( FDESC_READ ) ) {
-			serialf ( "[FS][OPEN] %s Read callback set\n", new_desc->name );
-			new_desc->read = ( read_fs_t* ) read_fs;
-		}
-
-		if ( read_mask ( mask ) & ( FDESC_WRITE ) ) {
-			serialf ( "[FS][OPEN] %s Write callback set\n", new_desc->name );
-			new_desc->write = ( write_fs_t* ) write_fs;
-		}
-
-		if ( open == TRUE ) {
-			tmp_desc->next = ( file_desc_t* ) new_desc;
-		}
-
-		return new_desc;
 	}
-
+	serialf("[FS] __open__ failed\n");
+	kfree(tmp);
 	return 0; //cause your a fail!
 }
 
@@ -231,22 +190,10 @@ void print_desc() {
 }
 
 FILE *f_open ( char *filename, void *dir, char *mask ) {
-	if ( !dir ) {
-		return 0;    //error
-	}
+	struct fs_node *file = (struct fs_node*)f_finddir(fs_root, filename);
+	serialf("file: %s inode: %d\n", filename, file->name);
+	return __open__((void*)file->inode, (char*)file->name, (char*)mask, 1);
 
-	struct dirent *d;
-	d = (struct dirent*) readdir_fs(fs_root, 1);
-
-	FILE *file;
-	file = ( FILE * ) f_finddir ( (fs_node_t*) dir, filename );
-	
-	
-	//a file already exists to be opened
-	if ( file ) {
-		serialf("[FS] File Exists and is being opened\n");
-		return __open__ ( file->node, filename, mask, TRUE );
-	}
 
 	//if we are outside, return an error
 	return 0;

@@ -43,9 +43,9 @@ struct fs_node {
 	u32int uid;         // The owning user.
 	u32int gid;         // The owning group.
 	u32int flags;       // Includes the node type. See #defines above.
-	u32int inode;       // This is device-specific - provides a way for a filesystem to identify files.
+	u32int inode;       // file identifier. used in this device only
 	u32int impl;        // An implementation-defined number.
-	u32int node_type;
+	u32int node_type;	// is it a file, directory, symlink
 
 	u32int length;      // Size of the file, in bytes. add up lengths in linked list to check...
 	struct fs_block *pointer; //for files

@@ -88,7 +88,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	printf(buf);*/
 	
 	FILE *q;
-	q = (FILE*) f_open("4", fs_root, "r");
+	q = (FILE*) f_open("1", fs_root, "r");
 	
 	startShell();
 
