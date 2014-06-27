@@ -3,12 +3,10 @@
 
 fs_node_t *fs_root = 0; // The root of the filesystem.
 
-extern fs_node_t *initrd_root;             // Parent of root
-extern fs_node_t *initrd_dev;              // Root dir
-extern fs_node_t *root_nodes;              // List of file nodes.
-extern int nroot_nodes;                    // Number of file nodes.
-
-
+fs_node_t *initrd_root;			 // Our root directory node.
+fs_node_t *initrd_dev;			  // We also add a directory node for /dev, so we can mount devfs later on.
+fs_node_t *root_nodes;			  // List of file nodes.
+int nroot_nodes;					// Number of file nodes.
 
 /*
 // Read a section of data from node

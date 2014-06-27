@@ -4,10 +4,11 @@
 
 initrd_header_t *initrd_header;	 // The header.
 initrd_file_header_t *file_headers; // The list of file headers.
-fs_node_t *initrd_root;			 // Our root directory node.
-fs_node_t *initrd_dev;			  // We also add a directory node for /dev, so we can mount devfs later on.
-fs_node_t *root_nodes;			  // List of file nodes.
-int nroot_nodes;					// Number of file nodes.
+
+extern fs_node_t *initrd_root;             // Parent of root
+extern fs_node_t *initrd_dev;              // Root dir
+extern fs_node_t *root_nodes;              // List of file nodes.
+extern int nroot_nodes;                    // Number of file nodes.
 
 struct dirent dirent;
 
@@ -62,6 +63,7 @@ fs_node_t *initrd_finddir ( fs_node_t *node, char *name ) {
 
 	for ( i = 0; i < nroot_nodes; i++ )
 		if ( !strcmp ( name, root_nodes[i].name ) ) {
+			serialf("[INITRD][FINDDIR]  inode: %d\tint_inode: %d\tname: %s\n", i, root_nodes[i].inode, root_nodes[i].name); 
 			return &root_nodes[i];
 		}
 
@@ -129,6 +131,8 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].open = 0;
 		root_nodes[i].close = 0;
 		root_nodes[i].impl = 0;
+		
+		serialf("[INITRD][REGISTER] name: %s,\tlength: %d\tinode: %d\n", file_headers[i].name, file_headers[i].length, i);
 	}
 
 
