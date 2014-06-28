@@ -39,11 +39,11 @@ typedef struct fs_block {
 
 struct fs_node {
 	u8int magic;		//required to find out type of node.
+	u32int fstype;       // Includes the node type. See #defines above.
 	char name[128];     // The filename.
 	u32int mask;        // The permissions mask.
 	u32int uid;         // The owning user.
 	u32int gid;         // The owning group.
-	u32int flags;       // Includes the node type. See #defines above.
 	u32int inode;       // file identifier. used in this device only
 	u32int impl;        // An implementation-defined number.
 	u32int node_type;	// is it a file, directory, symlink

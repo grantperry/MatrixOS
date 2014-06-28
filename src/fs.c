@@ -171,19 +171,41 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 	for ( ; tmp->next; tmp = tmp->next ) {
 		//if we already have this file node in the list
 		if ( tmp->node == node ) {
-			serialf("[FS] File already opened\n");
+			serialf("[FS][OPEN] File already opened\n");
 			return tmp;    //no need to open, just return it
 		}
 	}
-	//we have the next pointer in the list.
+	
 	tmp = (file_desc_t*)kmalloc(sizeof(file_desc_t));
-	tmp->next = 0; //next descriptor aint there.
+
+	//copy the name over
 	u32int name_length = strlen(name);
-	tmp->name = (char*)kmalloc(name_length + 1); // extra char for \000
+	tmp->name = (char*)kmalloc(name_length + 1); // +1 for the \000
 	memcpy(tmp->name, name, name_length + 1);
+
 	tmp->node = node;
-	
-	
+	tmp->fs_type = ((generic_fs_t*)node)->magic;
+	tmp->node_type = node_type(node);
+	//we have the next pointer in the list.
+	if (node_fs_type(node) == M_VFS) {
+		serialf("[FS][OPEN] VFS\n");
+		tmp->inode = ((fs_node_t*)node)->inode;
+		tmp->size = ((fs_node_t*)node)->length;
+		
+		//if it is a directory
+      if(new_desc->node_type == TYPE_DIRECTORY)
+      {
+        new_desc->_read = 0;
+        new_desc->_write = 0;
+        new_desc->_finddir = (void*)finddir_fs;
+        new_desc->_readdir = (void*)readdir_fs;
+      }else{
+        new_desc->_read = (void*)read_fs;
+        new_desc->_write = (void*)write_fs;
+        new_desc->_finddir = 0;
+        new_desc->_readdir = 0;
+      }
+	}
 	
 	serialf("[FS][OPEN] failed\n");
 	return 0; //cause your a fail!
@@ -201,11 +223,13 @@ void print_desc() {
 }
 
 FILE *f_open ( char *filename, void *dir, char *mask ) {
-	//struct fs_node *file = (struct fs_node*)f_finddir(dir, filename);
-	//serialf("file: %s inode: %d\n", file->name, file->inode);
-	//TODO return __open__((void*)file->node, (char*)file->name, (char*)mask, 1);
-
-
+	FILE *file = (FILE*)f_finddir(dir, filename);
+	serialf("file: %s inode: %d\n", file->name, file->inode);
+	if (file) {
+		if (read_mask(mask) & (FDESC_CLEAR | FDESC_READ) == (FDESC_CLEAR | FDESC_READ)) {
+			FILE *rc = (FILE*)__open__((void*)file->node, (char*)file->name, (char*)mask, 1);
+		}
+	}
 	//if we are outside, return an error
 	return 0;
 
@@ -216,20 +240,25 @@ u32int node_type ( void *node ) {
 	return nodet->magic;
 }
 
+u32int node_fs_type ( void *node ) {
+	generic_fs_t *nodet = (generic_fs_t*) node;
+	return nodet->fstype;
+}
+
 FILE *f_finddir ( void *node, char *name ) {
 	if (node_type(node) == FS_DIRECTORY) {
-		serialf("[FS][INITRD][FINDDIR]");
-		switch(((generic_fs_t*)node)->magic) {
+		serialf("[FS][INITRD][FINDDIR]\n");
+		switch(((generic_fs_t*)node)->fstype) {
 			case M_UNKNOWN:
 				return 0; //error
 			case M_VFS: 
 			{
 				//case the void * node to the vfs node structure
 				fs_node_t *vfs_node = node;
-				serialf("[FS][INITRD][FINDDIR][VFS]");
+				serialf("[FS][INITRD][FINDDIR][VFS]\n");
 				if(vfs_node->finddir) {
 					//return an unopened file node with no r/w/a permissions at all to the actuall node data
-					serialf("[FS][FINDDIR]");
+					serialf("[FS][INITRD][FINDDIR] worked\n");
 					return __open__(vfs_node->finddir(vfs_node, name), name, 0, FALSE);
 				} else {
 					break;

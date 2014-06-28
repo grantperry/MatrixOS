@@ -58,6 +58,7 @@ typedef struct file_desc FILE;
 
 typedef struct generic_fs {
 	u8int magic;
+	u32int fstype;
 } generic_fs_t;
 
 s8int init_file_system();
@@ -79,6 +80,8 @@ FILE *f_open ( char *filename, void *dir, char *mask );
 FILE *f_finddir ( void *node, char *name );
 
 u32int node_type ( void *node );
+
+u32int node_fs_type ( void *node );
 
 char *name_of_dir ( void *node );
 

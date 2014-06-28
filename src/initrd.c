@@ -63,7 +63,7 @@ fs_node_t *initrd_finddir ( fs_node_t *node, char *name ) {
 
 	for ( i = 0; i < nroot_nodes; i++ )
 		if ( !strcmp ( name, root_nodes[i].name ) ) {
-			serialf("[INITRD][FINDDIR]  inode: %d\tint_inode: %d\tname: %s\n", i, root_nodes[i].inode, root_nodes[i].name); 
+			serialf("[INITRD][FINDDIR]  inode: %d\tint_inode: %d\tname: \"%s\"\n", i, root_nodes[i].inode, root_nodes[i].name); 
 			return &root_nodes[i];
 		}
 
@@ -83,7 +83,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	strcpy ( initrd_root->name, "initrd" );
 	strcpy ( initrd_root->name + sizeof("initrd"), '\000');
 	initrd_root->mask = initrd_root->uid = initrd_root->gid = initrd_root->inode = initrd_root->length = 0;
-	initrd_root->node_type = M_VFS;
+	initrd_root->fstype = M_VFS;
 	initrd_root->magic = NODE_DIRECTORY;
 	initrd_root->read = 0;
 	initrd_root->write = 0;
@@ -98,7 +98,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	initrd_dev = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) );
 	strcpy ( initrd_dev->name, "dev" );
 	initrd_dev->mask = initrd_dev->uid = initrd_dev->gid = initrd_dev->inode = initrd_dev->length = 0;
-	initrd_dev->node_type = M_VFS;
+	initrd_dev->fstype = M_VFS;
 	initrd_dev->magic = NODE_DIRECTORY;
 	initrd_dev->read = 0;
 	initrd_dev->write = 0;
@@ -125,7 +125,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].mask = root_nodes[i].uid = root_nodes[i].gid = 0;
 		root_nodes[i].length = file_headers[i].length;
 		root_nodes[i].inode = i;
-		root_nodes[i].node_type = M_VFS;
+		root_nodes[i].fstype = M_VFS;
 		root_nodes[i].magic = NODE_FILE;
 		root_nodes[i].read = &initrd_read;
 		root_nodes[i].write = 0;
