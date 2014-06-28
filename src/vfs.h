@@ -38,6 +38,7 @@ typedef struct fs_block {
 } fs_block_t;
 
 struct fs_node {
+	u8int magic;		//required to find out type of node.
 	char name[128];     // The filename.
 	u32int mask;        // The permissions mask.
 	u32int uid;         // The owning user.

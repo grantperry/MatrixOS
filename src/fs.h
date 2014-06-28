@@ -40,6 +40,7 @@ typedef struct file_desc {
 	u32int fs_type;     //is it VFS, EXT2, etc.
 	u32int node_type;   //is it a file, directory, ect.
 	u8int permisions;
+	u32int inode;
 	void *node;
 	u32int size;
 

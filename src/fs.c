@@ -4,7 +4,9 @@
 //the curent directory node
 void *currentDirectory;
 
-//initial file descriptor location
+/* Initial file descriptor location
+// This holds the descriptors for open files.
+*/
 file_desc_t *initial_file_desc;
 
 s8int init_file_system() {
@@ -163,19 +165,27 @@ u8int read_mask ( char *mask ) {
 }
 
 FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
-	file_desc_t *tmp, *new;
-	if (node) {
-		tmp = initial_file_desc;
-		for ( ; tmp->next; tmp = tmp->next ) {
-			//if we already have this file node in the list
-			if ( tmp->node == node ) {
-				return tmp;    //no need to open, just return it
-			}
+	file_desc_t *tmp;
+	serialf("[FS][OPEN]\n");
+	tmp = initial_file_desc;
+	for ( ; tmp->next; tmp = tmp->next ) {
+		//if we already have this file node in the list
+		if ( tmp->node == node ) {
+			serialf("[FS] File already opened\n");
+			return tmp;    //no need to open, just return it
 		}
-		//we have the next pointer in the list.
-		
 	}
-	serialf("[FS] __open__ failed\n");
+	//we have the next pointer in the list.
+	tmp = (file_desc_t*)kmalloc(sizeof(file_desc_t));
+	tmp->next = 0; //next descriptor aint there.
+	u32int name_length = strlen(name);
+	tmp->name = (char*)kmalloc(name_length + 1); // extra char for \000
+	memcpy(tmp->name, name, name_length + 1);
+	tmp->node = node;
+	
+	
+	
+	serialf("[FS][OPEN] failed\n");
 	return 0; //cause your a fail!
 }
 
@@ -192,7 +202,7 @@ void print_desc() {
 
 FILE *f_open ( char *filename, void *dir, char *mask ) {
 	struct fs_node *file = (struct fs_node*)f_finddir(fs_root, filename);
-	serialf("file: %s inode: %d\n", filename, file->name);
+	serialf("file: %s inode: %d\n", file->name, file->inode);
 	return __open__((void*)file->inode, (char*)file->name, (char*)mask, 1);
 
 
