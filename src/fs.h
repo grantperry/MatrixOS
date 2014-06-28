@@ -71,8 +71,6 @@ u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer );
 
 u32int f_write ( FILE *node, u32int offset, u32int size, u8int *buffer );
 
-static u8int __open_fs_mask_to_u32int__ ( char *mask );
-
 FILE *__open__ ( void *node, char *name, char *mask, u8int open );
 
 FILE *f_open ( char *filename, void *dir, char *mask );
