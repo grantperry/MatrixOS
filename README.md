@@ -1,6 +1,6 @@
 MatrixOS v1.3.0
 ========
-![MatrixOSBoot](https://raw.githubusercontent.com/teenHack42/MatrixOS/master/docs/MatrixOSBootv1.2.2.png)
+![MatrixOSBoot](https://raw.githubusercontent.com/teenHack42/MatrixOS/master/docs/MatrixOSBootv1.3.0.png)
 
 My hobby OS!
 
