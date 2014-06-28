@@ -3,10 +3,10 @@
 
 fs_node_t *fs_root = 0; // The root of the filesystem.
 
-extern fs_node_t *initrd_root;             // Parent of root
-extern fs_node_t *initrd_dev;              // Root dir
-extern fs_node_t *root_nodes;              // List of file nodes.
-extern int nroot_nodes;                    // Number of file nodes.
+fs_node_t *initrd_root;			 // Our root directory node.
+fs_node_t *initrd_dev;			  // We also add a directory node for /dev, so we can mount devfs later on.
+fs_node_t *root_nodes;			  // List of file nodes.
+int nroot_nodes;					// Number of file nodes.
 
 /*
 // Read a section of data from node
@@ -63,7 +63,7 @@ void close_fs ( fs_node_t *node ) {
 */
 struct dirent *readdir_fs ( fs_node_t *node, u32int index ) {
 	// Is the node a directory, and does it have a callback?
-	if ( ( node->flags&0x7 ) == FS_DIRECTORY &&
+	if ( ( node->fstype&0x7 ) == FS_DIRECTORY &&
 			node->readdir != 0 ) {
 		return node->readdir ( node, index );
 
@@ -77,10 +77,8 @@ struct dirent *readdir_fs ( fs_node_t *node, u32int index ) {
 */
 fs_node_t *finddir_fs ( fs_node_t *node, char *name ) {
 	// Is the node a directory, and does it have a callback?
-	if ( ( node->flags&0x7 ) == FS_DIRECTORY &&
-			node->finddir != 0 ) {
+	if ( ( node->fstype&0x7 ) == FS_DIRECTORY && node->finddir != 0 ) {
 		return node->finddir ( node, name );
-
 	} else {
 		return 0;
 	}
@@ -101,7 +99,7 @@ fs_node_t *vfs_createFile ( fs_node_t *parentNode, char *name, u32int size ) {
 	//set the pointers to singly, doubly, triply to 0
 	root_nodes[n].pointer = 0;
 
-	root_nodes[n].flags = FS_FILE;
+	root_nodes[n].fstype = FS_FILE;
 	root_nodes[n].read = &initrd_read;
 	//~ root_nodes[n].write = 0;
 	//root_nodes[n].write = &initrd_write;
@@ -130,7 +128,7 @@ int findOpenNode() {
 	for ( i = 0; i < nroot_nodes; i++ )
 
 		//if all of those headers are not used, then there is no file
-		if ( !* ( root_nodes[i].name ) && !root_nodes[i].inode && !root_nodes[i].mask && !root_nodes[i].flags ) {
+		if ( !* ( root_nodes[i].name ) && !root_nodes[i].inode && !root_nodes[i].mask && !root_nodes[i].fstype ) {
 			return i;
 		}
 
@@ -152,7 +150,7 @@ int addFileToDir ( fs_node_t *dirNode, fs_node_t *fileNode ) {
 	dirent.rec_len = sizeof ( dirent.ino ) + sizeof ( dirent.rec_len ) + sizeof ( dirent.name ) + sizeof ( dirent.file_type ) + sizeof ( dirent.name_len ) + lengthOfName;
 
 	dirent.name_len = ( u8int ) lengthOfName;
-	dirent.file_type = fileNode->flags;
+	dirent.file_type = fileNode->fstype;
 	printf ( "3\n" );
 
 	//+1 being the \000 NULL termination 0 byte at the end of the string

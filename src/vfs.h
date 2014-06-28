@@ -4,6 +4,7 @@
 #include "common.h"
 #include "initrd.h"
 
+// used for the flags in "fs_node_t"
 #define FS_FILE        0x01
 #define FS_DIRECTORY   0x02
 #define FS_CHARDEVICE  0x03
@@ -37,14 +38,15 @@ typedef struct fs_block {
 } fs_block_t;
 
 struct fs_node {
+	u8int magic;		//required to find out type of node.
+	u32int fstype;       // Includes the node type. See #defines above.
 	char name[128];     // The filename.
 	u32int mask;        // The permissions mask.
 	u32int uid;         // The owning user.
 	u32int gid;         // The owning group.
-	u32int flags;       // Includes the node type. See #defines above.
-	u32int inode;       // This is device-specific - provides a way for a filesystem to identify files.
+	u32int inode;       // file identifier. used in this device only
 	u32int impl;        // An implementation-defined number.
-	u32int node_type;
+	u32int node_type;	// is it a file, directory, symlink
 
 	u32int length;      // Size of the file, in bytes. add up lengths in linked list to check...
 	struct fs_block *pointer; //for files

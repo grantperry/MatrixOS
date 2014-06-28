@@ -4,10 +4,11 @@
 
 initrd_header_t *initrd_header;	 // The header.
 initrd_file_header_t *file_headers; // The list of file headers.
-fs_node_t *initrd_root;			 // Our root directory node.
-fs_node_t *initrd_dev;			  // We also add a directory node for /dev, so we can mount devfs later on.
-fs_node_t *root_nodes;			  // List of file nodes.
-int nroot_nodes;					// Number of file nodes.
+
+extern fs_node_t *initrd_root;             // Parent of root
+extern fs_node_t *initrd_dev;              // Root dir
+extern fs_node_t *root_nodes;              // List of file nodes.
+extern int nroot_nodes;                    // Number of file nodes.
 
 struct dirent dirent;
 
@@ -62,6 +63,7 @@ fs_node_t *initrd_finddir ( fs_node_t *node, char *name ) {
 
 	for ( i = 0; i < nroot_nodes; i++ )
 		if ( !strcmp ( name, root_nodes[i].name ) ) {
+			serialf("[INITRD][FINDDIR]  inode: %d\tint_inode: %d\tname: \"%s\"\n", i, root_nodes[i].inode, root_nodes[i].name); 
 			return &root_nodes[i];
 		}
 
@@ -79,8 +81,10 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	// Initialise the root directory.
 	initrd_root = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) );
 	strcpy ( initrd_root->name, "initrd" );
+	strcpy ( initrd_root->name + sizeof("initrd"), '\000');
 	initrd_root->mask = initrd_root->uid = initrd_root->gid = initrd_root->inode = initrd_root->length = 0;
-	initrd_root->flags = FS_DIRECTORY;
+	initrd_root->fstype = M_VFS;
+	initrd_root->magic = NODE_DIRECTORY;
 	initrd_root->read = 0;
 	initrd_root->write = 0;
 	initrd_root->open = 0;
@@ -94,7 +98,8 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	initrd_dev = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) );
 	strcpy ( initrd_dev->name, "dev" );
 	initrd_dev->mask = initrd_dev->uid = initrd_dev->gid = initrd_dev->inode = initrd_dev->length = 0;
-	initrd_dev->flags = FS_DIRECTORY;
+	initrd_dev->fstype = M_VFS;
+	initrd_dev->magic = NODE_DIRECTORY;
 	initrd_dev->read = 0;
 	initrd_dev->write = 0;
 	initrd_dev->open = 0;
@@ -104,7 +109,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	initrd_dev->ptr = 0;
 	initrd_dev->impl = 0;
 
-	root_nodes = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) * initrd_header->nfiles+ 8 * sizeof ( fs_node_t ) ); //8 extra files////////////////////////////////////////////////////////////////////
+	root_nodes = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) * initrd_header->nfiles * sizeof ( fs_node_t ) ); //8 extra files////////////////////////////////////////////////////////////////////
 	nroot_nodes = initrd_header->nfiles;
 
 	// For every file...
@@ -120,7 +125,8 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].mask = root_nodes[i].uid = root_nodes[i].gid = 0;
 		root_nodes[i].length = file_headers[i].length;
 		root_nodes[i].inode = i;
-		root_nodes[i].flags = FS_FILE;
+		root_nodes[i].fstype = M_VFS;
+		root_nodes[i].magic = NODE_FILE;
 		root_nodes[i].read = &initrd_read;
 		root_nodes[i].write = 0;
 		root_nodes[i].readdir = 0;
@@ -128,21 +134,9 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].open = 0;
 		root_nodes[i].close = 0;
 		root_nodes[i].impl = 0;
+		
+		serialf("[INITRD][REGISTER] name: %s,\tlength: %d\tinode: %d\tmagic: %d\n", file_headers[i].name, file_headers[i].length, i, root_nodes[i].magic);
 	}
-	
-	/*u32int n = findOpenNode();
-	strcpy ( root_nodes[n].name, "testf" );
-	root_nodes[n].mask = root_nodes[n].uid = root_nodes[n].gid = 0;
-	root_nodes[n].length = 0;//may need changing
-	root_nodes[n].inode = n;
-	root_nodes[n].flags = FS_DIRECTORY;
-	root_nodes[n].read = 0;
-	root_nodes[n].write = 0;
-	root_nodes[n].readdir = &initrd_readdir;
-	root_nodes[n].finddir = &initrd_finddir;
-	root_nodes[n].open = 0;
-	root_nodes[n].close = 0;
-	root_nodes[n].impl = 0;*/
 
 
 	return initrd_root;

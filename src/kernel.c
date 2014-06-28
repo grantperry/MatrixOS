@@ -68,6 +68,27 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
+
+	//struct dirent *d;
+	//d = (struct dirent*) readdir_fs(fs_root, 1);
+	//struct fs_node *t;
+	//t = (struct fs_node*) finddir_fs(fs_root, d->name);
+	//serialf("inode: %d\n", t->inode);
+	//char *but = (char*)kmalloc(sizeof(char) * 67);
+	//read_fs(t, 0, 66, but);
+	//serialf("out: %s\n", but);
+
+	/*FILE *f, *e, *g;
+	f = (FILE*) f_open("1", fs_root, "r");
+	g = (FILE*) f_open("2", fs_root, "rw");
+	e = (FILE*) f_open("3", fs_root, "rwa");
+	char *buf = (char*)kmalloc(sizeof(char) * 32);
+	f_read(f, 0, 2, buf); //TODO start reading files;
+	printf(buf);*/
+	
+	FILE *q;
+	q = (FILE*) f_open("1", fs_root, "r");
+	
 	startShell();
 
 	for ( ;; ) {}
@@ -143,6 +164,8 @@ void init() {
 	// Initialise the PIT to 50Hz
 	asm volatile ( "sti" );
 	init_timer ( 50 );
+
+	runModule ( &init_file_system );
 
 	runModule ( &locate_initrd );
 
