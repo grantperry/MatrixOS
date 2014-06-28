@@ -63,7 +63,7 @@ fs_node_t *initrd_finddir ( fs_node_t *node, char *name ) {
 
 	for ( i = 0; i < nroot_nodes; i++ )
 		if ( !strcmp ( name, root_nodes[i].name ) ) {
-			serialf("[INITRD][FINDDIR]  inode: %d\tint_inode: %d\tname: \"%s\"\n", i, root_nodes[i].inode, root_nodes[i].name); 
+			serialf ( "[INITRD][FINDDIR]  inode: %d\tint_inode: %d\tname: \"%s\"\n", i, root_nodes[i].inode, root_nodes[i].name );
 			return &root_nodes[i];
 		}
 
@@ -81,7 +81,7 @@ fs_node_t *initialise_initrd ( u32int location ) {
 	// Initialise the root directory.
 	initrd_root = ( fs_node_t* ) kmalloc ( sizeof ( fs_node_t ) );
 	strcpy ( initrd_root->name, "initrd" );
-	strcpy ( initrd_root->name + sizeof("initrd"), '\000');
+	strcpy ( initrd_root->name + sizeof ( "initrd" ), '\000' );
 	initrd_root->mask = initrd_root->uid = initrd_root->gid = initrd_root->inode = initrd_root->length = 0;
 	initrd_root->fstype = M_VFS;
 	initrd_root->magic = NODE_DIRECTORY;
@@ -134,8 +134,8 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].open = 0;
 		root_nodes[i].close = 0;
 		root_nodes[i].impl = 0;
-		
-		serialf("[INITRD][REGISTER] name: %s,\tlength: %d\tinode: %d\tmagic: %d\n", file_headers[i].name, file_headers[i].length, i, root_nodes[i].magic);
+
+		serialf ( "[INITRD][REGISTER] name: %s,\tlength: %d\tinode: %d\tmagic: %d\n", file_headers[i].name, file_headers[i].length, i, root_nodes[i].magic );
 	}
 
 

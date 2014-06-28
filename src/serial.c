@@ -9,23 +9,29 @@ u8int current_port;
 void init_serial ( u8int port, u16int divisor ) {
 	u16int rate = 115200 / divisor;
 	u32int io;
-	switch (port) {
+
+	switch ( port ) {
 	case 1:
 		io = PORT_COM1;
 		break;
+
 	case 2:
 		io = PORT_COM2;
 		break;
+
 	case 3:
 		io = PORT_COM3;
 		break;
+
 	case 4:
 		io = PORT_COM4;
 		break;
+
 	default:
 		io = DEFAULT_PORT;
 		break;
 	}
+
 	outb ( io + 1, 0x00 ); // Disable all interrupts
 	outb ( io + 3, 0x80 ); // Enable DLAB (set baud rate divisor)
 	outb ( io + 0, ( rate & 0xFF ) ); //(lo byte) MAY BE IN WRONG ORDER
@@ -52,56 +58,69 @@ int is_transmit_empty() {
 
 
 //TODO print message on old port about leaving.
-void set_port(u8int port) {
+void set_port ( u8int port ) {
 	u32int io;
-	switch (port) {
+
+	switch ( port ) {
 	case 1:
 		io = PORT_COM1;
 		break;
+
 	case 2:
 		io = PORT_COM2;
 		break;
+
 	case 3:
 		io = PORT_COM3;
 		break;
+
 	case 4:
 		io = PORT_COM4;
 		break;
+
 	default:
 		io = DEFAULT_PORT;
 		break;
 	}
+
 	current_port = io;
 }
 
 void write_serial ( char a ) {
 	while ( is_transmit_empty() == 0 );
+
 	u32int io;
-	switch (current_port) {
+
+	switch ( current_port ) {
 	case 1:
 		io = PORT_COM1;
 		break;
+
 	case 2:
 		io = PORT_COM2;
 		break;
+
 	case 3:
 		io = PORT_COM3;
 		break;
+
 	case 4:
 		io = PORT_COM4;
 		break;
+
 	default:
 		io = DEFAULT_PORT;
 		break;
 	}
+
 	outb ( io, a );
 }
-void serialf(char *c, ...) {
+void serialf ( char *c, ... ) {
 	va_list arguments;
 
 	int i, numberOfArgs = 0, stringLength = strlen ( c );
 	int integerArg;
-	
+
 	for ( i = 0; c[i]; i++ ) //checks number arguments is correct
 		if ( c[i] == '%' ) {
 			numberOfArgs++;
@@ -110,14 +129,17 @@ void serialf(char *c, ...) {
 	i = 0;
 
 	va_start ( arguments, *c );
-	while (c[i]) {
-		if (c[i] == '%') {
+
+	while ( c[i] ) {
+		if ( c[i] == '%' ) {
 			i++;
-			if (c[i] == 's') {
+
+			if ( c[i] == 's' ) {
 				char *charArrayArg;
 				charArrayArg = va_arg ( arguments, char* );
-				serialf(charArrayArg);
+				serialf ( charArrayArg );
 			}
+
 			if ( c[i] == 'd' ) {
 				integerArg = va_arg ( arguments, int );
 
@@ -134,14 +156,16 @@ void serialf(char *c, ...) {
 					write_serial ( integer[x] );
 
 				}
-				}
-				if ( c[i] == 'c' ) { //user wants to print a char
+			}
+
+			if ( c[i] == 'c' ) { //user wants to print a char
 				char *charArg;
 				charArg = va_arg ( arguments, char* );
 
 				write_serial ( charArg[0] );
 
 			}
+
 			if ( c[i] == 'h' ) { //user wants to print a hex number
 
 				u32int hexArg = va_arg ( arguments, u32int );
@@ -180,12 +204,14 @@ void serialf(char *c, ...) {
 					write_serial ( tmp+'0' );
 				}
 			}
+
 		} else {
-			write_serial(c[i]);
+			write_serial ( c[i] );
 		}
+
 		i++;
 	}
-	
+
 	va_end ( arguments );
 }
 

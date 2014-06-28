@@ -25,6 +25,6 @@ int is_transmit_empty();
 
 void write_serial ( char a );
 
-void serialf(char *c, ...);
+void serialf ( char *c, ... );
 
 #endif//SERIAL_H

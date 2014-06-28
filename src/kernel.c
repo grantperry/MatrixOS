@@ -85,10 +85,10 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	char *buf = (char*)kmalloc(sizeof(char) * 32);
 	f_read(f, 0, 2, buf); //TODO start reading files;
 	printf(buf);*/
-	
+
 	FILE *q;
-	q = (FILE*) f_open("1", fs_root, "r");
-	
+	q = ( FILE* ) f_open ( "1", fs_root, "r" );
+
 	startShell();
 
 	for ( ;; ) {}
