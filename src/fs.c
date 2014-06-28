@@ -201,9 +201,9 @@ void print_desc() {
 }
 
 FILE *f_open ( char *filename, void *dir, char *mask ) {
-	struct fs_node *file = (struct fs_node*)f_finddir(fs_root, filename);
-	serialf("file: %s inode: %d\n", file->name, file->inode);
-	return __open__((void*)file->inode, (char*)file->name, (char*)mask, 1);
+	//struct fs_node *file = (struct fs_node*)f_finddir(dir, filename);
+	//serialf("file: %s inode: %d\n", file->name, file->inode);
+	//TODO return __open__((void*)file->node, (char*)file->name, (char*)mask, 1);
 
 
 	//if we are outside, return an error
@@ -211,8 +211,32 @@ FILE *f_open ( char *filename, void *dir, char *mask ) {
 
 }
 
+u32int node_type ( void *node ) {
+	generic_fs_t *nodet = (generic_fs_t*) node;
+	return nodet->magic;
+}
+
 FILE *f_finddir ( void *node, char *name ) {
-	return (FILE*)finddir_fs(node, name);
+	if (node_type(node) == FS_DIRECTORY) {
+		serialf("[FS][INITRD][FINDDIR]");
+		switch(((generic_fs_t*)node)->magic) {
+			case M_UNKNOWN:
+				return 0; //error
+			case M_VFS: 
+			{
+				//case the void * node to the vfs node structure
+				fs_node_t *vfs_node = node;
+				serialf("[FS][INITRD][FINDDIR][VFS]");
+				if(vfs_node->finddir) {
+					//return an unopened file node with no r/w/a permissions at all to the actuall node data
+					serialf("[FS][FINDDIR]");
+					return __open__(vfs_node->finddir(vfs_node, name), name, 0, FALSE);
+				} else {
+					break;
+				}
+			}
+		}
+	}
 }
 
 char *name_of_dir ( void *node ) {

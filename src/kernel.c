@@ -71,7 +71,6 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	struct dirent *d;
 	d = (struct dirent*) readdir_fs(fs_root, 1);
-	serialf("name: %s\n", d->name);
 	struct fs_node *t;
 	t = (struct fs_node*) finddir_fs(fs_root, d->name);
 	serialf("inode: %d\n", t->inode);

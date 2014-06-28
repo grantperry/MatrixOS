@@ -17,16 +17,16 @@
 
 ///node type values
 enum {
-	nTYPE_UNKOWN,
-	nTYPE_FILE,
-	nTYPE_DIRECTORY,
-	nTYPE_CHARD_DEV,
-	nTYPE_BLOCK_DEV,
-	nTYPE_FIFO,
-	nTYPE_SOCKET,
-	nTYPE_SYMLINK,
-	nTYPE_HARDLINK,
-	nTYPE_MOUNTPOINT
+	NODE_UNKOWN,
+	NODE_FILE,
+	NODE_DIRECTORY,
+	NODE_CHARD_DEV,
+	NODE_BLOCK_DEV,
+	NODE_FIFO,
+	NODE_SOCKET,
+	NODE_SYMLINK,
+	NODE_HARDLINK,
+	NODE_MOUNTPOINT
 };
 
 typedef u32int ( *read_fs_t ) ( void*, u32int, u32int, u8int* );
@@ -55,6 +55,10 @@ typedef struct file_desc {
 } file_desc_t;
 
 typedef struct file_desc FILE;
+
+typedef struct generic_fs {
+	u8int magic;
+} generic_fs_t;
 
 s8int init_file_system();
 
