@@ -19,8 +19,8 @@
 #include "elf_loader.h"
 
 #define VER_MAJOR		1
-#define VER_MINOR		2
-#define VER_FIX			3
+#define VER_MINOR		3
+#define VER_FIX			0
 
 //#define TASKING_USER
 
@@ -68,30 +68,12 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
-
-	//struct dirent *d;
-	//d = (struct dirent*) readdir_fs(fs_root, 1);
-	//struct fs_node *t;
-	//t = (struct fs_node*) finddir_fs(fs_root, d->name);
-	//serialf("inode: %d\n", t->inode);
-	//char *but = (char*)kmalloc(sizeof(char) * 67);
-	//read_fs(t, 0, 66, but);
-	//serialf("out: %s\n", but);
-
-	/*FILE *f, *e, *g;
-	f = (FILE*) f_open("1", fs_root, "r");
-	g = (FILE*) f_open("2", fs_root, "rw");
-	e = (FILE*) f_open("3", fs_root, "rwa");
-	char *buf = (char*)kmalloc(sizeof(char) * 32);
-	f_read(f, 0, 2, buf); //TODO start reading files;
-	printf(buf);*/
-
-	FILE *q;
+	/*FILE *q;
 	q = ( FILE* ) f_open ( "1", fs_root, "r" );
 	serialf ( "RETURNED\n" );
 	char *buf = ( char* ) kmalloc ( sizeof ( char ) * 150 );
 	f_read ( q, 0, 150, buf );
-	serialf("\n\n%s\n", buf);
+	serialf("\n\n%s\n", buf);*/
 
 	startShell();
 
