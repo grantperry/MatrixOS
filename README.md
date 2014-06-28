@@ -1,4 +1,4 @@
-MatrixOS
+MatrixOS v1.3.0
 ========
 ![MatrixOSBoot](https://raw.githubusercontent.com/teenHack42/MatrixOS/master/docs/MatrixOSBootv1.2.2.png)
 
@@ -13,7 +13,7 @@ Features
   - [x] Sydney
   - [ ] Welcome to add your own.
 - [x] Serial Com Port Support
-- [ ] Filesystem support
+- [x] Filesystem support
   - [ ] ext2
   - [ ] ext3-4
   - [ ] fat12
