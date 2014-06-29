@@ -69,6 +69,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
+	test();
+
 	/*FILE *q;
 	q = ( FILE* ) f_open ( "1", fs_root, "r" );
 	serialf ( "RETURNED\n" );
