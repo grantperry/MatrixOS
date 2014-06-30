@@ -1,7 +1,7 @@
 #ifndef ext2_INODE_H
 #define ext2_INODE_H
 
-typedef struct inoode_block_int { //15 x 32 bits
+typedef struct inode_block_int { //15 x 32 bits
 	extl4	block_1;
 	extl4	block_2;
 	extl4	block_3;

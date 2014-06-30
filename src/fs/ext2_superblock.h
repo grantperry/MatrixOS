@@ -128,8 +128,8 @@ typedef struct ext2_superblock {
 	extl4	s_hash_seed_pt3;
 	extl4	s_hash_seed_pt4;
 	extl1	s_def_hash_version;
-	extl2	BUF_DO_NOT_USE2;
-	extl1	BUF_DO_NOT_USE3;
+	extl1	BUF_DO_NOT_USE2;
+	extl2	BUF_DO_NOT_USE3;
 	//Other Options
 	extl4	s_default_mount_options;
 	extl4	s_first_meta_bg;
