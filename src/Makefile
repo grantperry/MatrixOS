@@ -42,6 +42,7 @@ clean:
 	cd fun; rm *.o; cd ..;
 	cd math; rm *.o; cd ..;
 	cd system; rm *.o; cd ..;
+	cd fs; rm *.o; cd ..;
 
 clean_code: $(CLEAN_CODE_DIRS)
 	@echo "[*] MatrixOS Cleaning code with astyle:"
