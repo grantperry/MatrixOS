@@ -38,6 +38,18 @@ u16int inw ( u16int port ) {
 	return ret;
 }
 
+void outl (u16int port, u32int val)
+{
+     __asm__ volatile ("outl %0,%1":: "a" (val), "d" (port));
+}
+
+u32int inl(u16int port)
+{
+     static u32int ret;
+     __asm__ volatile ("inl %1,%0":: "a" (ret), "dN" (port));
+     return ret;
+}
+
 /*
 // Copy len bytes from src to dest.
 */

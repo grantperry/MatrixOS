@@ -18,6 +18,7 @@
 #include "system/shell.h"
 #include "elf_loader.h"
 #include "fs/ext2.h"
+#include "drivers/pci.h"
 
 #define VER_MAJOR		1
 #define VER_MINOR		3
@@ -69,7 +70,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
-	test();
+	checkAllBuses();
 
 	/*FILE *q;
 	q = ( FILE* ) f_open ( "1", fs_root, "r" );
