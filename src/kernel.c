@@ -34,6 +34,7 @@ void init();
 void print_version();
 s8int locate_initrd();
 s8int init_Interupts();
+void print_mem();
 
 /*
 // Call asm 'sti'.
@@ -64,6 +65,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	print_version();
 	kprintf ( "\n" );
 	monitor_set_fore_colour ( WHITE );
+	print_mem();
 
 
 	//printf ( "Address: %h\n", mboot_ptr->addr );
@@ -75,6 +77,15 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	startShell();
 
 	for ( ;; ) {}
+}
+
+void print_mem() {
+	serialf("Memory: %d", (mboot_ptr->mem_lower+mboot_ptr->mem_upper)/1024);
+	int mem = mboot_ptr->mem_lower+mboot_ptr->mem_upper;
+	while(mem >= 1024) {
+		mem = mem - 1024;
+	}
+	serialf(".%dMB. High: %d, Low: %d\n", mem, mboot_ptr->mem_upper, mboot_ptr->mem_lower);
 }
 
 /*

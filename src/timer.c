@@ -29,6 +29,10 @@ void sleep ( u32int seconds ) {
 	}
 }
 
+void mSleep(u32int milliseconds) {
+	
+}
+
 void system_sleep ( u32int t ) {
 	syscall_sleep ( t );
 }
@@ -37,26 +41,14 @@ void system_mSleep ( u32int t ) {
 	syscall_mSleep ( t );
 }
 
-//~ void mSleep(long long int milliseconds)
-void mSleep ( u32int milliseconds ) {
-
-	if ( milliseconds > 0 ) {
-		unsigned long eticks;
-
-		eticks = systemTimePassed + milliseconds;
-
-		while ( systemTimePassed < eticks );
-	}
-
-}
 
 u32int getTick() {
 	return tick;
 }
+
 u32int getSeconds() {
 	return secondsPassed;
 }
-
 
 unsigned long long int getSystemUpTime() {
 	return systemTimePassed;
