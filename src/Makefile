@@ -14,7 +14,7 @@ FUN=fun/fun.o
 GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o graphics/gui.o
 MATH=math/math.o
 FS=fs/ext2.o
-DRIVERS=drivers/pci.o
+DRIVERS=drivers/pci.o drivers/pcie.o
 
 LD_SCRIPT=link.ld
 
@@ -53,6 +53,5 @@ clean_code: $(CLEAN_CODE_DIRS)
 link:
 	@echo "[*] Linking"
 	@$(LD) $(LDFLAGS) -o $(MATRIX_BASE)/bin/MatrixOS.bin $(SOURCES) $(MODULES)
-
 .s.o:
 	nasm $(ASFLAGS) $<

@@ -70,14 +70,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
-	checkAllBuses();
-
-	/*FILE *q;
-	q = ( FILE* ) f_open ( "1", fs_root, "r" );
-	serialf ( "RETURNED\n" );
-	char *buf = ( char* ) kmalloc ( sizeof ( char ) * 150 );
-	f_read ( q, 0, 150, buf );
-	serialf("\n\n%s\n", buf);*/
+	init_PCI();
 
 	startShell();
 
