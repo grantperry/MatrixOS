@@ -18,9 +18,9 @@ u8int inb ( u16int port );
 
 u16int inw ( u16int port );
 
-void outl (u16int port, u32int val);
+void outl ( u16int port, u32int val );
 
-u32int inl(u16int port);
+u32int inl ( u16int port );
 
 void sti();
 

@@ -27,8 +27,8 @@ EX_DIR=~/opt/cross/bin
 CC=$(EX_DIR)/i686-elf-gcc
 LD=$(EX_DIR)/i686-elf-ld
 
-CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c
-CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h
+CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c fs/*c drivers/*c
+CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h fs/*h drivers/*h
 CLEAN_CODE_DIRS=. input system fun graphics math
 
 

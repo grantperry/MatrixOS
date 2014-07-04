@@ -53,7 +53,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 
-	init_serial ( 1, 9 );
+	init_serial ( 1, 1 );
 
 	//VGA_init ( 320, 200, 256 );
 	//VGA_init(1024, 768, 24);
@@ -80,12 +80,14 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 }
 
 void print_mem() {
-	serialf("Memory: %d", (mboot_ptr->mem_lower+mboot_ptr->mem_upper)/1024);
+	serialf ( "Memory: %d", ( mboot_ptr->mem_lower+mboot_ptr->mem_upper ) /1024 );
 	int mem = mboot_ptr->mem_lower+mboot_ptr->mem_upper;
-	while(mem >= 1024) {
+
+	while ( mem >= 1024 ) {
 		mem = mem - 1024;
 	}
-	serialf(".%dMB. High: %d, Low: %d\n", mem, mboot_ptr->mem_upper, mboot_ptr->mem_lower);
+
+	serialf ( ".%dMB. High: %d, Low: %d\n", mem, mboot_ptr->mem_upper, mboot_ptr->mem_lower );
 }
 
 /*
