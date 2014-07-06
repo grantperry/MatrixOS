@@ -8,7 +8,7 @@ SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o
 MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH) $(FS)
 SUBDIRS=fs
 
-INPUT=input/i8042.o input/keyboard.o input/special_keys.o
+INPUT=input/i8042.o input/keyboard.o
 SYSTEM=system/moduleLoading.o system/shell.o
 FUN=fun/fun.o
 GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o graphics/gui.o

@@ -1,5 +1,6 @@
 #include "../common.h"
 #include "i8042.h"
+#include "keyboard.h"
 #include "../timer.h"
 
 #define I8042_KBD_PORT_NO	0
@@ -9,6 +10,7 @@
 
 u8int status = 0;
 
+u8int ltmp = 0;
 
 u8int PS2_2 = 0;
 u8int PS2_1 = 0;
@@ -34,6 +36,49 @@ static inline void i8042_write_command ( int val ) {
 }
 
 ////////////////////////////////////////////////////////
+
+/*
+// Initialize the i8042 controller
+*/
+u8int i8042_Init() { 
+	i8042_disable_devices();
+	i8042_flush_output_buffer();
+	i8042_set_controller_config_byte();
+	i8042_controller_self_test();
+	i8042_two_channels();
+	i8042_interface_test();
+	i8042_enable_devices();
+	i8042_reset_devices();
+	i8042_lable_devices();
+}
+
+void i8042_Caps(u8int Caps, u8int Scroll, u8int Num) {
+	inb(0x60);			//
+	outb(0x60, 0xED);	//
+	inb(0x60);			//We need to turn all of them off before changing them.
+	outb(0x60, 0);		//
+	inb(0x60);			//
+	inb(0x60);
+	
+	ltmp = 0;
+	
+	outb(0x60,0xED);
+	while(!(inb(0x60) == 0xFA));
+	if (Caps) {
+		ltmp |= 4; // bit 3
+	}
+	if (Scroll) {
+		ltmp |= 1; // bit 1
+	}
+	if (Num) {
+		ltmp |= 2; // bit 2
+	}
+	outb(0x60,ltmp);
+	if(!(inb(0x60) == 0xFA)) {/*Fail*/}
+	inb(0x60);
+	inb(0x60);
+}
+
 u8int i8042_disable_devices() {	//1
 	if ( DEBUG ) {
 		printf ( "disabling devices..." );
