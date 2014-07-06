@@ -50,6 +50,13 @@ u8int i8042_Init() {
 	i8042_enable_devices();
 	i8042_reset_devices();
 	i8042_lable_devices();
+	
+	inb(0x60);
+	outb(0x60, 0xF3);
+	while(!(inb(0x60) == 0xFA));
+	outb(0x60, 1 << 5); //set the typematic rate to top
+	inb(0x60);
+	inb(0x60);
 }
 
 void i8042_Caps(u8int Caps, u8int Scroll, u8int Num) {
