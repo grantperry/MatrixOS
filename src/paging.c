@@ -2,6 +2,7 @@
 
 #include "paging.h"
 #include "kheap.h"
+#include "common.h"
 
 // The kernel's page directory
 page_directory_t *kernel_directory=0;
@@ -103,6 +104,8 @@ void alloc_frame ( page_t *page, int is_kernel, int is_writeable ) {
 	} else {
 		u32int idx = first_frame();
 
+		serialf("alloc_frame: %d\n", idx);
+
 		if ( idx == ( u32int )-1 ) {
 			PANIC("No Free Frames!");
 		}
@@ -140,7 +143,7 @@ s8int initialise_paging() {
 	printf ( "Initalizing Paging." );
 	// The size of physical memory. For the moment we
 	// assume it is 16MB big.
-	u32int mem_end_page = 0x1000000;
+	u32int mem_end_page = return_memory()*0x10; //return_memory returns KB
 
 	memsize = mem_end_page;
 

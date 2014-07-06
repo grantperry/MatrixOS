@@ -43,6 +43,15 @@ void sti() {
 }
 
 /*
+// Returns The lower and upper memory up to the first memory hole.
+// Returns in KB.
+*/
+u32int return_memory() {
+	u32int mem = mboot_ptr->mem_lower + mboot_ptr->mem_upper;
+	return mem;
+}
+
+/*
 // This is where everything starts...
 // If you dont understand this go learn osDeving
 */
