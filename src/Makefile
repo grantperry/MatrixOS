@@ -3,7 +3,7 @@ MATRIX_BASE=~/MatrixOS
 
 SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o gdt.o timer.o \
         kheap.o paging.o ordered_array.o fs.o initrd.o task.o process.o syscall.o \
-        v86.o stdio.o elf_loader.o cpu.o vfs.o serial.o
+        v86.o stdio.o elf_loader.o cpu.o vfs.o serial.o usermode.o
 
 MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH) $(FS)
 SUBDIRS=fs

@@ -372,30 +372,16 @@ void disable_tasking() {
 	TASKING_ON = 0;
 }
 
+void asm_switch_to_usermode(void);
 
 void switch_to_user_mode()
 {
 	serialf("starting UM\n");
    // Set up a stack structure for switching to user mode.
-   asm volatile("  \
-     cli; \
-     mov $0x23, %ax; \
-     mov %ax, %ds; \
-     mov %ax, %es; \
-     mov %ax, %fs; \
-     mov %ax, %gs; \
-                   \
-     mov %esp, %eax; \
-     pushl $0x23; \
-     pushl %eax; \
-     pushf; \
-     pushl $0x1B; \
-     push $1f; \
-     iret; \
-   1: \
-     ");
+	asm_switch_to_usermode();
      serialf("im Here\n");
      sleep(1);
+     exit();
 }
 
 

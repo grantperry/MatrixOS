@@ -72,6 +72,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
+	start_task ( 200, 10, switch_to_user_mode, 0, "UserMode" );
+
 	startShell();
 
 	for ( ;; ) {}
