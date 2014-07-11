@@ -62,9 +62,6 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init_serial ( 1, 9 );
 
-	//VGA_init ( 320, 200, 256 );
-	//VGA_init(1024, 768, 24);
-
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
 	kprintf ( "MatrixOS " );
@@ -73,19 +70,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	kprintf ( "\n" );
 	monitor_set_fore_colour ( WHITE );
 
-
-	//printf ( "Address: %h\n", mboot_ptr->addr );
-
 	init();
-
-	test();
-
-	/*FILE *q;
-	q = ( FILE* ) f_open ( "1", fs_root, "r" );
-	serialf ( "RETURNED\n" );
-	char *buf = ( char* ) kmalloc ( sizeof ( char ) * 150 );
-	f_read ( q, 0, 150, buf );
-	serialf("\n\n%s\n", buf);*/
 
 	startShell();
 
