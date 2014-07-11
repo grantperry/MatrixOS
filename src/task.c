@@ -91,6 +91,7 @@ s8int initialise_tasking() {
 	//~ *((u8int*)task->name + name_len) = 0;
 
 	strcpy ( task->name, KERNEL_PROC_NAME );
+	strcpy ( task->name+strlen(KERNEL_PROC_NAME), '\000');
 
 	task->next = 0;
 
@@ -372,7 +373,33 @@ void disable_tasking() {
 }
 
 
-s8int switch_to_user_mode() {
+void switch_to_user_mode()
+{
+	serialf("starting UM\n");
+   // Set up a stack structure for switching to user mode.
+   asm volatile("  \
+     cli; \
+     mov $0x23, %ax; \
+     mov %ax, %ds; \
+     mov %ax, %es; \
+     mov %ax, %fs; \
+     mov %ax, %gs; \
+                   \
+     mov %esp, %eax; \
+     pushl $0x23; \
+     pushl %eax; \
+     pushf; \
+     pushl $0x1B; \
+     push $1f; \
+     iret; \
+   1: \
+     ");
+     serialf("im Here\n");
+     sleep(1);
+}
+
+
+/*s8int switch_to_user_mode() {
 	printf ( "Switching to UserMode" );
 	// Set up our kernel stack.
 	//set_kernel_stack(current_task->kernel_stack+KERNEL_STACK_SIZE);
@@ -397,4 +424,4 @@ iret; \
 1: \
 " );
 	return 0;
-}
+}*/
