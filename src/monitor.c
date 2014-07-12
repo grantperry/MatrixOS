@@ -234,12 +234,8 @@ void monitor_clear() {
 /*
 // Outputs a null-terminated ASCII string to the monitor.
 */
-#include "task.h"
-volatile task_t *current_task;//TODO delete this line
 void monitor_write ( char *c ) {
 	int i = 0;
-	
-	serialf("mon_write pid: %d\n", current_task->id);
 
 	while ( c[i] ) {
 		monitor_put ( c[i++] );

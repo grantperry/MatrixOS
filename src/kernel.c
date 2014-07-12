@@ -51,6 +51,12 @@ u32int return_memory() {
 	return mem;
 }
 
+void tsk() {
+	//serialf("Hello from usermode task\n");
+	//syscall_sleep(1);
+	exit();
+}
+
 /*
 // This is where everything starts...
 // If you dont understand this go learn osDeving
@@ -72,14 +78,9 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
-	//start_task ( 100, 10, switch_to_user_mode, 0, "UserMode" );
+	startShell();
 
-	switch_to_user_mode();
-
-	serialf("WOOHOO! USERMODE IS HERE TO STAY\n");
-	syscall_monitor_write("WOOHOO! USERMODE IS HERE TO STAY\n");
-
-	//startShell();
+switch_to_user_mode();
 
 	for ( ;; ) {}
 }
