@@ -72,9 +72,14 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
-	start_task ( 200, 10, switch_to_user_mode, 0, "UserMode" );
+	//start_task ( 100, 10, switch_to_user_mode, 0, "UserMode" );
 
-	startShell();
+	switch_to_user_mode();
+
+	serialf("WOOHOO! USERMODE IS HERE TO STAY\n");
+	syscall_monitor_write("WOOHOO! USERMODE IS HERE TO STAY\n");
+
+	//startShell();
 
 	for ( ;; ) {}
 }
@@ -149,6 +154,7 @@ void init() {
 	// Initialise the PIT to 50Hz
 	asm volatile ( "sti" );
 	init_timer ( 50 );
+	asm volatile ( "sti" );
 
 	runModule ( &init_file_system );
 

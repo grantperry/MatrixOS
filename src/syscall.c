@@ -4,6 +4,7 @@
 
 #include "monitor.h"
 #include "timer.h"
+#include "task.h"
 
 static void syscall_handler ( registers_t *regs );
 
@@ -13,6 +14,7 @@ DEFN_SYSCALL1 ( monitor_write_dec, 2, u32int );
 DEFN_SYSCALL1 ( sleep, 3, u32int );
 DEFN_SYSCALL0 ( sti, 4 );
 DEFN_SYSCALL1 ( mSleep, 5, u32int );
+DEFN_SYSCALL0 ( exit , 6);
 
 static void *syscalls[6] = {
 	&monitor_write,

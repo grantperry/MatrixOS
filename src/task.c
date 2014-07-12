@@ -84,12 +84,6 @@ s8int initialise_tasking() {
 	task->thread = 0;
 	task->thread_flags = 0;
 
-	//TODO FIX THIS NAME STUFF
-	//~ u32int name_len = strlen("init");
-	//~ task->name = kmalloc(name_len + 1); //+1 for the \000
-	//~ strcpy((u8int*)task->name, "init");
-	//~ *((u8int*)task->name + name_len) = 0;
-
 	strcpy ( task->name, KERNEL_PROC_NAME );
 	strcpy ( task->name+strlen(KERNEL_PROC_NAME), '\000');
 
@@ -269,15 +263,15 @@ void switch_task() {
 	// the next instruction.
 	// * Jump to the location in ECX (remember we put the new EIP in there).
 	asm volatile ( " \
-cli; \
-mov %0, %%ecx; \
-mov %1, %%esp; \
-mov %2, %%ebp; \
-mov %3, %%cr3; \
-mov $0x12345, %%eax; \
-sti; \
-jmp *%%ecx "
-				   : : "r" ( eip ), "r" ( esp ), "r" ( ebp ), "r" ( current_directory->physicalAddr ) );
+		cli; \
+		mov %0, %%ecx; \
+		mov %1, %%esp; \
+		mov %2, %%ebp; \
+		mov %3, %%cr3; \
+		mov $0x12345, %%eax; \
+		sti; \
+		jmp *%%ecx "
+	: : "r" ( eip ), "r" ( esp ), "r" ( ebp ), "r" ( current_directory->physicalAddr ) );
 
 	asm volatile ( "sti" );
 	printf ( "nt" );
@@ -376,12 +370,14 @@ void asm_switch_to_usermode(void);
 
 void switch_to_user_mode()
 {
-	serialf("starting UM\n");
    // Set up a stack structure for switching to user mode.
+   set_kernel_stack(current_task->stack+0x2000);
 	asm_switch_to_usermode();
-     serialf("im Here\n");
-     sleep(1);
-     exit();
+	//syscall_monitor_write("Hello,user\n");
+     //sleep(1);
+     if(current_task->id != 1)  {
+		syscall_exit();
+	}
 }
 
 

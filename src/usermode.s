@@ -25,3 +25,4 @@ asm_switch_to_usermode:
 	iret
 
 .4:
+	ret
