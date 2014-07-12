@@ -4,127 +4,95 @@
 */
 #include "pci.h"
 #include "pci_list.h"
+#include "pcie.h"
 #include "../common.h"
 
+PCI_BIOS_t *pci_bios;
+PCI_DEVICE_t* ret;
 
+static int pci_find_bios()
+{
+  unsigned long addr;
+  unsigned char crc;
+  int i;
 
-void pci_write_field(u32int device, int field, int size, u32int value) {
-	outl(PCI_ADDRESS_PORT, pci_get_addr(device, field));
-	outl(PCI_VALUE_PORT, value);
+  for (addr = 0xE0000; addr < 0xFFFFF; addr += 0x10)
+    {
+      pci_bios = (PCI_BIOS_t *) addr;
+      if (pci_bios->Magic == 0x5F32335F)
+	{
+	  for (i = 0, crc = 0; i < (pci_bios->Pages * 16); i++)
+	    crc += *((unsigned char *) (addr + i));
+	  if (crc == 0)
+	    {
+          //found bios
+          serialf("[PCI][FIND_BIOS] PCI BIOS found at 0x%h\n",addr);
+	      return 0;
+	    }
+	}
+    }
+  //no bios
+  serialf("[PCI][FIND_BIOS] PCI BIOS not found\n");
+  return 1;
 }
 
-u32int pci_read_field(u32int device, int field, int size) {
-	outl(PCI_ADDRESS_PORT, pci_get_addr(device, field));
-
-	if (size == 4) {
-		u32int t = inl(PCI_VALUE_PORT);
-		return t;
-	} else if (size == 2) {
-		u16int t = ins(PCI_VALUE_PORT + (field & 2));
-		return t;
-	} else if (size == 1) {
-		u8int t = inb(PCI_VALUE_PORT + (field & 3));
-		return t;
-	}
-	return 0xFFFF;
+static u32int pci_read(int bus, int dev, int func, int reg)
+{
+  outl(0xCF8, ((unsigned long) 0x80000000 | (bus << 16) | (dev << 11) | (func << 8) | reg));
+  return inl(0xCFC);
 }
 
-u16int pci_find_type(u32int dev) {
-	return (pci_read_field(dev, PCI_CLASS, 1) << 8) | pci_read_field(dev, PCI_SUBCLASS, 1);
+static PCI_DEVICE_t* pci_read_device(int bus, int dev, int func) {
+	int place, total = sizeof(PCI_DEVICE_t) / sizeof(unsigned long);
+
+	for (place = 0; place < total; place++) {
+		((u32int*)ret)[place] =  pci_read(bus, dev, func, (place * sizeof (unsigned long)));
+	}
+	return ret;
 }
-
-const char * pci_vendor_lookup(unsigned short vendor_id) {
-	unsigned int i = 0;
-	for (; i < PCI_VENTABLE_LEN; ++i) {
-		if (PciVenTable[i].VenId == vendor_id) {
-			return PciVenTable[i].VenFull;
-		}
-	}
-	return "";
-}
-
-const char * pci_device_lookup(unsigned short vendor_id, unsigned short device_id) {
-	unsigned int i = 0;
-	for (; i < PCI_DEVTABLE_LEN; ++i) {
-		if (PciDevTable[i].VenId == vendor_id && PciDevTable[i].DevId == device_id) {
-			return PciDevTable[i].ChipDesc;
-		}
-	}
-	return "";
-}
-
-void pci_scan_hit(pci_func_t f, u32int dev, void * extra) {
-	int dev_vend = (int)pci_read_field(dev, PCI_VENDOR_ID, 2);
-	int dev_dvid = (int)pci_read_field(dev, PCI_DEVICE_ID, 2);
-
-	f(dev, dev_vend, dev_dvid, extra);
-}
-
-void pci_scan_func(pci_func_t f, int type, int bus, int slot, int func, void * extra) {
-	u32int dev = pci_box_device(bus, slot, func);
-	if (type == -1 || type == pci_find_type(dev)) {
-		pci_scan_hit(f, dev, extra);
-	}
-	if (pci_find_type(dev) == PCI_TYPE_BRIDGE) {
-		pci_scan_bus(f, type, pci_read_field(dev, PCI_SECONDARY_BUS, 1), extra);
-	}
-}
-
-void pci_scan_slot(pci_func_t f, int type, int bus, int slot, void * extra) {
-	u32int dev = pci_box_device(bus, slot, 0);
-	if (pci_read_field(dev, PCI_VENDOR_ID, 2) == PCI_NONE) {
-		return;
-	}
-	pci_scan_func(f, type, bus, slot, 0, extra);
-	if (!pci_read_field(dev, PCI_HEADER_TYPE, 1)) {
-		return;
-	}
-	int func = 1;
-	for (; func < 8; func++) {
-		u32int dev = pci_box_device(bus, slot, func);
-		if (pci_read_field(dev, PCI_VENDOR_ID, 2) != PCI_NONE) {
-			pci_scan_func(f, type, bus, slot, func, extra);
-		}
-	}
-}
-
-void pci_scan_bus(pci_func_t f, int type, int bus, void * extra) {
-	int slot = 0;
-	for (; slot < 32; ++slot) {
-		pci_scan_slot(f, type, bus, slot, extra);
-	}
-}
-
-
-
-static void scan_list(u32int device, u32int vendorid, u32int deviceid, void * extra) {
-	serialf("[PCI] Ven: %h  Dev: %h  STAT: %d  COMM: %d\n", vendorid, deviceid, pci_read_field(device, PCI_STATUS, 2), pci_read_field(device, PCI_COMMAND, 2));
-}
-
-
-
-
-void pci_scan(pci_func_t f, int type, void * extra) {
-	pci_scan_bus(f, type, 0, extra);
-
-	if (!pci_read_field(0, PCI_HEADER_TYPE, 1)) {
-		return;
-	}
-
-	int func = 1;
-	for (; func < 8; ++func) {
-		u32int dev = pci_box_device(0, 0, func);
-		if (pci_read_field(dev, PCI_VENDOR_ID, 2) != PCI_NONE) {
-			pci_scan_bus(f, type, func, extra);
-		} else {
-			break;
-		}
-	}
-}
-
 
 void init_PCI() {
-	pci_scan((pci_func_t)scan_list, -1, 0);
+	serialf("[PCI] Starting\n%d", sizeof(PCI_DEVICE_t));
+	
+	if(pci_find_bios()) {
+		serialf("No PCI BIOS\n");
+	}
+	
+	
+	ret = (PCI_DEVICE_t*)kmalloc(sizeof(PCI_DEVICE_t));
+     
+     //Now enumerate devices
+     //if a driver is available, load it.
+     //For now (boot) we will only load required drivers
+     
+     #ifdef DEBUG
+     int invalid;
+     #endif
+
+     int bus, device, function;
+     static int count = 0;
+     PCI_DEVICE_t *tmp;
+     
+     for (bus = 0; bus <= 0xFF; bus++)
+     {
+          for (device = 0; device < 32; device++)
+	      {
+               for (function = 0; function < 8; function++)
+               {
+	                tmp = pci_read_device(bus, device, function);
+	                if((tmp->head.VendorID == 0) || (tmp->head.VendorID == 0xFFFF) || (tmp->head.DeviceID == 0xFFFF)) {
+						//serialf("[PCI] device NULL\n");
+						serialf("[PCI] VendorID: %d DeviceID: %d\n", tmp->head.VendorID, tmp->head.DeviceID);
+	                }
+	                else{ 
+	                	serialf("[PCI] VendorID: %d DeviceID: %d\n", tmp->head.VendorID, tmp->head.DeviceID);
+	                }
+				}
+			}
+		}
+	
+	
+	
 
 #ifdef PCIE_H
 	init_PCIe();
