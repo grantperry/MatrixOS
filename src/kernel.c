@@ -45,6 +45,21 @@ void sti() {
 }
 
 /*
+// Returns The lower and upper memory up to the first memory hole.
+// Returns in KB.
+*/
+u32int return_memory() {
+	u32int mem = mboot_ptr->mem_lower + mboot_ptr->mem_upper;
+	return mem;
+}
+
+void tsk() {
+	//serialf("Hello from usermode task\n");
+	//syscall_sleep(1);
+	exit();
+}
+
+/*
 // This is where everything starts...
 // If you dont understand this go learn osDeving
 */
@@ -55,9 +70,6 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init_serial ( 1, 1 );
 
-	//VGA_init ( 320, 200, 256 );
-	//VGA_init(1024, 768, 24);
-
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
 	kprintf ( "MatrixOS " );
@@ -67,14 +79,13 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	monitor_set_fore_colour ( WHITE );
 	print_mem();
 
-
-	//printf ( "Address: %h\n", mboot_ptr->addr );
-
 	init();
 
 	init_PCI();
 
 	startShell();
+
+switch_to_user_mode();
 
 	for ( ;; ) {}
 }
@@ -160,6 +171,7 @@ void init() {
 	// Initialise the PIT to 50Hz
 	asm volatile ( "sti" );
 	init_timer ( 50 );
+	asm volatile ( "sti" );
 
 	runModule ( &init_file_system );
 

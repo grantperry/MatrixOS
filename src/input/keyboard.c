@@ -3,13 +3,14 @@
 #include "../monitor.h"
 #include "../isr.h"
 #include "../common.h"
-#include "special_keys.h"
 
 #include "../fun/fun.h"
 #include "../system/moduleLoading.h"
 
 u8int shift_flag = 0;
 u8int CapsOn = 0, NumOn = 0, ScrollOn = 0;
+
+keyboard_t *keyboard_inst;
 
 volatile char currentKey = 0;
 
@@ -19,18 +20,21 @@ char getKey() {
 	return currKey;
 }
 
-s8int init_keyboard() { /////////////////////////////////////////////////////////
+s8int init_keyboard() {
 	printf ( "Initalizing Keyboard." );
+	keyboard_inst = (keyboard_t*)kmalloc(sizeof(keyboard_t));
+	
+	strcpy(keyboard_inst->driver_name, "i8042_Matrix_kybd\000");
+	keyboard_inst->init = (void*)i8042_Init; //TODO When PCI make this search for keyboards and use the right handler
+	keyboard_inst->lights = (void*)i8042_Caps;
+	
+	
+	
+	//keyboard_inst->init();
+	i8042_Init();
+	i8042_Caps(1,0,0);
+	i8042_Caps(0,0,0);
 	register_interrupt_handler ( IRQ1, &keyboard_handler );
-	i8042_disable_devices();
-	i8042_flush_output_buffer();
-	i8042_set_controller_config_byte();
-	i8042_controller_self_test();
-	i8042_two_channels();
-	i8042_interface_test();
-	i8042_enable_devices();
-	i8042_reset_devices();
-	i8042_lable_devices();
 	return 0;
 }
 
@@ -50,14 +54,6 @@ s32int isSpecialKey ( unsigned char keyPressChar ) {
 
 	case 0x1C:
 		return 5;
-
-	case 0x58: /* F12 */
-		doSpecial ( 12 );
-		return -1;
-
-	case 0x3B: /* F1 */
-		doSpecial ( 1 );
-		return -1;
 
 	default:
 		return 0;
@@ -167,6 +163,7 @@ void keyboard_handler ( registers_t *regs ) {
 
 		if ( scancode == 0x3A ) {
 			CapsOn = !CapsOn;
+			i8042_Caps(CapsOn, 0, 0);
 		}
 
 		if ( shift_flag == 0 && CapsOn == 0 ) {
@@ -210,4 +207,7 @@ void keyboard_handler ( registers_t *regs ) {
 
 		}
 	}
+	
+	
+	//i8042_Caps(CapsOn, 0, 0);
 }

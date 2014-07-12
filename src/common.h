@@ -51,4 +51,6 @@ extern void panic ( const char *message, const char *file, u32int line );
 
 extern void panic_assert ( const char *file, u32int line, const char *desc );
 
+u32int return_memory();
+
 #endif // COMMON_H

@@ -24,6 +24,10 @@
  */
 #define I8042_BUFFER_SIZE	16
 
+u8int i8042_Init();
+
+void i8042_Caps(u8int Caps, u8int Scroll, u8int Num);
+
 u8int i8042_disable_devices();				//1
 u8int i8042_flush_output_buffer();			//2
 u8int i8042_set_controller_config_byte();	//3
