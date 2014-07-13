@@ -32,7 +32,35 @@ typedef struct pci_common_header {
 	pci8	BIST;
 } pci_common_header_t;
 
-typedef struct pci_device_header {
+typedef struct pci_bridge_header { //1
+	struct pci_common_header head;
+	pci32	BAR0;
+	pci32	BAR1;
+	pci8	PrimaryBusNumber;
+	pci8	SecondaryBusNumber;
+	pci8	SubordinateBusNumber;
+	pci8	SecondaryLatencyTimer;
+	pci8	IOBase;
+	pci8	IOLimit;
+	pci16	SecondaryStatus;
+	pci16	MemoryBase;
+	pci16	MemoryLimit;
+	pci16	PrefetchableMemoryBase;
+	pci16	PrefetchableMemoryLimit;
+	pci32	PrefetchableBaseUpper32Bits;
+	pci32	PrefetchableLimitUpper32Bits;
+	pci16	IOBaseUpper16Bits;
+	pci16	IOLimitUpper16Bits;
+	pci8	CapabilityPointer;
+	pci8	RES1;
+	pci16	RES2;
+	pci32	ExpansionROMAddress;
+	pci8	InterruptLine;
+	pci8	InteruptPin;
+	pci16	BridgeControl;
+} PCI_BRIDGE_t;
+
+typedef struct pci_device_header { //0
 	struct pci_common_header head;
 	pci32	BAR0;
 	pci32	BAR1;

@@ -51,6 +51,121 @@ static PCI_DEVICE_t* pci_read_device(int bus, int dev, int func) {
 	return ret;
 }
 
+static PCI_BRIDGE_t* pci_read_bridge(int bus, int dev, int func) {
+	int place, total = sizeof(PCI_BRIDGE_t) / sizeof(unsigned long);
+
+	for (place = 0; place < total; place++) {
+		((u32int*)ret)[place] =  pci_read(bus, dev, func, (place * sizeof (unsigned long)));
+	}
+	return (PCI_BRIDGE_t*)ret;
+}
+
+u16int getVendorID(pci8 bus, pci8 device, pci8 function) {
+	PCI_DEVICE_t *dev = pci_read_device(bus, device, function);
+	return dev->head.VendorID;
+}
+
+pci8 getHeaderType(pci8 bus, pci8 device, pci8 function) {
+	PCI_DEVICE_t *dev = pci_read_device(bus, device, function);
+	return dev->head.HeaderType;
+}
+
+u16int getDeviceID(pci8 bus, pci8 device, pci8 function) {
+	PCI_DEVICE_t *dev = pci_read_device(bus, device, function);
+	return dev->head.DeviceID;
+}
+
+pci8 getBaseClass(pci8 bus, pci8 device, pci8 function) { //TODO Check what header type
+	PCI_DEVICE_t *dev = pci_read_device(bus, device, function);
+	return dev->head.ClassCode;
+}
+
+pci8 getSubClass(pci8 bus, pci8 device, pci8 function) {//TODO Check what header type
+	PCI_DEVICE_t *dev = pci_read_device(bus, device, function);
+	return dev->head.SubClass;
+}
+
+void checkFunction(u8int bus, u8int device, u8int function);
+
+void checkDevice(u8int bus, u8int device) {
+     pci8 function = 0;
+     pci16 vendorID;
+     pci16 deviceID;
+     
+     pci8 headerType;
+ 
+     vendorID = getVendorID(bus, device, function);
+     if(vendorID = 0xFFFF) {
+     	serialf("[PCI] No Device\n");
+     	return;
+	}        // Device doesn't exist
+     checkFunction(bus, device, function);
+     headerType = getHeaderType(bus, device, function);
+     if( (headerType & 0x80) != 0) {
+         /* It is a multi-function device, so check remaining functions */
+         serialf("[PCI] Multifunction device\n");
+         for(function = 1; function < 8; function++) {
+             if(getVendorID(bus, device, function) != 0xFFFF) {
+                 checkFunction(bus, device, function);
+             }
+         }
+     } else {
+     	vendorID = getVendorID(bus, device, function);
+     	deviceID = getDeviceID(bus, device, function);
+     	serialf("[PCI] BUS:%d DEV:%d FUNC:%d VENDID:%d DEVID:%d\n", bus, device, function, vendorID, deviceID);
+     }
+ }
+
+ void checkBus(u8int bus) {
+     u8int device;
+ 
+     for(device = 0; device < 32; device++) {
+     	serialf("[PCI] dev:%d\n", device);
+         checkDevice(bus, device);
+     }
+ }
+ 
+ pci8 getSecondaryBus (pci8 bus, pci8 device, pci8 function) {
+ 	PCI_BRIDGE_t *dev = pci_read_bridge(bus, device, function);
+ 	return dev->SecondaryBusNumber;
+ }
+ 
+ void checkFunction(u8int bus, u8int device, u8int function) {
+     u8int baseClass;
+     u8int subClass;
+     u8int secondaryBus;
+ 
+     baseClass = getBaseClass(bus, device, function);
+     subClass = getSubClass(bus, device, function);
+     
+     if( (baseClass == 0x06) && (subClass == 0x04) ) {
+     	serialf("[PCI] Secondary Bus found: Bus:%d Device:%d Function:%d\n", bus, device, function);
+         secondaryBus = getSecondaryBus(bus, device, function);
+         checkBus(secondaryBus);
+     }
+ }
+ 
+ void checkAllBuses(void) {
+     pci8 function;
+     pci8 bus;
+     pci8 headerType;
+	serialf("[PCI] Checking all busses\n");
+     headerType = getHeaderType(0, 0, 0);
+     if( (headerType & 0x80) == 0) {
+         /* Single PCI host controller */
+			serialf("[PCI] Single PCI Host Controller found\n");
+         checkBus(0);
+     } else {
+         /* Multiple PCI host controllers */
+         serialf("[PCI] Multiple PCI Host Controllers found\n");
+         for(function = 0; function < 8; function++) {
+             if(getVendorID(0, 0, function) != 0xFFFF) break;
+             bus = function;
+             checkBus(bus);
+         }
+     }
+ }
+
 void init_PCI() {
 	serialf("[PCI] Starting\n%d", sizeof(PCI_DEVICE_t));
 	
@@ -58,6 +173,9 @@ void init_PCI() {
 		serialf("No PCI BIOS\n");
 	}
 	
+	
+	checkAllBuses();
+	return;
 	
 	ret = (PCI_DEVICE_t*)kmalloc(sizeof(PCI_DEVICE_t));
      
@@ -82,10 +200,10 @@ void init_PCI() {
 	                tmp = pci_read_device(bus, device, function);
 	                if((tmp->head.VendorID == 0) || (tmp->head.VendorID == 0xFFFF) || (tmp->head.DeviceID == 0xFFFF)) {
 						//serialf("[PCI] device NULL\n");
-						serialf("[PCI] VendorID: %d DeviceID: %d\n", tmp->head.VendorID, tmp->head.DeviceID);
+						//serialf("[PCI] %d %d %d VendorID: %d DeviceID: %d\n", bus, device, function, tmp->head.VendorID, tmp->head.DeviceID);
 	                }
 	                else{ 
-	                	serialf("[PCI] VendorID: %d DeviceID: %d\n", tmp->head.VendorID, tmp->head.DeviceID);
+	                	serialf("[PCI] %d %d %d VendorID: %d DeviceID: %d\n", bus, device, function, tmp->head.VendorID, tmp->head.DeviceID);
 	                }
 				}
 			}
