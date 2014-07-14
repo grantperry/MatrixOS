@@ -120,7 +120,8 @@ void checkDevice(u8int bus, u8int device) {
      u8int device;
  
      for(device = 0; device < 32; device++) {
-     	serialf("[PCI] dev:%d\n", device);
+     	printf("[PCI] dev:%d\n", device);
+     	sleep(1);
          checkDevice(bus, device);
      }
  }
@@ -154,6 +155,7 @@ void checkDevice(u8int bus, u8int device) {
      if( (headerType & 0x80) == 0) {
          /* Single PCI host controller */
 			serialf("[PCI] Single PCI Host Controller found\n");
+			sleep(1);
          checkBus(0);
      } else {
          /* Multiple PCI host controllers */
