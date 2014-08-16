@@ -4,6 +4,5 @@ astyle
 *.orig
 *~
 *.mod
-docs/documentation
-docs/ExampleOS/*
+ExampleOS/*
 Local/
