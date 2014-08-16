@@ -5,7 +5,7 @@ SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o
         kheap.o paging.o ordered_array.o fs.o initrd.o task.o process.o syscall.o \
         v86.o stdio.o elf_loader.o cpu.o vfs.o serial.o usermode.o
 
-MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH) $(FS)
+MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH) $(FS) $(DRIVERS)
 SUBDIRS=fs
 
 INPUT=input/i8042.o input/keyboard.o
@@ -14,6 +14,7 @@ FUN=fun/fun.o
 GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o graphics/gui.o
 MATH=math/math.o
 FS=fs/ext2.o
+DRIVERS=drivers/pci.o drivers/pcie.o
 
 LD_SCRIPT=link.ld
 
@@ -26,8 +27,8 @@ EX_DIR=~/opt/cross/bin
 CC=$(EX_DIR)/i686-elf-gcc
 LD=$(EX_DIR)/i686-elf-ld
 
-CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c
-CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h
+CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c fs/*c drivers/*c
+CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h fs/*h drivers/*h
 CLEAN_CODE_DIRS=. input system fun graphics math
 
 
@@ -43,6 +44,7 @@ clean:
 	cd math; rm *.o; cd ..;
 	cd system; rm *.o; cd ..;
 	cd fs; rm *.o; cd ..;
+	cd drivers; rm *.o; cd ..;
 
 clean_code: $(CLEAN_CODE_DIRS)
 	@echo "[*] MatrixOS Cleaning code with astyle:"
@@ -51,6 +53,5 @@ clean_code: $(CLEAN_CODE_DIRS)
 link:
 	@echo "[*] Linking"
 	@$(LD) $(LDFLAGS) -o $(MATRIX_BASE)/bin/MatrixOS.bin $(SOURCES) $(MODULES)
-
 .s.o:
 	nasm $(ASFLAGS) $<

@@ -9,7 +9,7 @@ typedef	unsigned	int		extl4;
 #include "ext2_block_group_descriptor.h"
 #include "ext2_inode.h"
 
-void test(void);
+void test ( void );
 
 
 

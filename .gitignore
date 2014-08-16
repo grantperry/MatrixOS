@@ -6,4 +6,5 @@ astyle
 *.mod
 docs/documentation
 docs/ExampleOS/*
+docs/references
 Local/

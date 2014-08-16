@@ -18,6 +18,7 @@
 #include "system/shell.h"
 #include "elf_loader.h"
 #include "fs/ext2.h"
+#include "drivers/pci.h"
 
 #define VER_MAJOR		1
 #define VER_MINOR		3
@@ -33,6 +34,7 @@ void init();
 void print_version();
 s8int locate_initrd();
 s8int init_Interupts();
+void print_mem();
 
 /*
 // Call asm 'sti'.
@@ -66,7 +68,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 
-	init_serial ( 1, 9 );
+	init_serial ( 1, 1 );
 
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
@@ -75,14 +77,28 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	print_version();
 	kprintf ( "\n" );
 	monitor_set_fore_colour ( WHITE );
+	print_mem();
 
 	init();
+
+	init_PCI();
 
 	startShell();
 
 switch_to_user_mode();
 
 	for ( ;; ) {}
+}
+
+void print_mem() {
+	serialf ( "Memory: %d", ( mboot_ptr->mem_lower+mboot_ptr->mem_upper ) /1024 );
+	int mem = mboot_ptr->mem_lower+mboot_ptr->mem_upper;
+
+	while ( mem >= 1024 ) {
+		mem = mem - 1024;
+	}
+
+	serialf ( ".%dMB. High: %d, Low: %d\n", mem, mboot_ptr->mem_upper, mboot_ptr->mem_lower );
 }
 
 /*
