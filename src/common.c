@@ -1,5 +1,5 @@
-// common.c -- Defines some global functions.
-//			 From JamesM's kernel development tutorials.
+// MatrixOS - common.c
+// Common C functions
 
 #include "common.h"
 #include "syscall.h"

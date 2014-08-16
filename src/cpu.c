@@ -1,3 +1,5 @@
+// MatrixOS - cpu.c
+// functions relating to cpu
 #include "cpu.h"
 
 unsigned char readCMOS ( unsigned char addr ) {

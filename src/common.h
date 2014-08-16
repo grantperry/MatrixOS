@@ -1,3 +1,5 @@
+// MatrixOS - common.h
+// common C function headers
 #ifndef COMMON_H
 #define COMMON_H
 

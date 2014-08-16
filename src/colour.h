@@ -1,3 +1,5 @@
+// MatrixOS - colour.h
+// Definitions of bios text mode colours
 #ifndef COLOUR_H
 #define COLOUR_H
 

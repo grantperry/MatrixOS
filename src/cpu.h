@@ -1,4 +1,5 @@
-#ifndef CPU_H
+// MatrixOS - cpu.h
+// Functions related to cpu#ifndef CPU_H
 #define CPU_H
 
 #include "common.h"

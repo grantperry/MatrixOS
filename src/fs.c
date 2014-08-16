@@ -1,4 +1,5 @@
-#include "fs.h"
+// MatrixOS - fs.c
+// #include "fs.h"
 #include "vfs.h"
 
 //the curent directory node

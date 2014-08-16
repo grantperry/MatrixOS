@@ -1,3 +1,5 @@
+// MatrixOS - descriptor_tables.c
+// Functions related to creating a populating descriptor tables
 #include "common.h"
 #include "descriptor_tables.h"
 #include "isr.h"
