@@ -1,4 +1,5 @@
-// monitor.h -- Defines the interface for monitor.h
+// MatrixOS - monitor.h
+// Defines the interface for monitor.h
 
 #ifndef MONITOR_H
 #define MONITOR_H

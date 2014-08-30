@@ -1,4 +1,5 @@
-// kheap.h -- Interface for kernel heap functions, also provides
+// MatrixOS - kheap.h
+// Interface for kernel heap functions, also provides
 //            a placement malloc() for use before the heap is
 //            initialised.
 

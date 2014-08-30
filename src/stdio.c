@@ -1,7 +1,5 @@
-
-
-
-// stdio.h
+// MatrixOS - stdio.h
+// stdio file
 #include "stdio.h"
 #include "common.h"
 #include "/home/grant/MatrixOS/include/stdarg.h"

@@ -1,4 +1,4 @@
-;  v86.asm
+; MatrixOS - v86.s
 ;  
 ;  Copyright 2013 JS-OS <js@duck-squirell>
 ;  

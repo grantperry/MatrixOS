@@ -1,3 +1,5 @@
+// MatrixOS - serial.h
+// Serial communication
 #ifndef SERIAL_H
 #define SERIAL_H
 

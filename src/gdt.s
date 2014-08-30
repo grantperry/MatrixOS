@@ -1,6 +1,7 @@
-; Gdt.s -- contains global descriptor table and interrupt descriptor table
-;          setup code.
-;          Based on code from Bran's kernel development tutorials.
+; MatrixOS - gdt.s
+;				contains global descriptor table and interrupt descriptor table
+;				setup code.
+;				Based on code from Bran's kernel development tutorials.
 
 [GLOBAL gdt_flush]    ; Allows the C code to call gdt_flush().
 

@@ -1,3 +1,5 @@
+// MatrixOS - serial.c
+// Serial communication
 #include "serial.h"
 #include "/home/grant/MatrixOS/include/stdarg.h"
 

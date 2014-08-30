@@ -1,4 +1,5 @@
-// task.h - Defines the structures and prototypes needed to multitask.
+// MatrixOS - task.h
+// Defines the structures and prototypes needed to multitask.
 
 #ifndef TASK_H
 #define TASK_H

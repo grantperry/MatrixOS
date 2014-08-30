@@ -1,4 +1,5 @@
-// paging.h -- Defines the interface for and structures relating to paging.
+// MatrixOS - paging.h
+// Defines the interface for and structures relating to paging.
 
 #ifndef PAGING_H
 #define PAGING_H

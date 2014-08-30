@@ -1,6 +1,7 @@
-// monitor.c -- Defines functions for writing to the monitor.
-//			 heavily based on Bran's kernel development tutorials,
-//			 but rewritten for JamesM's kernel tutorials.
+// MatrixOS - monitor.c
+// Defines functions for writing to the monitor.
+// heavily based on Bran's kernel development tutorials,
+// but rewritten for JamesM's kernel tutorials.
 
 #include "monitor.h"
 #include "graphics/graphics.h"

@@ -1,4 +1,5 @@
-// task.c - Implements the functionality needed to multitask.
+// MatrixOS - task.c
+// Implements the functionality needed to multitask.
 
 #include "task.h"
 #include "paging.h"

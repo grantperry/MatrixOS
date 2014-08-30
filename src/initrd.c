@@ -1,4 +1,5 @@
-// initrd.c -- Defines the interface for and structures relating to the initial ramdisk.
+// MatrixOS - initrd.c
+// Defines the interface for and structures relating to the initial ramdisk.
 
 #include "initrd.h"
 

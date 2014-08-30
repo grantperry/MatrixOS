@@ -1,6 +1,7 @@
-// kheap.c -- Kernel heap functions, also provides
-//			a placement malloc() for use before the heap is
-//			initialised.
+// MatrixOS - kheap.c
+// Kernel heap functions, also provides
+// a placement malloc() for use before the heap is
+// initialised.
 
 // TODO comment this
 

@@ -1,4 +1,5 @@
-// multiboot.h -- Declares the multiboot info structure.
+// MatrixOS - multiboot.h
+// Declares the multiboot info structure.
 
 #ifndef MULTIBOOT_H
 #define MULTIBOOT_H

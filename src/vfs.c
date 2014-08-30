@@ -1,3 +1,5 @@
+// MatrixOS - vfs.c
+// a sub fs of fs.c for the vfs(ramdisk)
 #include "vfs.h"
 #include "fs.h"
 

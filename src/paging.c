@@ -1,4 +1,5 @@
-// paging.c -- Defines the interface for and structures relating to paging.
+// MatrixOS - paging.c
+// Defines the interface for and structures relating to paging.
 
 #include "paging.h"
 #include "kheap.h"

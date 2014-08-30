@@ -1,5 +1,6 @@
 // MatrixOS - descriptor_tables.h
-// Functions related to creating a populating descriptor tables#ifndef DESCRIPTOR_TABLES_H
+// Functions related to creating a populating descriptor tables
+#ifndef DESCRIPTOR_TABLES_H
 #define DESCRIPTOR_TABLES_H
 
 #include "common.h"

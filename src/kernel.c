@@ -1,4 +1,6 @@
-// kernel.c -- MatrixOS kernel
+// MatrixOS - kernel.c
+// Woooo.
+// The heart of MatrixOS sits here.
 
 #include "monitor.h"
 #include "descriptor_tables.h"
