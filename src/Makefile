@@ -6,7 +6,7 @@ SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o
         kheap.o paging.o ordered_array.o fs.o initrd.o task.o process.o syscall.o \
         v86.o stdio.o elf_loader.o cpu.o vfs.o serial.o usermode.o
 
-MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH) $(FS)
+MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH) $(FS) $(DRIVERS)
 SUBDIRS=fs
 
 INPUT=input/i8042.o input/keyboard.o
@@ -15,6 +15,7 @@ FUN=fun/fun.o
 GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o graphics/gui.o
 MATH=math/math.o
 FS=fs/ext2.o
+DRIVERS=drivers/sound.o
 
 LD_SCRIPT=link.ld
 

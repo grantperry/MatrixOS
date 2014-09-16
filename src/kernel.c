@@ -20,6 +20,7 @@
 #include "system/shell.h"
 #include "elf_loader.h"
 #include "fs/ext2.h"
+#include "drivers/sound.h"
 
 #define VER_MAJOR		1
 #define VER_MINOR		3
@@ -137,6 +138,27 @@ void clock() {
 	exit();
 }
 
+s8int init_sound() {
+	printf("Initiating sound.");
+	play_sound(1500);
+	sleep(1);
+	nosound();
+	return 0;
+}
+
+void ts() {
+	play_sound(1000);
+	sleep(1);
+	nosound();
+	exit();
+}
+
+s8int init_sound_multitsk() {
+	printf("Initiating sound for multitasking environment.");
+	start_task ( 200, 10, ts, 0, "sfmte_test" );
+	return 0;
+}
+
 /*
 // Stick your lowlevel initalisation in here!
 */
@@ -158,6 +180,8 @@ void init() {
 	asm volatile ( "sti" );
 	init_timer ( 50 );
 	asm volatile ( "sti" );
+
+	runModule ( &init_sound );
 
 	runModule ( &init_file_system );
 
@@ -181,6 +205,7 @@ void init() {
 	//sleep ( 1 );
 	monitor_set_fore_colour ( 15 );
 
+	runModule(&init_sound_multitsk);
 
 	//start_elf ( "elf_test" );
 	//load_elf ( "testbin" );
