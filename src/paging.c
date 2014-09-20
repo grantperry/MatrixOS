@@ -107,6 +107,7 @@ void alloc_frame ( page_t *page, int is_kernel, int is_writeable ) {
 		u32int idx = first_frame();
 
 		if ( idx == ( u32int )-1 ) {
+			serialf("No Free Frames!");
 			PANIC ( "No Free Frames!" );
 		}
 
