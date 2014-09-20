@@ -138,15 +138,11 @@ void clock() {
 	exit();
 }
 
-s8int init_sound() {
-	printf("Initiating sound.");
-	play_sound(1500);
+void init_sound() {
+	play_sound(1000);
 	sleep(1);
-	nosound();
-	return 0;
-}
-
-void ts() {
+	play_sound(990);
+	sleep(1);
 	play_sound(1000);
 	sleep(1);
 	nosound();
@@ -155,7 +151,7 @@ void ts() {
 
 s8int init_sound_multitsk() {
 	printf("Initiating sound for multitasking environment.");
-	start_task ( 200, 10, ts, 0, "sfmte_test" );
+	start_task ( 200, 10, init_sound, 0, "init_sound_test" );
 	return 0;
 }
 
@@ -181,8 +177,6 @@ void init() {
 	init_timer ( 50 );
 	asm volatile ( "sti" );
 
-	runModule ( &init_sound );
-
 	runModule ( &init_file_system );
 
 	runModule ( &locate_initrd );
@@ -205,7 +199,7 @@ void init() {
 	//sleep ( 1 );
 	monitor_set_fore_colour ( 15 );
 
-	runModule(&init_sound_multitsk);
+	runModule ( &init_sound_multitsk );
 
 	//start_elf ( "elf_test" );
 	//load_elf ( "testbin" );
