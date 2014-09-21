@@ -142,9 +142,10 @@ void free_frame ( page_t *page ) {
 */
 s8int initialise_paging() {
 	printf ( "Initalizing Paging." );
+	serialf("Initializing Paging.");
 	// The size of physical memory. For the moment we
 	// assume it is 16MB big.
-	u32int mem_end_page = return_memory() *0x10; //return_memory returns KB
+	u32int mem_end_page = return_memory() * 0x10; //return_memory returns KB
 
 	memsize = mem_end_page;
 
@@ -180,7 +181,7 @@ s8int initialise_paging() {
 	// initialised properly.
 	i = 0;
 
-	while ( i < 0x400000 ) { //placement_address+0x1000)
+	while ( i < placement_address+0x1000 ) { //i < 0x400000
 		// Kernel code is readable but not writeable from userspace.
 		alloc_frame ( get_page ( i, 1, kernel_directory ), 0, 0 );
 		i += 0x1000;
@@ -260,7 +261,7 @@ void page_fault ( registers_t *regs ) {
 
 	// Output an error message.
 	printf ( "Page fault! ( " );
-
+	
 	if ( present ) {
 		printf ( "present " );
 	}
@@ -279,6 +280,28 @@ void page_fault ( registers_t *regs ) {
 
 	printf ( ") at %h - EIP: %h\n", faulting_address, regs->eip );
 	mehpid();
+	
+	serialf ( "Page fault! ( " );
+	
+	if ( present ) {
+		serialf ( "present " );
+	}
+
+	if ( rw ) {
+		serialf ( "read-only " );
+	}
+
+	if ( us ) {
+		serialf ( "user-mode " );
+	}
+
+	if ( reserved ) {
+		serialf ( "reserved " );
+	}
+
+	serialf ( ") at %h - EIP: %h\n", faulting_address, regs->eip );
+	mehpid();
+	
 	PANIC ( "Page fault" );
 }
 
