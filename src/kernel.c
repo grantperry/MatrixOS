@@ -18,9 +18,9 @@
 #include "system/moduleLoading.h"
 #include "graphics/graphics.h"
 #include "system/shell.h"
-#include "elf_loader.h"
 #include "fs/ext2.h"
 #include "drivers/sound.h"
+#include "elf.h"
 
 #define VER_MAJOR		1
 #define VER_MINOR		3
