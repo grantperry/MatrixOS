@@ -7,6 +7,8 @@
 #define MAX_BUTTONS   10
 #define MAX_CHILDREN   100
 
+void init_mem();
+
 struct window;
 
 typedef void ( *callback_type_t ) ( struct window );

@@ -186,7 +186,8 @@ s8int initialise_paging() {
 		alloc_frame ( get_page ( i, 1, kernel_directory ), 0, 0 );
 		i += 0x1000;
 	}
-
+	
+	
 	// Now allocate those pages we mapped earlier.
 	for ( i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000 ) {
 		alloc_frame ( get_page ( i, 1, kernel_directory ), 0, 0 );
@@ -205,6 +206,31 @@ s8int initialise_paging() {
 	switch_page_directory ( current_directory );
 
 	return 0;
+}
+
+void init_v_mem() {
+	/*
+	// We need to identity Map the Linear frame buffer
+	*/
+	 //This is for our VESA LFB
+    u32int lfb_address = 0xE0000000; //replace me with a routine
+    
+    u32int j = lfb_address;
+    while (j < lfb_address+(1024*768*4))
+    {
+         //If frame is valid...
+         if(j+lfb_address+(1024*768*4) < memsize) {
+         	set_frame(j); // Tell the frame bitmap that this frame is now used!
+         }
+         //Get the page
+         page_t *page = get_page(j, 1, kernel_directory);
+         //And fill it
+         page->present = 1;
+         page->rw = 1;
+         page-> user = 1;
+         page->frame = j / 0x1000;
+         j += 0x1000;
+    }
 }
 
 /*

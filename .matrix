@@ -9,7 +9,7 @@ export PATH="$HOME/opt/cross/bin:$PATH"
 alias sdb="cd $M_HOME;
 			dd if=MatrixOS.iso of=/dev/sdb; sync;"
 
-alias push="git push origin master;"
+alias push="git push "
 alias commit="git commit;"
 alias add="git add "
 alias pre_commit="cd $M_HOME/src;"

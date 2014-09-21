@@ -25,6 +25,11 @@
 #include "vesa.h"
 #include "graphics.h"
 #include "../task.h"
+#include "../paging.h"
+
+//from paging.c
+extern volatile u32int memsize;
+extern page_directory_t *kernel_directory;
 
 #define wVESA     1024
 #define hVESA     768
@@ -101,7 +106,6 @@ void setBank ( int bankNo ) {
 	int32 ( 0x10, &regs );
 
 }
-
 
 //sets up VESA for mode
 void setVesa ( u32int mode ) {
