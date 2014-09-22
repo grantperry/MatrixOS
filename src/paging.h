@@ -40,6 +40,8 @@ typedef struct page_directory {
 	u32int physicalAddr;
 } page_directory_t;
 
+u8int identity_map(page_directory_t *dir, u32int startAddr, u32int length, u8int rw, u8int user);
+
 static void set_frame ( u32int frame_addr );
 static void clear_frame ( u32int frame_addr );
 static u32int test_frame ( u32int frame_addr );

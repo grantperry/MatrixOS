@@ -135,6 +135,29 @@ void free_frame ( page_t *page ) {
 }
 
 /*
+// Identity map pages from Pysical (startAddr),
+// for length(lenght).
+*/
+u8int identity_map(page_directory_t *dir, u32int startAddr, u32int length, u8int rw, u8int user) {
+	int i = startAddr;
+	serialf("idmap: %h\n", i);
+	while ( i < length+0x1000 ) {
+		alloc_frame ( get_page ( i, 1, kernel_directory ), 0, 0 );
+		
+		
+		page_t *page = get_page ( i, 1, current_directory );
+		page->present = 1;
+		page->rw = rw;
+		page->user = user;
+		page->frame = i / 0x1000;
+		
+		i += 0x1000;
+		
+		
+	}
+}
+
+/*
 // Initialise paging by
 // Setting the size of phisical memory.
 // Making the page directory.

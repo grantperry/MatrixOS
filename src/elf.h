@@ -3,6 +3,13 @@
 #define ELF_H
 #include "stdio.h"
 
+
+
+void load();
+
+
+
+
 typedef u32int	Elf32_Addr; // Program address
 typedef u32int	Elf32_Off;  // File offset
 typedef u16int	Elf32_Half;
@@ -17,20 +24,20 @@ typedef s32int	Elf32_Sword;
 #define ELF32_FSZ_WORD	4
 #define EI_NIDENT		16
 typedef struct {
-unsigned	char	e_ident[EI_NIDENT];
-Elf32_Half	e_type;
-Elf32_Half	e_machine;
-Elf32_Word	e_version;
-Elf32_Addr	e_entry;
-Elf32_Off	e_phoff;
-Elf32_Off	e_shoff;
-Elf32_Word	e_flags;
-Elf32_Half	e_ehsize;
-Elf32_Half	e_phentsize;
-Elf32_Half	e_phnum;
-Elf32_Half	e_shentsize;
-Elf32_Half	e_shnum;
-Elf32_Half	e_shstrndx;
+	unsigned char	e_ident[EI_NIDENT];//0x74, 'E', 'L', 'F', ...
+	Elf32_Half	e_type;
+	Elf32_Half	e_machine;
+	Elf32_Word	e_version;
+	Elf32_Addr	e_entry;
+	Elf32_Off	e_phoff;
+	Elf32_Off	e_shoff;
+	Elf32_Word	e_flags;
+	Elf32_Half	e_ehsize;
+	Elf32_Half	e_phentsize;
+	Elf32_Half	e_phnum;
+	Elf32_Half	e_shentsize;
+	Elf32_Half	e_shnum;
+	Elf32_Half	e_shstrndx;
 }Elf32_Ehdr;
 
 #define ELFMAG0			0x7f
