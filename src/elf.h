@@ -3,11 +3,15 @@
 #define ELF_H
 #include "stdio.h"
 
-typedef u32int	Elf32_Addr; // Program address
-typedef u32int	Elf32_Off;  // File offset
-typedef u16int	Elf32_Half;
-typedef u32int	Elf32_Word;
-typedef s32int	Elf32_Sword;
+void elf(char* file);
+
+
+//offsets as comment
+typedef u32int	Elf32_Addr; // Program address //4
+typedef u32int	Elf32_Off;  // File offset		//4
+typedef u16int	Elf32_Half;//2
+typedef u32int	Elf32_Word;//4
+typedef s32int	Elf32_Sword;//4
 
 
 #define ELF32_FSZ_ADDR	4
@@ -15,6 +19,7 @@ typedef s32int	Elf32_Sword;
 #define ELF32_FSZ_OFF	4
 #define ELF32_FSZ_SWORD	4
 #define ELF32_FSZ_WORD	4
+
 #define EI_NIDENT		16
 typedef struct {
 	unsigned char	e_ident[EI_NIDENT];//0x74, 'E', 'L', 'F', ...
@@ -48,14 +53,17 @@ typedef struct {
 #define EI_DATA			5
 #define EI_VERSION		6
 #define EI_PAD			7
+
 #define ELFCLASSNONE	0
 #define ELFCLASS32		1
 #define ELFCLASS64		2
 #define ELFCLASSNUM		3
+
 #define ELFDATANONE		0
 #define ELFDATA2LSB		1
 #define ELFDATA2MSB		2
 #define ELFDATANUM		3
+
 #define ET_NONE			0
 #define ET_REL			1
 #define ET_EXEC			2

@@ -80,9 +80,10 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	monitor_set_fore_colour ( WHITE );
 
 	init();
-	
-	printf("running flat binary at 0x500000\n");
-	load_flat("binary.bin");
+
+
+	elf("binary.elf");
+
 
 	startShell();
 
@@ -204,11 +205,8 @@ void init() {
 
 	runModule ( &init_sound_multitsk );
 
-	//start_elf ( "elf_test" );
-	//load_elf ( "testbin" );
-	//load_elf("hello");
-
-	//printf ( "FINISHED!\n" );
+	printf("running flat binary at 0x500000\n");
+	load_flat("flat.bin");
 
 	//runModule ( &switch_to_user_mode);
 
