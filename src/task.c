@@ -297,6 +297,7 @@ u32int start_task ( u32int priority, u32int burst_time, void ( *func ) (), void 
 	//page_directory_t *directory = clone_directory(current_directory);
 	//task->page_directory = directory;
 
+	//TODO Set this to make a new page directory when in user mode.
 	//this is a task (process) not a fork, we do not need a cloned address space
 	task->page_directory = 0;
 

@@ -3,13 +3,6 @@
 #define ELF_H
 #include "stdio.h"
 
-
-
-void load_flat(char* name);
-
-
-
-
 typedef u32int	Elf32_Addr; // Program address
 typedef u32int	Elf32_Off;  // File offset
 typedef u16int	Elf32_Half;
