@@ -8,10 +8,9 @@ void load() {
 	serialf ( "Binary openend\n" );
 	char *buf = ( char* ) kmalloc ( sizeof ( char ) * 1024 );
 	f_read ( bin, 0, 1024, buf );
-	serialf("\n\n%s\n", buf);
+	//serialf("\n\n%s\n", buf);
 	
 	virtual_map_pages ( 0x500000, 0x1000, 1, 0 );
-	//ident_map(page_directory_t *dir, u32int startAddr, u32int length, u, 0);
 	kmalloc_ap(1024, 0x500000);
 	serialf("yay memory allocation worked :)\n");
 	memset(0x500000, 0, 1024);
@@ -19,4 +18,6 @@ void load() {
 	serialf("memory coppied :) :) :)\n");
 	
 	asm volatile("call 0x500000");
+	
+	printf("FINISHED\n");
 }
