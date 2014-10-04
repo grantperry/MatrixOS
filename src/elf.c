@@ -2,9 +2,9 @@
 #include "fs.h"
 #include "paging.h"
 
-void load() {
+void load_flat(char* name) {
 	FILE *bin;
-	bin = ( FILE* ) f_open ( "binary.bin", fs_root, "r" );
+	bin = ( FILE* ) f_open ( name, fs_root, "r" );
 	serialf ( "Binary openend\n" );
 	char *buf = ( char* ) kmalloc ( sizeof ( char ) * 1024 );
 	f_read ( bin, 0, 1024, buf );

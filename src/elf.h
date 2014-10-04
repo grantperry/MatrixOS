@@ -5,7 +5,7 @@
 
 
 
-void load();
+void load_flat(char* name);
 
 
 

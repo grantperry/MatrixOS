@@ -81,8 +81,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 	
-	
-	load();
+	printf("running flat binary at 0x500000\n");
+	load_flat("binary.bin");
 
 	startShell();
 
