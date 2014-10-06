@@ -1,9 +1,9 @@
 [BITS 32]
 
 section .text                           ; this is the code section
-global main                           ; _start is the entry point and needs global scope to be 'seen' by the
+global _start                           ; _start is the entry point and needs global scope to be 'seen' by the
                                             ; linker&nbsp;–    equivalent to main() in C/C++
-main:                                 ; procedure start
+_start:                                 ; procedure start
 	mov	eax, 0                   ; specify the sys_write function code (from OS vector table)
 	mov	ebx, str1                 ; move start _address_ of string message to ecx regist
 	int	80h                      ; tell kernel to perform the system call we just set up 

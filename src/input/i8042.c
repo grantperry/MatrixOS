@@ -6,7 +6,7 @@
 #define I8042_KBD_PORT_NO	0
 #define I8042_AUX_PORT_NO	1
 
-#define DEBUG				0
+#define DEBUG_KBD			0
 
 u8int status = 0;
 
@@ -87,7 +87,7 @@ void i8042_Caps(u8int Caps, u8int Scroll, u8int Num) {
 }
 
 u8int i8042_disable_devices() {	//1
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "disabling devices..." );
 	}
 
@@ -97,7 +97,7 @@ u8int i8042_disable_devices() {	//1
 }
 
 u8int i8042_flush_output_buffer() {	//2
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "flushing output buffer" );
 	}
 
@@ -113,7 +113,7 @@ u8int i8042_flush_output_buffer() {	//2
 }
 
 u8int i8042_set_controller_config_byte() {	//3
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "setting controller config byte" );
 	}
 
@@ -125,7 +125,7 @@ u8int i8042_set_controller_config_byte() {	//3
 	i8042_write_command ( 0x60 );
 	i8042_write_data ( status );
 
-	if ( DEBUG && ! ( status & ( 1 << 5 ) ) ) {
+	if ( DEBUG_KBD && ! ( status & ( 1 << 5 ) ) ) {
 		printf ( "DUAL PS/2 = YES\n" );    //TODO check if this is right
 	}
 
@@ -133,7 +133,7 @@ u8int i8042_set_controller_config_byte() {	//3
 }
 
 u8int i8042_controller_self_test() {	//4
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "controller self test" );
 	}
 
@@ -141,7 +141,7 @@ u8int i8042_controller_self_test() {	//4
 	u8int resp = i8042_read_data();
 	resp = i8042_read_data();
 
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		if ( resp == 0x55 ) {
 			printf ( "PASS\n" );
 		}
@@ -155,7 +155,7 @@ u8int i8042_controller_self_test() {	//4
 }
 
 u8int i8042_two_channels() {	//5
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "finding channels" );
 	}
 
@@ -163,7 +163,7 @@ u8int i8042_two_channels() {	//5
 }
 
 u8int i8042_interface_test() {	//6
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "checking peripherals" );
 	}
 
@@ -172,7 +172,7 @@ u8int i8042_interface_test() {	//6
 }
 
 u8int i8042_enable_devices() {	//7
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "enabling devices..." );
 	}
 
@@ -188,7 +188,7 @@ u8int i8042_enable_devices() {	//7
 }
 
 u8int i8042_reset_devices() {	//8
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "resetting devices" );
 	}
 
@@ -196,7 +196,7 @@ u8int i8042_reset_devices() {	//8
 }
 
 u8int i8042_lable_devices() {	//9
-	if ( DEBUG ) {
+	if ( DEBUG_KBD ) {
 		printf ( "name devices" );
 	}
 

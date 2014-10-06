@@ -3,8 +3,9 @@
 #define ELF_H
 #include "stdio.h"
 
-void elf(char* file);
+u8int elf(char* file);
 
+# define ELF_RELOC_ERR -1
 
 //offsets as comment
 typedef u32int	Elf32_Addr; // Program address //4
@@ -187,7 +188,14 @@ typedef struct {
 	Elf32_Sword r_addend;
 } Elf32_Rela;
 #define ELF32_R_SYM(info)		((info)>>8)
-#define ELF32_R_TYPE(info)		((unsignedchar)(info))
-#define ELF32_R_INFO(sym,type)	(((sym)<<8)+(unsignedchar)(type)
+#define ELF32_R_TYPE(info)		((unsigned char)(info))
+#define ELF32_R_INFO(sym,type)	(((sym)<<8)+(unsigned char)(type)
+
+#define R_386_NONE	0
+#define R_386_32	1
+#define R_386_PC32	2
+
+# define DO_386_32(S, A)	((S) + (A))
+# define DO_386_PC32(S, A, P)	((S) + (A) - (P))
 
 #endif//ELF_H
