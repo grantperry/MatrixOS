@@ -350,6 +350,41 @@ void *elf_load_file(char *file) {
 }
 
 
+elf_print_program(char *elf, Elf32_Ehdr *elf_Ehdr) {
+	serialf("|ELF  Program Headers|===============================================================\n");
+	serialf(" idx\ttype\toffset\tvirt address\tpys address\tfile sz\tmem sz\tflags\talign\n");
+	serialf("-------------------------------------------------------------------------------------\n");
+	
+	u32int phoff = (u32int)elf + elf_Ehdr->e_phoff;
+	
+	//Elf32_Phdr *elf_Phdr = 0;
+	
+	
+	serialf("%h\n", ((Elf32_Phdr*)(phoff + (0 * 32)))->p_flags);
+	
+	
+	u32int i;
+	for(i = 0; i < elf_Ehdr->e_phnum; i++) {
+		Elf32_Phdr *elf_Phdr = ((Elf32_Phdr*)phoff + ( i * (elf_Ehdr->e_phentsize)));
+		
+		serialf(" %d\t", i);
+		serialf("%d\t", elf_Phdr->p_type);
+		serialf("%d\t", elf_Phdr->p_offset);
+		serialf("%h\t", elf_Phdr->p_vaddr);
+		serialf("%h\t", elf_Phdr->p_paddr);
+		serialf("%h\t", elf_Phdr->p_filesz);
+		serialf("%h\t", elf_Phdr->p_memsz);
+		serialf("%h\t", elf_Phdr->p_flags);
+		serialf("%h\t", elf_Phdr->p_align);
+		
+		serialf("%h", elf_Phdr);
+		
+		serialf("\n");
+		elf_Phdr = 0;
+	}
+}
+
+
 u8int elf(char* file) {
 	serialf("\n[ELF] Loading \"%s\".\n", file);
 	FILE *elff = ( FILE* ) f_open ( file, fs_root, "r" );
@@ -377,9 +412,13 @@ u8int elf(char* file) {
 		return 0;
 	}
 	
-	elf_print_sections(elf, elf_Ehdr);
+	if( elf_Ehdr->e_type == ET_EXEC) {
+		elf_print_program(elf, elf_Ehdr);
+	}
 	
-	elf_load_file(elf);
+	//elf_print_sections(elf, elf_Ehdr);
+	
+	//elf_load_file(elf);
 	
 	
 }

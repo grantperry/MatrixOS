@@ -95,6 +95,7 @@ typedef struct {
 	Elf32_Word	p_flags;
 	Elf32_Word	p_align;
 } Elf32_Phdr;
+
 #define PT_NULL		0
 #define PT_LOAD		1
 #define PT_DYNAMIC	2
