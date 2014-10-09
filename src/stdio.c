@@ -53,6 +53,22 @@ void printf ( char *c, ... ) {
 				printf ( charArrayArg );
 				i = i + 2;
 
+			} else if ( c[i+1] == 'o' ) { //user wants to print a null string
+				char *charArrayArg;
+				charArrayArg = va_arg ( arguments, char* );
+				char *ca = 0;
+				u32int i = 0;
+				while (1) {
+					if(charArrayArg == 0) {
+						break;
+					}
+					i++;
+				}
+				serialf("%d\n\n\n", i);
+
+				printf ( charArrayArg );
+				i = i + 2;
+
 			} else if ( c[i+1] == 'c' ) { //user wants to print a char
 				char *charArg;
 				charArg = va_arg ( arguments, char* );

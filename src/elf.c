@@ -319,55 +319,49 @@ void *elf_load_file(char *file) {
 	return 0;
 }
 
-
-
-void elf_print_sections(char *elf, Elf32_Ehdr *Ehdr) {
-	u32int off_ = (u32int) (elf + Ehdr->e_shoff);
-	Elf32_Shdr *Shdrs = (Elf32_Shdr*)off_ + (Ehdr->e_shstrndx * Ehdr->e_shentsize);
-	serialf("[ELF] Shdrs: %h\n", (u32int)Shdrs - (u32int)elf);
-	//char *str_tbl = read_section(elf, (off_ + (Ehdr->e_shstrndx * Ehdr->e_shentsize)));
-	char *str_tbl = read_section(elf, Shdrs);
-	
-	Elf32_Shdr *Shdr;
+void elf_print_sections(char *elf, Elf32_Ehdr *elf_Ehdr) {
 	serialf("|ELF Sections|====================================================================================\n");
-	serialf(" idx\tname\ttype\t\tflags\taddress\toffset\tsize\taddress align\tentry size\n");
-	serialf("--------------------------------------------------------------------------------------------------\n");
+	serialf("|idx\tname\t\ttype\t\tflags\taddress\toffset\tsize\taddress align\tentry size\n");
+	serialf("|-------------------------------------------------------------------------------------------------\n");
+	u32int shoff = (u32int)elf + elf_Ehdr->e_shoff;
+	Elf32_Shdr *elf_Shdr = (Elf32_Shdr*)(shoff + (elf_Ehdr->e_shstrndx * elf_Ehdr->e_shentsize)); //string table
+	u32int nametbl =  (u32int)elf + (elf_Shdr->sh_offset);
+
 	u32int i = 0;
-	for (i = 0; i < Ehdr->e_shnum; i++) {
-		Shdr = (Elf32_Shdr*)(off_ + (i * Ehdr->e_shentsize));
+	for (i = 0; i < elf_Ehdr->e_shnum; i++) {
+		elf_Shdr = (Elf32_Shdr*)(shoff + (i * elf_Ehdr->e_shentsize));
 		
-		
-		serialf(" %d\t\t", i);
-		
-		//serialf("%s\t", str_tbl + Shdr[i].sh_name);
-		
-		serialf("%h\t\t", Shdr[i].sh_type);
-		serialf("%h\t", Shdr[i].sh_flags);
-		serialf("%h\t", Shdr[i].sh_addr);
-		serialf("%h\t", Shdr[i].sh_offset);
-		serialf("%h\t", Shdr[i].sh_size);
-		serialf("%h\t", Shdr[i].sh_addralign);
-		serialf("%h\t", Shdr[i].sh_entsize);
+		serialf("|%d\t", i);
+		serialf( ((nametbl) + elf_Shdr->sh_name));
+		serialf("\t\t");
+		serialf("%h\t", elf_Shdr->sh_type);
+		serialf("%h\t", elf_Shdr->sh_flags);
+		serialf("%h\t", elf_Shdr->sh_addr);
+		serialf("%h\t", elf_Shdr->sh_offset);
+		serialf("%h\t", elf_Shdr->sh_size);
+		serialf("%h\t", elf_Shdr->sh_addralign);
+		serialf("%h\t", elf_Shdr->sh_entsize);
 		
 		serialf("\n");
+		elf_Shdr = 0;
 	}
+	serialf("|-------------------------------------------------------------------------------------------------\n");
 }
 
 
 elf_print_program(char *elf, Elf32_Ehdr *elf_Ehdr) {
 	serialf("|ELF  Program Headers|================================================================\n");
-	serialf(" idx\ttype\toffset\tvirt add\tpys add\t\tfile sz\tmem sz\tflags\talign\n");
-	serialf("--------------------------------------------------------------------------------------\n");
+	serialf("|idx\ttype\toffset\tvirt add\tpys add\t\tfile sz\tmem sz\tflags\talign\n");
+	serialf("|-------------------------------------------------------------------------------------\n");
 	
 	u32int phoff = (u32int)elf + elf_Ehdr->e_phoff;
-
+	
 	u32int i;
 	for(i = 0; i < elf_Ehdr->e_phnum; i++) {
 		Elf32_Phdr *elf_Phdr = (Elf32_Phdr*)(phoff + (i * elf_Ehdr->e_phentsize));
-		
-		serialf(" %d\t", i);
+		serialf("|%d\t", i);
 		serialf("%d\t", elf_Phdr->p_type);
-		serialf("%d\t", elf_Phdr->p_offset);
+		serialf("%h\t", elf_Phdr->p_offset);
 		serialf("%h\t", elf_Phdr->p_vaddr);
 		serialf("%h\t", elf_Phdr->p_paddr);
 		serialf("%h\t", elf_Phdr->p_filesz);
@@ -384,7 +378,7 @@ elf_print_program(char *elf, Elf32_Ehdr *elf_Ehdr) {
 		serialf("\n");
 		elf_Phdr = 0;
 	}
-	serialf("--------------------------------------------------------------------------------------\n");
+	serialf("|-------------------------------------------------------------------------------------\n");
 }
 
 
@@ -419,7 +413,7 @@ u8int elf(char* file) {
 		elf_print_program(elf, elf_Ehdr);
 	}
 	
-	//elf_print_sections(elf, elf_Ehdr);
+	elf_print_sections(elf, elf_Ehdr);
 	
 	//elf_load_file(elf);
 	
