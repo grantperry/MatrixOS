@@ -65,5 +65,5 @@ void enable_tasking();
 
 void disable_tasking();
 
-void switch_to_user_mode();
+s8int switch_to_user_mode();
 #endif

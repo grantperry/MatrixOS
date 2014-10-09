@@ -300,7 +300,36 @@ static inline void *elf_load_rel(Elf32_Ehdr *hdr) {
 	// TODO : Parse the program header (if present)
 	return (void *)hdr->e_entry;
 }
- 
+
+void elf_load_exec (char *elf, Elf32_Ehdr *elf_Ehdr) {
+	u32int phoff = (u32int)elf + elf_Ehdr->e_phoff;
+	u32int shoff = (u32int)elf + elf_Ehdr->e_shoff;
+	
+	Elf32_Shdr *elf_Shdr = (Elf32_Shdr*)(shoff + (0 * elf_Ehdr->e_shentsize)); //string table
+	u32int nametbl =  (u32int)elf + (elf_Shdr->sh_offset);
+	
+	Elf32_Phdr *elf_Phdr = (Elf32_Phdr*)(phoff + (0 * elf_Ehdr->e_phentsize));
+	
+	virtual_map_pages ( elf_Phdr->p_vaddr, 0x1000, 1, 1 ); //TODO make real size
+	u32int i = 0;
+	while (i < elf_Ehdr->e_phnum) {
+		elf_Phdr = (Elf32_Phdr*)(phoff + (i * elf_Ehdr->e_phentsize));
+		void *mem = (void*)elf_Phdr->p_offset;
+		memcpy(mem, elf + elf_Phdr->p_offset, elf_Phdr->p_filesz);
+		
+		
+		
+		
+		
+		
+		
+		i++;
+	}
+	i = 0;
+	
+	//asm volatile("call 0x8048080");
+}
+
 void *elf_load_file(char *file) {
 	Elf32_Ehdr *hdr = (Elf32_Ehdr *)file;
 	if(!elf_check_supported(hdr)) {
@@ -309,8 +338,8 @@ void *elf_load_file(char *file) {
 	}
 	switch(hdr->e_type) {
 		case ET_EXEC:
-			serialf("[ELF] Load Executable TODO");
-			// TODO : Implement
+			serialf("[ELF] Load Executable");
+			elf_load_exec(file, hdr);
 			return 0;
 		case ET_REL:
 			serialf("[ELF] Load Relative\n");
@@ -415,7 +444,7 @@ u8int elf(char* file) {
 	
 	elf_print_sections(elf, elf_Ehdr);
 	
-	//elf_load_file(elf);
+	elf_load_file(elf);
 	
 	
 }

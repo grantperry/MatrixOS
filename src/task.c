@@ -368,7 +368,7 @@ void disable_tasking() {
 	TASKING_ON = 0;
 }
 
-void asm_switch_to_usermode(void);
+/*void asm_switch_to_usermode(void);
 
 void switch_to_user_mode()
 {
@@ -380,10 +380,10 @@ void switch_to_user_mode()
      if(current_task->id != 1)  {
 		syscall_exit();
 	}
-}
+}*/
 
 
-/*s8int switch_to_user_mode() {
+s8int switch_to_user_mode() {
 	printf ( "Switching to UserMode" );
 	// Set up our kernel stack.
 	//set_kernel_stack(current_task->kernel_stack+KERNEL_STACK_SIZE);
@@ -408,4 +408,4 @@ iret; \
 1: \
 " );
 	return 0;
-}*/
+}
