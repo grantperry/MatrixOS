@@ -146,37 +146,7 @@ char *read_section(char *fd, Elf32_Shdr* sh)
 	return buff;
 }
 
-void elf_print_sections(char *elf, Elf32_Ehdr *Ehdr) {
-	u32int off_ = (u32int) (elf + Ehdr->e_shoff);
-	Elf32_Shdr *Shdrs = (Elf32_Shdr*)off_ + (Ehdr->e_shstrndx * Ehdr->e_shentsize);
-	serialf("[ELF] Shdrs: %h\n", (u32int)Shdrs - (u32int)elf);
-	//char *str_tbl = read_section(elf, (off_ + (Ehdr->e_shstrndx * Ehdr->e_shentsize)));
-	char *str_tbl = read_section(elf, Shdrs);
-	
-	Elf32_Shdr *Shdr;
-	serialf("|ELF Sections|====================================================================================\n");
-	serialf(" idx\tname\ttype\t\tflags\taddress\toffset\tsize\taddress align\tentry size\n");
-	serialf("--------------------------------------------------------------------------------------------------\n");
-	u32int i = 0;
-	for (i = 0; i < Ehdr->e_shnum; i++) {
-		Shdr = (Elf32_Shdr*)(off_ + (i * Ehdr->e_shentsize));
-		
-		
-		serialf(" %d\t\t", i);
-		
-		//serialf("%s\t", str_tbl + Shdr[i].sh_name);
-		
-		serialf("%h\t\t", Shdr[i].sh_type);
-		serialf("%h\t", Shdr[i].sh_flags);
-		serialf("%h\t", Shdr[i].sh_addr);
-		serialf("%h\t", Shdr[i].sh_offset);
-		serialf("%h\t", Shdr[i].sh_size);
-		serialf("%h\t", Shdr[i].sh_addralign);
-		serialf("%h\t", Shdr[i].sh_entsize);
-		
-		serialf("\n");
-	}
-}
+
 
 
 static inline char *elf_str_table(Elf32_Ehdr *hdr) {
@@ -350,22 +320,50 @@ void *elf_load_file(char *file) {
 }
 
 
+
+void elf_print_sections(char *elf, Elf32_Ehdr *Ehdr) {
+	u32int off_ = (u32int) (elf + Ehdr->e_shoff);
+	Elf32_Shdr *Shdrs = (Elf32_Shdr*)off_ + (Ehdr->e_shstrndx * Ehdr->e_shentsize);
+	serialf("[ELF] Shdrs: %h\n", (u32int)Shdrs - (u32int)elf);
+	//char *str_tbl = read_section(elf, (off_ + (Ehdr->e_shstrndx * Ehdr->e_shentsize)));
+	char *str_tbl = read_section(elf, Shdrs);
+	
+	Elf32_Shdr *Shdr;
+	serialf("|ELF Sections|====================================================================================\n");
+	serialf(" idx\tname\ttype\t\tflags\taddress\toffset\tsize\taddress align\tentry size\n");
+	serialf("--------------------------------------------------------------------------------------------------\n");
+	u32int i = 0;
+	for (i = 0; i < Ehdr->e_shnum; i++) {
+		Shdr = (Elf32_Shdr*)(off_ + (i * Ehdr->e_shentsize));
+		
+		
+		serialf(" %d\t\t", i);
+		
+		//serialf("%s\t", str_tbl + Shdr[i].sh_name);
+		
+		serialf("%h\t\t", Shdr[i].sh_type);
+		serialf("%h\t", Shdr[i].sh_flags);
+		serialf("%h\t", Shdr[i].sh_addr);
+		serialf("%h\t", Shdr[i].sh_offset);
+		serialf("%h\t", Shdr[i].sh_size);
+		serialf("%h\t", Shdr[i].sh_addralign);
+		serialf("%h\t", Shdr[i].sh_entsize);
+		
+		serialf("\n");
+	}
+}
+
+
 elf_print_program(char *elf, Elf32_Ehdr *elf_Ehdr) {
-	serialf("|ELF  Program Headers|===============================================================\n");
-	serialf(" idx\ttype\toffset\tvirt address\tpys address\tfile sz\tmem sz\tflags\talign\n");
-	serialf("-------------------------------------------------------------------------------------\n");
+	serialf("|ELF  Program Headers|================================================================\n");
+	serialf(" idx\ttype\toffset\tvirt add\tpys add\t\tfile sz\tmem sz\tflags\talign\n");
+	serialf("--------------------------------------------------------------------------------------\n");
 	
 	u32int phoff = (u32int)elf + elf_Ehdr->e_phoff;
-	
-	//Elf32_Phdr *elf_Phdr = 0;
-	
-	
-	serialf("%h\n", ((Elf32_Phdr*)(phoff + (1 * 32)))->p_vaddr);
-	
-	
+
 	u32int i;
 	for(i = 0; i < elf_Ehdr->e_phnum; i++) {
-		Elf32_Phdr *elf_Phdr = (Elf32_Phdr*)(phoff + (i * 32));
+		Elf32_Phdr *elf_Phdr = (Elf32_Phdr*)(phoff + (i * elf_Ehdr->e_phentsize));
 		
 		serialf(" %d\t", i);
 		serialf("%d\t", elf_Phdr->p_type);
@@ -374,14 +372,19 @@ elf_print_program(char *elf, Elf32_Ehdr *elf_Ehdr) {
 		serialf("%h\t", elf_Phdr->p_paddr);
 		serialf("%h\t", elf_Phdr->p_filesz);
 		serialf("%h\t", elf_Phdr->p_memsz);
-		serialf("%h\t", elf_Phdr->p_flags);
+		u8int r = 0, w = 0, x = 0;
+		r = elf_Phdr->p_flags & PF_R;
+		w = elf_Phdr->p_flags & PF_W;
+		x = elf_Phdr->p_flags & PF_X;
+		serialf("%s",   (r) ? "-" : "R");
+		serialf("%s",   (w) ? "-" : "W");
+		serialf("%s\t", (x) ? "-" : "E");
 		serialf("%h\t", elf_Phdr->p_align);
-		
-		serialf("%h", elf_Phdr);
 		
 		serialf("\n");
 		elf_Phdr = 0;
 	}
+	serialf("--------------------------------------------------------------------------------------\n");
 }
 
 
