@@ -360,12 +360,12 @@ elf_print_program(char *elf, Elf32_Ehdr *elf_Ehdr) {
 	//Elf32_Phdr *elf_Phdr = 0;
 	
 	
-	serialf("%h\n", ((Elf32_Phdr*)(phoff + (0 * 32)))->p_flags);
+	serialf("%h\n", ((Elf32_Phdr*)(phoff + (1 * 32)))->p_vaddr);
 	
 	
 	u32int i;
 	for(i = 0; i < elf_Ehdr->e_phnum; i++) {
-		Elf32_Phdr *elf_Phdr = ((Elf32_Phdr*)phoff + ( i * (elf_Ehdr->e_phentsize)));
+		Elf32_Phdr *elf_Phdr = (Elf32_Phdr*)(phoff + (i * 32));
 		
 		serialf(" %d\t", i);
 		serialf("%d\t", elf_Phdr->p_type);
