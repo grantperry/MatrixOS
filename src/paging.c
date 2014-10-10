@@ -165,7 +165,6 @@ u8int identity_map(page_directory_t *dir, u32int startAddr, u32int length, u8int
 */
 s8int initialise_paging() {
 	printf ( "Initalizing Paging." );
-	serialf("Initializing Paging.");
 	// The size of physical memory. For the moment we
 	// assume it is 16MB big.
 	u32int mem_end_page = return_memory() * 0x10; //return_memory returns KB

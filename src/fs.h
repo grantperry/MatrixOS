@@ -17,6 +17,13 @@
 #define M_VFS           1
 #define M_EXT2          2
 
+u8int set_f_verbose(u8int vb);
+
+//Verbosity
+#define VB_NONE		0
+#define VB_NAMES	1
+#define VB_ALL		2
+
 ///node type values
 enum {
 	NODE_UNKOWN,

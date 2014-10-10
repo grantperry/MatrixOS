@@ -80,8 +80,10 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	monitor_set_fore_colour ( WHITE );
 
 	init();
+	
+	set_f_verbose(VB_NONE);
 
-	elf("binary.elf");
+	//elf("binary.elf");
 
 
 	startShell();
