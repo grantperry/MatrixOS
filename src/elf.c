@@ -312,7 +312,7 @@ void elf_load_exec (char *elf, Elf32_Ehdr *elf_Ehdr) {
 	
 	virtual_map_pages ( elf_Phdr->p_vaddr, 0x1000, 1, 1 ); //TODO make real size
 	u32int i = 0;
-	while (i < elf_Ehdr->e_phnum) {
+	/*while (i < elf_Ehdr->e_phnum) {
 		elf_Phdr = (Elf32_Phdr*)(phoff + (i * elf_Ehdr->e_phentsize));
 		void *mem = (void*)elf_Phdr->p_offset;
 		memcpy(mem, elf + elf_Phdr->p_offset, elf_Phdr->p_filesz);
@@ -324,8 +324,29 @@ void elf_load_exec (char *elf, Elf32_Ehdr *elf_Ehdr) {
 		
 		
 		i++;
-	}
+	}*/
 	i = 0;
+	
+	while (i < elf_Ehdr->e_shnum) {
+		elf_Shdr = (Elf32_Shdr*)(shoff + (i * elf_Ehdr->e_shentsize));
+		u32int type = elf_Shdr->sh_type;
+		if(type == SHT_NULL) {
+			serialf("NULL\n");
+			goto endloop;
+		}
+		if(type == SHT_PROGBITS) {
+			serialf("PROGBITS\n");
+		}
+		
+		
+		
+		
+		
+		
+		endloop: //leave at end of loop
+		i++;
+	}
+	
 	
 	//asm volatile("call 0x8048080");
 }
@@ -338,7 +359,7 @@ void *elf_load_file(char *file) {
 	}
 	switch(hdr->e_type) {
 		case ET_EXEC:
-			serialf("[ELF] Load Executable");
+			serialf("[ELF] Load Executable\n");
 			elf_load_exec(file, hdr);
 			return 0;
 		case ET_REL:
