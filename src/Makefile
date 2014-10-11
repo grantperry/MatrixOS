@@ -2,12 +2,29 @@
 # Makefile for MatrixOS
 MATRIX_BASE=~/MatrixOS
 
-SOURCES=boot.o kernel.o monitor.o common.o descriptor_tables.o isr.o interrupt.o gdt.o timer.o \
-        kheap.o paging.o ordered_array.o fs.o initrd.o task.o process.o syscall.o \
-        v86.o stdio.o cpu.o vfs.o serial.o usermode.o elf.o bin_flat.o
+DIRECTORY := $(sort $(dir $(wildcard ./*/)))
+DIRECTORY := $(filter-out ./,$(DIRECTORY))
+SOURCES := $(sort $(wildcard ./*/))
+SOURCES := $(filter-out ./Makefile,$(SOURCES))
+SOURCES := $(filter-out ./Makefile~,$(SOURCES))
+SOURCES := $(filter-out $(wildcard ./*~),$(SOURCES))
+SOURCES := $(filter-out $(wildcard ./*.orig),$(SOURCES))
+SOURCES := $(filter-out $(DIRECTORY),$(SOURCES))
+SOURCES := $(SOURCES:.c=.o)
+SOURCES := $(SOURCES:.s=.o)
+SOURCES := $(filter-out $(wildcard ./*.h),$(SOURCES))
+SOURCES := $(filter-out ./.h,$(SOURCES))
+SOURCES := $(filter-out $(wildcard ./*.ld),$(SOURCES))
+SOURCES := $(filter-out ./.ld,$(SOURCES))
+SOURCES := $(sort $(SOURCES))
 
-MODULES=$(INPUT) $(SYSTEM) $(FUN) $(GRAPHICS) $(MATH) $(FS) $(DRIVERS)
-SUBDIRS=fs
+
+BUILD_DIR=$(MATRIX_BASE)/build
+
+SUBDIRS := $(sort $(dir $(wildcard */)))
+SUBDIRS := $(filter-out ./,$(SUBDIRS))
+
+SUBDIRSRC = $(join $(SUBDIRS), $(SUBDIRS:/=_OUT.o))
 
 INPUT=input/i8042.o input/keyboard.o
 SYSTEM=system/moduleLoading.o system/shell.o
@@ -32,19 +49,21 @@ CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c
 CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h
 CLEAN_CODE_DIRS=. input system fun graphics math
 
+export MATRIX_BASE CFLAGS LDFLAGS ASFLAGS .s.o CC LD
 
-all: $(SOURCES) $(MODULES) link
+all: $(SOURCES) subdirs link
+
+subdirs: $(SUBDIRSRC)
+
+$(SUBDIRSRC):
+	@$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$@)) # get the first part of the path before the /
+
 
 release: clean all
 
-clean:
-	-rm *.o $(MATRIX_BASE)/bin/MatrixOS.bin
-	cd input; rm *.o; cd ..;
-	cd graphics; rm *.o; cd ..;
-	cd fun; rm *.o; cd ..;
-	cd math; rm *.o; cd ..;
-	cd system; rm *.o; cd ..;
-	cd fs; rm *.o; cd ..;
+clean: $(SUBDIRSRC)
+	@rm -f *.o $(MATRIX_BASE)/bin/MatrixOS.bin
+	@$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$<)) clean # get the first part of the path before the /
 
 clean_code: $(CLEAN_CODE_DIRS)
 	@echo "[*] MatrixOS Cleaning code with astyle:"
@@ -52,7 +71,7 @@ clean_code: $(CLEAN_CODE_DIRS)
 
 link:
 	@echo "[*] Linking"
-	@$(LD) $(LDFLAGS) -o $(MATRIX_BASE)/bin/MatrixOS.bin $(SOURCES) $(MODULES)
+	$(LD) $(LDFLAGS) -o $(MATRIX_BASE)/bin/MatrixOS.bin boot.o $(filter-out ./boot.o, $(SOURCES)) $(SUBDIRSRC)
 
 .s.o:
 	nasm $(ASFLAGS) $<
