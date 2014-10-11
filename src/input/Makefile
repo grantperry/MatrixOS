@@ -6,13 +6,18 @@ SOURCES := $(filter-out ./Makefile~,$(SOURCES))
 SOURCES := $(filter-out $(wildcard ./*~),$(SOURCES))
 SOURCES := $(filter-out $(wildcard ./*.orig),$(SOURCES))
 SOURCES := $(filter-out $(DIRECTORY),$(SOURCES))
+SOURCES := $(SOURCES:.c=.o)
+SOURCES := $(SOURCES:.s=.o)
 SOURCES := $(filter-out $(wildcard ./*.h),$(SOURCES))
 SOURCES := $(filter-out ./.h,$(SOURCES))
+SOURCES := $(filter-out $(wildcard ./*.ld),$(SOURCES))
+SOURCES := $(filter-out ./.ld,$(SOURCES))
+SOURCES := $(sort $(SOURCES))
 
 SOURCES1 := $(subst ./, ,$(SOURCES))
 SOURCES = $(SOURCES1)
 
-OBJECTS := $(sort $(SOURCES:.c=.o))
+OBJECTS := $(SOURCES:.c=.o)
 OBJECTS := $(filter-out $(notdir $(shell pwd))_OUT.o,$(OBJECTS))
 OBJECTS := $(filter-out Makefile,$(OBJECTS))
 
@@ -21,24 +26,26 @@ SUBDIRS := $(filter-out ./,$(SUBDIRS))
 
 SUBDIRSRC = $(join $(SUBDIRS), $(SUBDIRS:/=_OUT.o))
 
+export MATRIX_BASE CFLAGS LDFLAGS ASFLAGS .s.o CC LD
+
+.PHONY: all
 
 all: subdirs $(OBJECTS) $(DIRECTORY) link
-
-OUT := $(sort $(notdir $(wildcard ./*.o)))
-OUT := $(filter-out ./$(notdir $(shell pwd))_OUT.o,$(OUT))
-OUT := $(filter-out ./.o,$(OUT))
 
 link: 
 	@echo "[*] Linking" $(shell pwd)
 	@rm -f $(shell pwd)/$(notdir $(shell pwd))_OUT.o
-	@$(LD) -r -o $(shell pwd)/$(notdir $(shell pwd))_OUT.o $(OBJECTS)
+	@$(LD) -r -o $(shell pwd)/$(notdir $(shell pwd))_OUT.o $(OBJECTS) $(SUBDIRSRC)
 	@echo "[*]"
 
-clean: $(SUBDIRSRC)
-	@echo "clean directory: " $<
-	@rm -f *.o 
-	$(ifeq "./" "./$(firstword $(subst /, ,$<))"\then\$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$<)) clean\fi;)
-	
+.PHONY: clean
+
+clean:
+	@echo "cleaning directory:"  $(shell pwd)
+	@rm -f *.o
+	@for c in $(firstword $(subst /, ,$(SUBDIRSRC:_OUT.o=))); do\
+		$(MAKE) --no-print-directory -C $$c clean # get the first part of the path before the /\
+	done;\
 
 CODE := $(sort $(wildcard ./*))
 CODE := $(filter-out ./Makefile,$(CODE))
@@ -54,3 +61,6 @@ subdirs: $(SUBDIRSRC)
 
 $(SUBDIRSRC):
 	@$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$@)) # get the first part of the path before the /
+
+.s.o:
+	nasm $(ASFLAGS) $<

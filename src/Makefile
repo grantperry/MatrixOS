@@ -26,17 +26,9 @@ SUBDIRS := $(filter-out ./,$(SUBDIRS))
 
 SUBDIRSRC = $(join $(SUBDIRS), $(SUBDIRS:/=_OUT.o))
 
-INPUT=input/i8042.o input/keyboard.o
-SYSTEM=system/moduleLoading.o system/shell.o
-FUN=fun/fun.o
-GRAPHICS=graphics/graphics.o graphics/x_server.o graphics/vesa.o graphics/gui.o
-MATH=math/math.o
-FS=fs/ext2.o
-DRIVERS=drivers/sound.o
-
 LD_SCRIPT=link.ld
 
-CFLAGS=-nostdlib -ffreestanding -nostdinc -g
+CFLAGS=-nostdlib -ffreestanding -nostdinc -g -I $(MATRIX_BASE)/include
 #-fno-builtin
 LDFLAGS=-T$(LD_SCRIPT)
 ASFLAGS=-felf
@@ -45,25 +37,27 @@ EX_DIR=~/opt/cross/bin
 CC=$(EX_DIR)/i686-elf-gcc
 LD=$(EX_DIR)/i686-elf-ld
 
-CLEAN_CODE_DIRS_C=*.c input/*.c system/*.c fun/*.c graphics/*.c math/*.c
-CLEAN_CODE_DIRS_H=*.h input/*.h system/*.h fun/*.h graphics/*.h math/*.h
-CLEAN_CODE_DIRS=. input system fun graphics math
-
 export MATRIX_BASE CFLAGS LDFLAGS ASFLAGS .s.o CC LD
+
+.PHONY: all
 
 all: $(SOURCES) subdirs link
 
 subdirs: $(SUBDIRSRC)
 
 $(SUBDIRSRC):
-	@$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$@)) # get the first part of the path before the /
+	@$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$@)) all # get the first part of the path before the /
 
 
 release: clean all
 
-clean: $(SUBDIRSRC)
+.PHONY: clean
+
+clean:
 	@rm -f *.o $(MATRIX_BASE)/bin/MatrixOS.bin
-	@$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$<)) clean # get the first part of the path before the /
+	@for c in $(DIRECTORY); do\
+		$(MAKE) --no-print-directory -C $$c clean # get the first part of the path before the /\
+	done;\
 
 clean_code: $(CLEAN_CODE_DIRS)
 	@echo "[*] MatrixOS Cleaning code with astyle:"
