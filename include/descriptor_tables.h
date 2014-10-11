@@ -3,7 +3,7 @@
 #ifndef DESCRIPTOR_TABLES_H
 #define DESCRIPTOR_TABLES_H
 
-#include "common.h"
+#include <common.h>
 
 // Initialisation function is publicly accessible.
 s8int init_descriptor_tables();

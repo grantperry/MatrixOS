@@ -4,8 +4,8 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include "common.h"
-#include "paging.h"
+#include <common.h>
+#include <paging.h>
 
 s8int initialise_tasking();
 

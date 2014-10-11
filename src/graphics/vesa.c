@@ -21,11 +21,11 @@
  *
  */
 
-#include "../common.h"
-#include "vesa.h"
-#include "graphics.h"
-#include "../task.h"
-#include "../paging.h"
+#include <common.h>
+#include <vesa.h>
+#include <graphics.h>
+#include <task.h>
+#include <paging.h>
 
 //from paging.c
 extern volatile u32int memsize;

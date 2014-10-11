@@ -4,9 +4,9 @@
 #ifndef INITRD_H
 #define INITRD_H
 
-#include "common.h"
-#include "vfs.h"
-#include "fs.h"
+#include <common.h>
+#include <vfs.h>
+#include <fs.h>
 
 typedef struct fs_node fs_node_t;
 

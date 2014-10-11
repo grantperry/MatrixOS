@@ -1,7 +1,7 @@
 // MatrixOS - fs.c
-// 
-#include "fs.h"
-#include "vfs.h"
+//
+#include <fs.h>
+#include <vfs.h>
 
 //the curent directory node
 void *currentDirectory;
@@ -20,14 +20,14 @@ file_desc_t *initial_file_desc;
 // 1 = file names
 // 2 = everything
 */
-u8int set_f_verbose(u8int vb) {
+u8int set_f_verbose ( u8int vb ) {
 	f_verbose = vb;
 	return f_verbose;
 }
 
 s8int init_file_system() {
 	printf ( "Initalizing File System." );
-	set_f_verbose(VB_NONE);
+	set_f_verbose ( VB_NONE );
 	initial_file_desc = ( file_desc_t* ) kmalloc ( sizeof ( file_desc_t ) );
 	strcpy ( initial_file_desc->name, "root" );
 	initial_file_desc->inode = -1;
@@ -46,14 +46,15 @@ file_desc_t *lookup_file_desc ( void *node ) {
 
 	for ( ; tmp_desc; tmp_desc = tmp_desc->next ) {
 		if ( tmp_desc ) {
-			if (f_verbose >= VB_ALL) {
+			if ( f_verbose >= VB_ALL ) {
 				serialf ( "[FDESC][LOOKUP] %s", tmp_desc->name );
 			}
 
 			if ( tmp_desc == node ) {
-				if (f_verbose >= VB_ALL) {
+				if ( f_verbose >= VB_ALL ) {
 					serialf ( " FOUND\n" );
 				}
+
 				return ( file_desc_t* ) tmp_desc;
 			}
 
@@ -71,9 +72,10 @@ u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer ) {
 
 	// descriptor in the list.
 	if ( !fdesc ) {
-		if (f_verbose >= VB_ALL) {
+		if ( f_verbose >= VB_ALL ) {
 			serialf ( "[FS][READ] File not Open!\n" );
 		}
+
 		return 0;
 	}
 
@@ -97,14 +99,17 @@ u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer ) {
 		}
 
 	} else {
-		if (f_verbose >= VB_ALL) {
+		if ( f_verbose >= VB_ALL ) {
 			serialf ( "[FS][READ][ERROR] You dont have read permisions\n" );
 		}
+
 		return 0;
 	}
-	if (f_verbose >= VB_ALL) {
+
+	if ( f_verbose >= VB_ALL ) {
 		serialf ( "[FS] File is not linked to a Filesystem" );
 	}
+
 	return 0; //error
 }
 
@@ -146,7 +151,7 @@ u32int f_write ( FILE *node, u32int offset, u32int size, u8int *buffer ) {
 			}
 
 		} else {
-			if (f_verbose >= VB_ALL) {
+			if ( f_verbose >= VB_ALL ) {
 				serialf ( "[FS] Error: writing to an unprivilaged file\n" );
 			}
 		}
@@ -189,9 +194,11 @@ u8int read_mask ( char *mask ) {
 
 FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 	file_desc_t *tmp, *con;
-	if (f_verbose >= VB_ALL) {
+
+	if ( f_verbose >= VB_ALL ) {
 		serialf ( "[FS][OPEN]\n" );
 	}
+
 	con = initial_file_desc;
 
 	if ( !node ) {
@@ -201,9 +208,10 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 	while ( con->next ) {
 		//if we already have this file node in the list
 		if ( con->node == node ) {
-			if (f_verbose >= VB_ALL) {
+			if ( f_verbose >= VB_ALL ) {
 				serialf ( "[FS][OPEN] File already opened\n" );
 			}
+
 			return con;    //no need to open, just return it
 		}
 
@@ -226,9 +234,10 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 
 	//we have the next pointer in the list.
 	if ( node_fs_type ( node ) == M_VFS ) {
-		if (f_verbose >= VB_ALL) {
+		if ( f_verbose >= VB_ALL ) {
 			serialf ( "[FS][OPEN] VFS\n" );
 		}
+
 		tmp->inode = ( ( fs_node_t* ) node )->inode;
 		tmp->size = ( ( fs_node_t* ) node )->length;
 
@@ -248,24 +257,26 @@ FILE *__open__ ( void *node, char *name, char *mask, u8int open ) {
 	}
 
 	if ( open ) {
-		if (f_verbose >= VB_ALL) {
+		if ( f_verbose >= VB_ALL ) {
 			serialf ( "[FS][OPEN] Opened\n" );
 		}
+
 		con->next = tmp;
 
 	}
 
 	if ( lookup_file_desc ( ( void* ) tmp ) ) {
-		if (f_verbose >= VB_ALL) {
+		if ( f_verbose >= VB_ALL ) {
 			serialf ( "[FS][OPEN] Succsesful\n" );
 		}
 	}
 
 	return tmp;
 
-	if (f_verbose >= VB_ALL) {
+	if ( f_verbose >= VB_ALL ) {
 		serialf ( "[FS][OPEN] failed\n" );
 	}
+
 	return 0; //cause your a fail!
 }
 
@@ -282,27 +293,30 @@ void print_desc() {
 
 FILE *f_open ( char *filename, void *dir, char *mask ) {
 	FILE *file = ( FILE* ) f_finddir ( dir, filename );
-	if (f_verbose >= VB_NAMES) {
+
+	if ( f_verbose >= VB_NAMES ) {
 		serialf ( "[FS][OPEN]Opening \"%s\" inode %d ", file->name, file->inode );
 	}
 
 	if ( file ) {
-		if (f_verbose >= VB_NAMES) {
+		if ( f_verbose >= VB_NAMES ) {
 			serialf ( "with mask: %d ", read_mask ( mask ) );
 		}
 
 		if ( read_mask ( mask ) == FDESC_READ ) {
-			if (f_verbose >= VB_ALL) {
+			if ( f_verbose >= VB_ALL ) {
 				serialf ( "with Read Permissions\n" );
 			}
+
 			FILE *rc = ( FILE* ) __open__ ( ( void* ) file->node, ( char* ) file->name, ( char* ) mask, 1 );
 			return rc;
 		}
 	}
 
-	if (f_verbose >= VB_ALL) {
+	if ( f_verbose >= VB_ALL ) {
 		serialf ( "FAILED!\n" );
 	}
+
 	//if we are outside, return an error
 	return 0;
 
@@ -320,7 +334,7 @@ u32int node_fs_type ( void *node ) {
 
 FILE *f_finddir ( void *node, char *name ) {
 	if ( node_type ( node ) == FS_DIRECTORY ) {
-		if (f_verbose == VB_NAMES) {
+		if ( f_verbose == VB_NAMES ) {
 			serialf ( "[FS][INITRD][FINDDIR] directory: %s\n", name );
 		}
 
@@ -331,15 +345,17 @@ FILE *f_finddir ( void *node, char *name ) {
 		case M_VFS: {
 				//case the void * node to the vfs node structure
 				fs_node_t *vfs_node = node;
-				if (f_verbose >= VB_ALL) {
+
+				if ( f_verbose >= VB_ALL ) {
 					serialf ( "[FS][INITRD][FINDDIR][VFS]\n" );
 				}
 
 				if ( vfs_node->finddir ) {
 					//return an unopened file node with no r/w/a permissions at all to the actuall node data
-					if (f_verbose >= VB_ALL) {
+					if ( f_verbose >= VB_ALL ) {
 						serialf ( "[FS][INITRD][FINDDIR] worked\n" );
 					}
+
 					return __open__ ( vfs_node->finddir ( vfs_node, name ), name, 0, FALSE );
 
 				} else {

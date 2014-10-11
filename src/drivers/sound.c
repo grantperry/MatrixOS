@@ -1,4 +1,4 @@
- #include "sound.h"
+ #include <sound.h>
  //Play sound using built in speaker
 void play_sound(u32int nFrequence) {
  	u32int Div;

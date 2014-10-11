@@ -1,7 +1,7 @@
-#include "graphics.h"
-#include "../common.h"
-#include "font.h"
-#include "../math/math.h"
+#include <graphics.h>
+#include <common.h>
+#include <font.h>
+#include <math.h>
 
 extern u8int *vga_mem; //pointer to VESA Linear Frame Buffer
 extern u8int *double_buffer; //double buffer for VESA video

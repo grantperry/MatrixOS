@@ -2,25 +2,25 @@
 // Woooo.
 // The heart of MatrixOS sits here.
 
-#include "monitor.h"
-#include "descriptor_tables.h"
-#include "timer.h"
-#include "paging.h"
-#include "multiboot.h"
-#include "fs.h"
-#include "vfs.h"
-#include "initrd.h"
-#include "task.h"
-#include "syscall.h"
-#include "colour.h"
+#include <monitor.h>
+#include <descriptor_tables.h>
+#include <timer.h>
+#include <paging.h>
+#include <multiboot.h>
+#include <fs.h>
+#include <vfs.h>
+#include <initrd.h>
+#include <task.h>
+#include <syscall.h>
+#include <colour.h>
 
-#include "input/keyboard.h"
-#include "system/moduleLoading.h"
-#include "graphics/graphics.h"
-#include "system/shell.h"
-#include "fs/ext2.h"
-#include "drivers/sound.h"
-#include "elf.h"
+#include <keyboard.h>
+#include <moduleLoading.h>
+#include <graphics.h>
+#include <shell.h>
+#include <ext2.h>
+#include <sound.h>
+#include <elf.h>
 
 #define VER_MAJOR		1
 #define VER_MINOR		3
@@ -80,15 +80,15 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	monitor_set_fore_colour ( WHITE );
 
 	init();
-	
-	set_f_verbose(VB_NONE);
+
+	set_f_verbose ( VB_NONE );
 
 	//elf("binary.elf");
 
 
 	startShell();
 
-switch_to_user_mode();
+	switch_to_user_mode();
 
 	for ( ;; ) {}
 }
@@ -144,18 +144,18 @@ void clock() {
 }
 
 void init_sound() {
-	play_sound(1000);
-	sleep(1);
-	play_sound(990);
-	sleep(1);
-	play_sound(1000);
-	sleep(1);
+	play_sound ( 1000 );
+	sleep ( 1 );
+	play_sound ( 990 );
+	sleep ( 1 );
+	play_sound ( 1000 );
+	sleep ( 1 );
 	nosound();
 	exit();
 }
 
 s8int init_sound_multitsk() {
-	printf("Initiating sound for multitasking environment.");
+	printf ( "Initiating sound for multitasking environment." );
 	start_task ( 200, 10, init_sound, 0, "init_sound_test" );
 	return 0;
 }
@@ -206,8 +206,8 @@ void init() {
 
 	runModule ( &init_sound_multitsk );
 
-	printf("running flat binary at 0x500000\n");
-	load_flat("flat.bin");
+	printf ( "running flat binary at 0x500000\n" );
+	load_flat ( "flat.bin" );
 
 	//runModule ( &switch_to_user_mode);
 

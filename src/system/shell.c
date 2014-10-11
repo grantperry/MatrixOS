@@ -1,8 +1,8 @@
-#include "shell.h"
-#include "../stdio.h"
-#include "../graphics/gui.h"
-#include "../cpu.h"
-#include "../timer.h" //Time
+#include <shell.h>
+#include <stdio.h>
+#include <gui.h>
+#include <cpu.h>
+#include <timer.h> //Time
 
 #define BUF_SIZE_INIT 1024*2 //2KB of buffer for input should do
 

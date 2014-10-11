@@ -1,4 +1,4 @@
-#include "../common.h"
+#include <common.h>
 
 #ifndef GRAPHICS_H
 #define GRAPHICS_H

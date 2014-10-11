@@ -59,9 +59,12 @@ clean:
 		$(MAKE) --no-print-directory -C $$c clean # get the first part of the path before the /\
 	done;\
 
+CODE := $(sort $(wildcard ./*.c))
+
 clean_code: $(CLEAN_CODE_DIRS)
-	@echo "[*] MatrixOS Cleaning code with astyle:"
-	astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets $(CLEAN_CODE_DIRS_C) $(CLEAN_CODE_DIRS_H)
+	@echo "[*] MatrixOS Cleaning code with astyle:" $(CODE)
+	astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets $(CODE)
+	rm -f *.orig
 
 link:
 	@echo "[*] Linking"

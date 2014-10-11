@@ -1,5 +1,5 @@
-#include "fun.h"
-#include "../monitor.h"
+#include <fun.h>
+#include <monitor.h>
 
 void colour_fun() {
 	monitor_clear();

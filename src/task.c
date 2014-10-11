@@ -1,8 +1,8 @@
 // MatrixOS - task.c
 // Implements the functionality needed to multitask.
 
-#include "task.h"
-#include "paging.h"
+#include <task.h>
+#include <paging.h>
 
 #define KERNEL_PROC_NAME "kernel"
 
@@ -86,7 +86,7 @@ s8int initialise_tasking() {
 	task->thread_flags = 0;
 
 	strcpy ( task->name, KERNEL_PROC_NAME );
-	strcpy ( task->name+strlen(KERNEL_PROC_NAME), '\000');
+	strcpy ( task->name+strlen ( KERNEL_PROC_NAME ), '\000' );
 
 	task->next = 0;
 
@@ -272,7 +272,7 @@ void switch_task() {
 		mov $0x12345, %%eax; \
 		sti; \
 		jmp *%%ecx "
-	: : "r" ( eip ), "r" ( esp ), "r" ( ebp ), "r" ( current_directory->physicalAddr ) );
+				   : : "r" ( eip ), "r" ( esp ), "r" ( ebp ), "r" ( current_directory->physicalAddr ) );
 
 	asm volatile ( "sti" );
 	printf ( "nt" );

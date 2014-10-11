@@ -1,7 +1,7 @@
 // MatrixOS - vfs.c
 // a sub fs of fs.c for the vfs(ramdisk)
-#include "vfs.h"
-#include "fs.h"
+#include <vfs.h>
+#include <fs.h>
 
 fs_node_t *fs_root = 0; // The root of the filesystem.
 

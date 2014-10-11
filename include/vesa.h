@@ -2,7 +2,7 @@
 #ifndef VESA_H
 #define VESA_H
 
-#include "../task.h"
+#include <task.h>
 
 #define MAX_BUTTONS   10
 #define MAX_CHILDREN   100

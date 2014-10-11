@@ -3,8 +3,8 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include "common.h"
-#include "stdio.h"
+#include <common.h>
+#include <stdio.h>
 
 //Read CMOS clock
 unsigned char readCMOS ( unsigned char addr );

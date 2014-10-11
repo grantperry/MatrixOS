@@ -1,6 +1,6 @@
-#include "moduleLoading.h"
-#include "../common.h"
-#include "../monitor.h"
+#include <moduleLoading.h>
+#include <common.h>
+#include <monitor.h>
 
 extern u8int SYSCALL_ENABLED;
 extern u8int SLEEP_ENABLED;

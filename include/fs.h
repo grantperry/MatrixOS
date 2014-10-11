@@ -3,8 +3,8 @@
 #ifndef FS_H
 #define FS_H
 
-#include "common.h"
-#include "vfs.h"
+#include <common.h>
+#include <vfs.h>
 
 //for the file descriptor
 #define FDESC_CLEAR   0b1000

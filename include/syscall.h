@@ -1,6 +1,6 @@
 // MatrixOS - syscall.h
 //
-#include "common.h"
+#include <common.h>
 
 /*
 // This is a file full of macros to help make syscalls.

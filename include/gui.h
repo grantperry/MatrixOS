@@ -1,7 +1,7 @@
 #ifndef GUI_H
 #define GUI_H
-#include "../stdio.h"
-#include "../common.h"
+#include <stdio.h>
+#include <common.h>
 
 void startgui ( int look );
 

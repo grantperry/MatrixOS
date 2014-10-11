@@ -3,7 +3,7 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
-#include "common.h"
+#include <common.h>
 
 //Standard COM ports
 #define PORT_COM1 0x3F8

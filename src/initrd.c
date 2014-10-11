@@ -1,7 +1,7 @@
 // MatrixOS - initrd.c
 // Defines the interface for and structures relating to the initial ramdisk.
 
-#include "initrd.h"
+#include <initrd.h>
 
 initrd_header_t *initrd_header;	 // The header.
 initrd_file_header_t *file_headers; // The list of file headers.
@@ -66,9 +66,10 @@ fs_node_t *initrd_finddir ( fs_node_t *node, char *name ) {
 
 	for ( i = 0; i < nroot_nodes; i++ )
 		if ( !strcmp ( name, root_nodes[i].name ) ) {
-			if (f_verbose >= VB_ALL) {
+			if ( f_verbose >= VB_ALL ) {
 				serialf ( "[INITRD][FINDDIR]  inode: %d\tint_inode: %d\tname: \"%s\"\n", i, root_nodes[i].inode, root_nodes[i].name );
 			}
+
 			return &root_nodes[i];
 		}
 
@@ -140,8 +141,8 @@ fs_node_t *initialise_initrd ( u32int location ) {
 		root_nodes[i].close = 0;
 		root_nodes[i].impl = 0;
 
-		if (f_verbose >= VB_NAMES) {
-		serialf ( "[INITRD][REGISTER] name: %s,\tlength: %d\tinode: %d\tmagic: %d\n", file_headers[i].name, file_headers[i].length, i, root_nodes[i].magic );
+		if ( f_verbose >= VB_NAMES ) {
+			serialf ( "[INITRD][REGISTER] name: %s,\tlength: %d\tinode: %d\tmagic: %d\n", file_headers[i].name, file_headers[i].length, i, root_nodes[i].magic );
 		}
 	}
 

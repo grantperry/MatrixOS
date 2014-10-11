@@ -1,6 +1,6 @@
-#include "gui.h"
-#include "../task.h"
-#include "graphics.h"
+#include <gui.h>
+#include <task.h>
+#include <graphics.h>
 
 int currentlook = 0;
 int guirunning = 0;

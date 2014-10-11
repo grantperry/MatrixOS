@@ -1,7 +1,7 @@
-#include "../common.h"
-#include "i8042.h"
-#include "keyboard.h"
-#include "../timer.h"
+#include <common.h>
+#include <i8042.h>
+#include <keyboard.h>
+#include <timer.h>
 
 #define I8042_KBD_PORT_NO	0
 #define I8042_AUX_PORT_NO	1

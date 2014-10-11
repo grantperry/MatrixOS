@@ -4,8 +4,8 @@
 #ifndef PAGING_H
 #define PAGING_H
 
-#include "common.h"
-#include "isr.h"
+#include <common.h>
+#include <isr.h>
 
 typedef struct page {
 	u32int present	 : 1;	// Page present in memory

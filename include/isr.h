@@ -1,7 +1,7 @@
 // MatrixOS - isr.h
 // Interface and structures for high level interrupt service routines.
 
-#include "common.h"
+#include <common.h>
 
 #ifndef ISR_H
 #define ISR_H

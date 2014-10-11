@@ -1,4 +1,4 @@
-#include "math.h"
+#include <math.h>
 
 int math_pow ( int base, int exponent ) {
 	int x, output = 1;

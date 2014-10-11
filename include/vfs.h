@@ -2,8 +2,8 @@
 #ifndef VFS_H
 #define VFS_H
 
-#include "common.h"
-#include "initrd.h"
+#include <common.h>
+#include <initrd.h>
 
 // used for the flags in "fs_node_t"
 #define FS_FILE        0x01

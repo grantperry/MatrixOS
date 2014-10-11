@@ -1,9 +1,9 @@
 // MatrixOS - stdio.h
 // stdio file
-#include "stdio.h"
-#include "common.h"
-#include "/home/grant/MatrixOS/include/stdarg.h"
-#include "task.h"
+#include <stdio.h>
+#include <common.h>
+#include <stdarg.h>
+#include <task.h>
 
 extern volatile task_t *current_task;
 
@@ -58,13 +58,16 @@ void printf ( char *c, ... ) {
 				charArrayArg = va_arg ( arguments, char* );
 				char *ca = 0;
 				u32int i = 0;
-				while (1) {
-					if(charArrayArg == 0) {
+
+				while ( 1 ) {
+					if ( charArrayArg == 0 ) {
 						break;
 					}
+
 					i++;
 				}
-				serialf("%d\n\n\n", i);
+
+				serialf ( "%d\n\n\n", i );
 
 				printf ( charArrayArg );
 				i = i + 2;

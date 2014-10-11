@@ -1,8 +1,8 @@
 // MatrixOS - common.c
 // Common C functions
 
-#include "common.h"
-#include "syscall.h"
+#include <common.h>
+#include <syscall.h>
 
 u32int screen[25 * 80]; //char array to hold screen characters when k_save() is called.
 extern u16int video_memory; // from monitor.c

@@ -1,11 +1,11 @@
-#include "keyboard.h"
-#include "i8042.h"
-#include "../monitor.h"
-#include "../isr.h"
-#include "../common.h"
+#include <keyboard.h>
+#include <i8042.h>
+#include <monitor.h>
+#include <isr.h>
+#include <common.h>
 
-#include "../fun/fun.h"
-#include "../system/moduleLoading.h"
+#include <fun.h>
+#include <moduleLoading.h>
 
 u8int shift_flag = 0;
 u8int CapsOn = 0, NumOn = 0, ScrollOn = 0;
