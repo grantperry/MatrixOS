@@ -28,15 +28,18 @@ SUBDIRSRC = $(join $(SUBDIRS), $(SUBDIRS:/=_OUT.o))
 
 export MATRIX_BASE CFLAGS LDFLAGS ASFLAGS .s.o CC LD
 
+OUT = $(shell pwd)/$(notdir $(shell pwd))_OUT.o
+
 .PHONY: all
 
-all: subdirs $(OBJECTS) $(DIRECTORY) link
+all: subdirs $(OBJECTS) $(DIRECTORY) $(OUT) link
+
+$(OUT): $(OBJECTS) $(DIRECTORY)
 
 link: 
 	@echo "[*] Linking" $(shell pwd)
 	@rm -f $(shell pwd)/$(notdir $(shell pwd))_OUT.o
 	@$(LD) -r -o $(shell pwd)/$(notdir $(shell pwd))_OUT.o $(OBJECTS) $(SUBDIRSRC)
-	@echo "[*]"
 
 .PHONY: clean
 

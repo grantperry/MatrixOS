@@ -21,6 +21,14 @@ u8int inb ( u16int port );
 
 u16int inw ( u16int port );
 
+void outw ( u16int port, u16int value );
+
+u32int inl ( u16int port );
+
+void outl ( u16int port, u32int value );
+
+
+
 void sti();
 
 // define our structure for our registers.
