@@ -28,15 +28,18 @@ SUBDIRSRC = $(join $(SUBDIRS), $(SUBDIRS:/=_OUT.o))
 
 export MATRIX_BASE CFLAGS LDFLAGS ASFLAGS .s.o CC LD
 
+OUT = $(shell pwd)/$(notdir $(shell pwd))_OUT.o
+
 .PHONY: all
 
-all: subdirs $(OBJECTS) $(DIRECTORY) link
+all: subdirs $(OBJECTS) $(DIRECTORY) $(OUT) link
+
+$(OUT): $(OBJECTS) $(DIRECTORY)
 
 link: 
 	@echo "[*] Linking" $(shell pwd)
 	@rm -f $(shell pwd)/$(notdir $(shell pwd))_OUT.o
 	@$(LD) -r -o $(shell pwd)/$(notdir $(shell pwd))_OUT.o $(OBJECTS) $(SUBDIRSRC)
-	@echo "[*]"
 
 .PHONY: clean
 
@@ -57,10 +60,10 @@ clean_code:
 	@echo "[*] MatrixOS Cleaning code with astyle: " $(shell pwd)
 	@astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets 
 
-subdirs: $(SUBDIRSRC)
-
-$(SUBDIRSRC):
-	@$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$@)) # get the first part of the path before the /
+subdirs:
+	@for d in $(SUBDIRS); do\
+		$(MAKE) --no-print-directory -C $$d all # get the first part of the path before the /\
+	done;\
 
 .s.o:
 	nasm $(ASFLAGS) $<

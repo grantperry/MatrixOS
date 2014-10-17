@@ -60,10 +60,10 @@ clean_code:
 	@echo "[*] MatrixOS Cleaning code with astyle: " $(shell pwd)
 	@astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets 
 
-subdirs: $(SUBDIRSRC)
-
-$(SUBDIRSRC):
-	@$(MAKE) --no-print-directory -C $(firstword $(subst /, ,$@)) # get the first part of the path before the /
+subdirs:
+	@for d in $(SUBDIRS); do\
+		$(MAKE) --no-print-directory -C $$d all # get the first part of the path before the /\
+	done;\
 
 .s.o:
 	nasm $(ASFLAGS) $<
