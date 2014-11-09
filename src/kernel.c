@@ -16,7 +16,6 @@
 
 #include <keyboard.h>
 #include <moduleLoading.h>
-#include <graphics.h>
 #include <shell.h>
 #include <ext2.h>
 #include <sound.h>
@@ -84,6 +83,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	set_f_verbose ( VB_NONE );
 
 	//elf("binary.elf");
+
+	init_ata_pio();
 
 
 	startShell();
@@ -207,7 +208,8 @@ void init() {
 	runModule ( &init_sound_multitsk );
 
 	printf ( "running flat binary at 0x500000\n" );
-	load_flat ( "flat.bin" );
+	load_flat ( "flat.bin", 0x500000 );
+	load_flat ( "flat2.bin", 0x501000 );
 
 	//runModule ( &switch_to_user_mode);
 

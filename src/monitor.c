@@ -4,7 +4,6 @@
 // but rewritten for JamesM's kernel tutorials.
 
 #include <monitor.h>
-#include <graphics.h>
 
 // The VGA framebuffer starts at 0xB8000.
 u16int *video_memory = ( u16int * ) 0xB8000;
@@ -183,20 +182,10 @@ void monitor_put ( char c ) {
 
 	// Handle any other printable character.
 	else if ( c >= ' ' ) {
-		if ( VGA ) {
-			putGraphicChar ( &c, ( cursor_x * 8 ), ( cursor_y * 8 ), 2, 8 );
-			cursor_x++;
-
-			if ( cursor_x == 40 ) {
-				cursor_x = 0;
-				cursor_y++;
-			}
-
-		} else {
-			location = video_memory + ( cursor_y*80 + cursor_x );
-			*location = c | attribute;
-			cursor_x++;
-		}
+		location = video_memory + ( cursor_y*80 + cursor_x );
+		*location = c | attribute;
+		cursor_x++;
+	
 	}
 
 	// Check if we need to insert a new line because we have reached the end

@@ -1,6 +1,6 @@
 #include <bin_flat.h>
 
-void load_flat ( char* name ) {
+void load_flat ( char* name, u32int loc) {
 	FILE *bin;
 	bin = ( FILE* ) f_open ( name, fs_root, "r" );
 	serialf ( "Binary openend\n" );
@@ -8,14 +8,14 @@ void load_flat ( char* name ) {
 	f_read ( bin, 0, 1024, buf );
 	//serialf("\n\n%s\n", buf);
 
-	virtual_map_pages ( 0x500000, 0x1000, 1, 0 );
-	kmalloc_ap ( 1024, 0x500000 );
+	virtual_map_pages ( loc, 0x1000, 1, 0 );
+	kmalloc_ap ( 1024, loc );
 	serialf ( "yay memory allocation worked :)\n" );
-	memset ( 0x500000, 0, 1024 );
-	memcpy ( 0x500000, buf, 1024 );
+	memset ( loc, 0, 1024 );
+	memcpy ( loc, buf, 1024 );
 	serialf ( "memory coppied :) :) :)\n" );
 
-	asm volatile ( "call 0x500000" );
+	asm volatile ( "call %0"::"r"(loc) );
 
 	printf ( "FINISHED\n" );
 }
