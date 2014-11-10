@@ -84,6 +84,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	//elf("binary.elf");
 
+	init_fdc();
+
 	init_ata_pio();
 
 
