@@ -39,6 +39,29 @@ u16int inw ( u16int port ) {
 }
 
 /*
+// Write a word out to the specified port.
+*/
+void outw ( u16int port, u16int value ) {
+	asm volatile ( "outw %1, %0" : : "dN" ( port ), "a" ( value ) );
+}
+
+/*
+// Read Word from specified port.
+*/
+u32int inl ( u16int port ) {
+	u32int ret;
+	asm volatile ( "inl %1, %0" : "=a" ( ret ) : "dN" ( port ) );
+	return ret;
+}
+
+/*
+// Write a long out to the specified port.
+*/
+void outl ( u16int port, u32int value ) {
+	asm volatile ( "outl %1, %0" : : "dN" ( port ), "a" ( value ) );
+}
+
+/*
 // Copy len bytes from src to dest.
 */
 void memcpy ( u8int *dest, const u8int *src, u32int len ) {

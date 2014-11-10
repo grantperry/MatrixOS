@@ -80,6 +80,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	init();
 
+	init_PCI();
+
 	set_f_verbose ( VB_NONE );
 
 	//elf("binary.elf");
