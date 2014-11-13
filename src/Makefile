@@ -34,8 +34,8 @@ LDFLAGS=-T$(LD_SCRIPT)
 ASFLAGS=-felf
 
 EX_DIR=~/opt/cross/bin
-CC=$(EX_DIR)/i686-elf-gcc
-LD=$(EX_DIR)/i686-elf-ld
+CC=i686-elf-gcc
+LD=i686-elf-ld
 
 export MATRIX_BASE CFLAGS LDFLAGS ASFLAGS .s.o CC LD
 
