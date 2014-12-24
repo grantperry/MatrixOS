@@ -6,4 +6,4 @@ install:
  - alias i686-elf-ld='ld'
  - alias i686-elf-gcc='gcc'
 
-script: cd src; make;
+script: ls; cd src; ls; make;
