@@ -3,7 +3,6 @@ language: c
 install:
  - sudo apt-get update -qq
  - sudo apt-get install nasm
- - alias i686-elf-ld='ld'
- - alias i686-elf-gcc='gcc'
+ - set PATH=$PATH:./extern
 
 script: ls; cd src; ls; make;
