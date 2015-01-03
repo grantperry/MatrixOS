@@ -6,4 +6,9 @@ install:
  - export PATH=$PATH:./extern/i686-CrossCimpiler/bin
  - echo $PATH
 
-script: ls; cd src; ls; make;
+script:
+ - ls
+ - cd ./extern/i686-CrossCimpiler/bin
+ - ls
+ - cd ../../..
+ - cd src; make
