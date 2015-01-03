@@ -10,8 +10,7 @@ env:
 
 script:
  - ls
- - cd ./extern/i686-CrossCompiler/bin
- - ./i686-elf-ld
+ - cd ./extern/i686-CrossCompiler/bin; ./i686-elf-ld
  - ls
  - cd ../../../
  - i686-elf-ld --help
