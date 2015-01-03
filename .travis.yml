@@ -8,7 +8,7 @@ install:
 
 script:
  - ls
- - cd ./extern
+ - cd ./extern/i686-CrossCompiler
  - ls
- - cd ../
+ - cd ../../
  - cd src; make
