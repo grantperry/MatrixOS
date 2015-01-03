@@ -11,4 +11,5 @@ script:
  - cd ./extern/i686-CrossCompiler/bin
  - ls
  - cd ../../../
- - cd src; make
+ - i686-elf-ld --help
+ - 
