@@ -8,7 +8,7 @@ install:
 
 script:
  - ls
- - cd ./extern/i686-CrossCimpiler/bin
+ - cd ./extern
  - ls
- - cd ../../..
+ - cd ../
  - cd src; make
