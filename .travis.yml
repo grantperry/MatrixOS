@@ -3,7 +3,7 @@ language: c
 install:
  - sudo apt-get update -qq
  - sudo apt-get install nasm
- - export PATH=$PATH:./extern
+ - export PATH=$PATH:./extern/i686-CrossCimpiler/bin
  - echo $PATH
 
 script: ls; cd src; ls; make;
