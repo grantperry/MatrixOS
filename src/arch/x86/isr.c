@@ -25,6 +25,7 @@ void isr_handler ( registers_t regs ) {
 
 	} else {
 		printf ( "unhandled interrupt: %h\n", int_no );
+		serialf ( "unhandled interrupt: %h\n", int_no );
 
 		for ( ;; );
 	}
