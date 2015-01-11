@@ -4,10 +4,10 @@
 u32int openBMP(char *name) {
 	FILE *bmp;
 	bmp = ( FILE* ) f_open ( name, fs_root, "r" );
-	serialf ( "BMP: %s\n", name );
-	u8int *bmpbuf = ( u8int* ) kmalloc ( 0x5FFFF );
+	serialf ( "BMP: %s\nBMP: size: %h\n", name, bmp->size );
+	u8int *bmpbuf;// = ( u8int* ) kmalloc ( bmp->size );
 	serialf("BMP: Memalloc: DONE!\n");
-	f_read ( bmp, 0, 0x5FFFF, bmpbuf );
+	//f_read ( bmp, 0, bmp->size - 1, bmpbuf );
 	serialf("BMP: Read:     DONE!\n");
 	
 	u16int *magic = (u16int*)bmpbuf;
@@ -32,13 +32,17 @@ u32int openBMP(char *name) {
 		y = 0;
 		while(y <= ye) {
 			u8int r,g,b;
-			u32int offset = ((x * (*pixelBPP/8)) + (y * xe));
+			
+			u32int offset = ( y * (*pixelBPP / 8) + ((x * 3) * ye ));
+			
+			
 			r = *(bmpbuf + *pixelArayOff + offset + 0);
 			g = *(bmpbuf + *pixelArayOff + offset + 1);
 			b = *(bmpbuf + *pixelArayOff + offset + 2);
-			u32int c = (r << 16) + (g << 8) + b;
-			drawPixel(xe-x, ye-y, c);
-			//serialf("x:%d y:%d  %h %h %h  %h\n", x, y, r, g, b, c);
+			u32int c = (b << 16) + (g << 8) + (r << 0);
+			//u32int c = (r << 16) + (g << 8) + (b << 0);
+			drawPixel(y, xe-x, c);
+			//serialf("x:%d y:%d  %h %h %h  %h    %h\n", x, y, r, g, b, c, offset);
 			y++;
 		}
 		x++;
