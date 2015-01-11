@@ -68,7 +68,6 @@ clean_code: $(CLEAN_CODE_DIRS)
 .PHONY: link
 link:
 	@echo "[*] Linking"
-	mkdir bin
 	$(LD) $(LDFLAGS) -o $(MATRIX_BASE)/bin/MatrixOS.bin boot.o $(filter-out ./boot.o, $(SOURCES)) $(SUBDIRSRC)
 
 .PHONY: .s.o
