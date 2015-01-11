@@ -20,6 +20,7 @@
 #include <ext2.h>
 #include <sound.h>
 #include <elf.h>
+#include <VESA/VESA.h>
 
 #define VER_MAJOR		1
 #define VER_MINOR		3
@@ -85,6 +86,11 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	set_f_verbose ( VB_NONE );
 
 	//elf("binary.elf");
+
+	//u16int vesaret = testvesa();
+	//serialf("vesabit: %h\n", vesaret);
+	
+	setVesa(0x11A);
 
 	startShell();
 
