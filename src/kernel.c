@@ -88,6 +88,13 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	//elf("binary.elf");
 
 	setDisplay(0x118);
+	
+	drawRect(20, 40, 200, 400, 0x0088FF33);
+	sleep(1);
+	drawRect(25, 45, 190, 390, 0x000000FF);
+	sleep(1);
+	u32int r = openBMP("lena.bmp");
+	serialf("bmp:ret: %d\n", r);
 
 	startShell();
 
