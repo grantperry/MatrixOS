@@ -132,9 +132,9 @@ void setVesa(u32int mode)
   memcpy(&info, buffer, sizeof(VESA_INFO)); //copies info from the buffer to the info typedef struct
 
   //print VESA information
-  serialf("\n\nVesa Signature: %s\n", info.VESASignature);
-  serialf("\n\nVesa Version: %h\n", info.VESAVersion);
-  serialf("\n\nVesa Video Modes: %h\n", info.VideoModePtr);
+  serialf("Vesa Signature: %s\n", info.VESASignature);
+  serialf("Vesa Version: %h\n", info.VESAVersion);
+  serialf("Vesa Video Modes: %h\n", info.VideoModePtr);
 
   /**Gests VESA mode information**/
 
@@ -155,11 +155,11 @@ void setVesa(u32int mode)
   depthVESA = vbeModeInfo.BitsPerPixel;
 
   //print VESA mode information
-  serialf("\nBase Pointer: %h\n", (u32int)vbeModeInfo.PhysBasePtr);
-  serialf("\nXRes: %d\n", (u32int)vbeModeInfo.XResolution);
-  serialf("\nYRes: %d\n", (u32int)vbeModeInfo.YResolution);
-  serialf("\nBits per pixel: %d\n", (u32int)vbeModeInfo.BitsPerPixel);
-  serialf("\nExits status: %h\n", (u32int)regs.ax);
+  serialf("Base Pointer: %h\n", (u32int)vbeModeInfo.PhysBasePtr);
+  serialf("XRes: %d\n", (u32int)vbeModeInfo.XResolution);
+  serialf("YRes: %d\n", (u32int)vbeModeInfo.YResolution);
+  serialf("Bits per pixel: %d\n", (u32int)vbeModeInfo.BitsPerPixel);
+  serialf("Exits status: %h\n", (u32int)regs.ax);
 
   /*Sets the Linear Frame Buffer address tp vga_mem and lfb variables*/
   vga_mem = (u8int*)vbeModeInfo.PhysBasePtr;

@@ -87,11 +87,6 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	//elf("binary.elf");
 
-	//u16int vesaret = testvesa();
-	//serialf("vesabit: %h\n", vesaret);
-	
-	setVesa(0x11A);
-
 	startShell();
 
 	switch_to_user_mode();
