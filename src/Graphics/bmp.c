@@ -5,9 +5,9 @@ u32int openBMP(char *name) {
 	FILE *bmp;
 	bmp = ( FILE* ) f_open ( name, fs_root, "r" );
 	serialf ( "BMP: %s\nBMP: size: %h\n", name, bmp->size );
-	u8int *bmpbuf;// = ( u8int* ) kmalloc ( bmp->size );
+	u8int *bmpbuf = ( u8int* ) kmalloc ( 0x68000  );
 	serialf("BMP: Memalloc: DONE!\n");
-	//f_read ( bmp, 0, bmp->size - 1, bmpbuf );
+	f_read ( bmp, 0, 0x68000, bmpbuf );
 	serialf("BMP: Read:     DONE!\n");
 	
 	u16int *magic = (u16int*)bmpbuf;

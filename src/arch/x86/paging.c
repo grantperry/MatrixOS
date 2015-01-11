@@ -167,7 +167,7 @@ s8int initialise_paging() {
 	printf ( "Initalizing Paging." );
 	// The size of physical memory. For the moment we
 	// assume it is 16MB big.
-	u32int mem_end_page = return_memory() * 0x10; //return_memory returns KB
+	u32int mem_end_page = (128 * 1024 * 1024 ); //return_memory returns KB
 
 	memsize = mem_end_page;
 
