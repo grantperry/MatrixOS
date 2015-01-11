@@ -1,5 +1,9 @@
+//MatrixOS - VESA.h
+// Thankyou to JS-OS for the VESA VBE Mode Changing Coode.
+
 #include <stdio.h>
 #include <VESA/VESA.h>
+#include <Graphics/Graphics.h>
 #include <task.h>
 
 /*
@@ -132,9 +136,9 @@ void setVesa(u32int mode)
   memcpy(&info, buffer, sizeof(VESA_INFO)); //copies info from the buffer to the info typedef struct
 
   //print VESA information
-  serialf("Vesa Signature: %s\n", info.VESASignature);
-  serialf("Vesa Version: %h\n", info.VESAVersion);
-  serialf("Vesa Video Modes: %h\n", info.VideoModePtr);
+  //serialf("Vesa Signature: %s\n", info.VESASignature);
+  //serialf("Vesa Version: %h\n", info.VESAVersion);
+  //serialf("Vesa Video Modes: %h\n", info.VideoModePtr);
 
   /**Gests VESA mode information**/
 
@@ -154,12 +158,19 @@ void setVesa(u32int mode)
   heightVESA = vbeModeInfo.YResolution;
   depthVESA = vbeModeInfo.BitsPerPixel;
 
+
+  DispX = widthVESA;
+  DispY = heightVESA;
+  DispD = depthVESA;
+  VESAMemLoc = (u32int)vbeModeInfo.PhysBasePtr;
+
+
   //print VESA mode information
-  serialf("Base Pointer: %h\n", (u32int)vbeModeInfo.PhysBasePtr);
-  serialf("XRes: %d\n", (u32int)vbeModeInfo.XResolution);
-  serialf("YRes: %d\n", (u32int)vbeModeInfo.YResolution);
-  serialf("Bits per pixel: %d\n", (u32int)vbeModeInfo.BitsPerPixel);
-  serialf("Exits status: %h\n", (u32int)regs.ax);
+  //serialf("Base Pointer: %h\n", (u32int)vbeModeInfo.PhysBasePtr);
+  //serialf("XRes: %d\n", (u32int)vbeModeInfo.XResolution);
+  //serialf("YRes: %d\n", (u32int)vbeModeInfo.YResolution);
+  //serialf("Bits per pixel: %d\n", (u32int)vbeModeInfo.BitsPerPixel);
+  //serialf("Exits status: %h\n", (u32int)regs.ax);
 
   /*Sets the Linear Frame Buffer address tp vga_mem and lfb variables*/
   vga_mem = (u8int*)vbeModeInfo.PhysBasePtr;
