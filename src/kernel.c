@@ -89,6 +89,12 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	setDisplay(0x118);
 	
+	u32int n = 0;
+	while (1) {
+		serialf("n:%d %h\n", n, n);
+		n++;
+	}
+	
 	drawRect(20, 40, 200, 400, 0x0088FF33);
 	sleep(1);
 	drawRect(25, 45, 190, 390, 0x000000FF);
