@@ -1,9 +1,6 @@
-// MatrixOS - paging.c
-// Defines the interface for and structures relating to paging.
-
-#include "paging.h"
-#include "kheap.h"
-#include "common.h"
+#include <stdio.h>
+#include <paging.h>
+#include <kheap.h>
 
 // The kernel's page directory
 page_directory_t *kernel_directory=0;
@@ -107,8 +104,7 @@ void alloc_frame ( page_t *page, int is_kernel, int is_writeable ) {
 		u32int idx = first_frame();
 
 		if ( idx == ( u32int )-1 ) {
-			serialf("No Free Frames!");
-			PANIC ( "No Free Frames!" );
+			// PANIC! no free frames!!
 		}
 
 		set_frame ( idx*0x1000 );
@@ -135,29 +131,6 @@ void free_frame ( page_t *page ) {
 }
 
 /*
-// Identity map pages from Pysical (startAddr),
-// for length(lenght).
-*/
-u8int identity_map(page_directory_t *dir, u32int startAddr, u32int length, u8int rw, u8int user) {
-	int i = startAddr;
-	serialf("idmap: %h\n", i);
-	while ( i < length+0x1000 ) {
-		alloc_frame ( get_page ( i, 1, kernel_directory ), 0, 0 );
-		
-		
-		page_t *page = get_page ( i, 1, current_directory );
-		page->present = 1;
-		page->rw = rw;
-		page->user = user;
-		page->frame = i / 0x1000;
-		
-		i += 0x1000;
-		
-		
-	}
-}
-
-/*
 // Initialise paging by
 // Setting the size of phisical memory.
 // Making the page directory.
@@ -167,7 +140,7 @@ s8int initialise_paging() {
 	printf ( "Initalizing Paging." );
 	// The size of physical memory. For the moment we
 	// assume it is 16MB big.
-	u32int mem_end_page = return_memory() * 0x10; //return_memory returns KB
+	u32int mem_end_page = 0xF0000000;
 
 	memsize = mem_end_page;
 
@@ -203,13 +176,12 @@ s8int initialise_paging() {
 	// initialised properly.
 	i = 0;
 
-	while ( i < placement_address+0x1000 ) { //i < 0x400000
+	while ( i < placement_address+0x1000 ) { //0x400000)
 		// Kernel code is readable but not writeable from userspace.
 		alloc_frame ( get_page ( i, 1, kernel_directory ), 0, 0 );
 		i += 0x1000;
 	}
-	
-	
+
 	// Now allocate those pages we mapped earlier.
 	for ( i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000 ) {
 		alloc_frame ( get_page ( i, 1, kernel_directory ), 0, 0 );
@@ -228,31 +200,6 @@ s8int initialise_paging() {
 	switch_page_directory ( current_directory );
 
 	return 0;
-}
-
-void init_v_mem() {
-	/*
-	// We need to identity Map the Linear frame buffer
-	*/
-	 //This is for our VESA LFB
-    u32int lfb_address = 0xE0000000; //replace me with a routine
-    
-    u32int j = lfb_address;
-    while (j < lfb_address+(1024*768*4))
-    {
-         //If frame is valid...
-         if(j+lfb_address+(1024*768*4) < memsize) {
-         	set_frame(j); // Tell the frame bitmap that this frame is now used!
-         }
-         //Get the page
-         page_t *page = get_page(j, 1, kernel_directory);
-         //And fill it
-         page->present = 1;
-         page->rw = 1;
-         page-> user = 1;
-         page->frame = j / 0x1000;
-         j += 0x1000;
-    }
 }
 
 /*
@@ -309,48 +256,34 @@ void page_fault ( registers_t *regs ) {
 
 	// Output an error message.
 	printf ( "Page fault! ( " );
-	
+	serialf( "Page fault! ( " );
+
 	if ( present ) {
 		printf ( "present " );
+		serialf( "present " );
 	}
 
 	if ( rw ) {
 		printf ( "read-only " );
+		serialf( "read-only " );
 	}
 
 	if ( us ) {
 		printf ( "user-mode " );
-	}
-
-	if ( reserved ) {
-		printf ( "reserved " );
-	}
-
-	printf ( ") at %h - EIP: %h\n", faulting_address, regs->eip );
-	mehpid();
-	
-	serialf ( "Page fault! ( " );
-	
-	if ( present ) {
-		serialf ( "present " );
-	}
-
-	if ( rw ) {
-		serialf ( "read-only " );
-	}
-
-	if ( us ) {
 		serialf ( "user-mode " );
 	}
 
 	if ( reserved ) {
+		printf ( "reserved " );
 		serialf ( "reserved " );
 	}
 
+	printf ( ") at %h - EIP: %h\n", faulting_address, regs->eip );
 	serialf ( ") at %h - EIP: %h\n", faulting_address, regs->eip );
+
 	mehpid();
-	
 	PANIC ( "Page fault" );
+	
 }
 
 static page_table_t *clone_table ( page_table_t *src, u32int *physAddr ) {

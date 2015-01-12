@@ -87,11 +87,14 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	//elf("binary.elf");
 
-	setDisplay(0x118);
+	//setDisplay(0x118);
 	
-	drawRect(20, 40, 200, 400, 0x0088FF33);
-	drawRect(25, 45, 190, 390, 0x000000FF);
+	//drawRect(20, 40, 200, 400, 0x0088FF33);
+	//drawRect(25, 45, 190, 390, 0x000000FF);
 
+	u32int n = (1024 * 1480) * 3;
+	serialf("ALLOC: %d\n", n);
+	u8int *a = (u8int*)kalloc(n);
 
 	startShell();
 
