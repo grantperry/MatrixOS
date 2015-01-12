@@ -37,5 +37,6 @@ void setDisplay(u32int mode) {
 	vga_mem = (u8int*) VESAMemLoc;
 	drawPixel = (void*)drawPixelVesa24;
 	
+	init_BackBuffer(DispX, DispY, DispD);
 }
 
