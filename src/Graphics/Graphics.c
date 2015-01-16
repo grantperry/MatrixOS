@@ -35,8 +35,9 @@ void setDisplay(u32int mode) {
 	serialf("s: %h\n", (DispX*DispY*(DispD/8)));
 	virtual_map_pages(VESAMemLoc, (DispX*DispY*(DispD/8)), 1, 1);
 	vga_mem = (u8int*) VESAMemLoc;
+	
 	drawPixel = (void*)drawPixelVesa24;
 	
-	init_BackBuffer(DispX, DispY, DispD);
+	//init_BackBuffer(DispX, DispY, DispD);
 }
 

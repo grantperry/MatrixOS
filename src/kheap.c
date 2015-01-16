@@ -323,7 +323,18 @@ void *alloc ( u32int size, u8int page_align, heap_t *heap ) {
 	block_header->size	  = new_size;
 	// ...And the footer
 	footer_t *block_footer  = ( footer_t * ) ( orig_hole_pos + sizeof ( header_t ) + size );
-	block_footer->magic	 = HEAP_MAGIC;
+	
+	
+	
+	
+	///////////////////////////////////ERROR///////////////////////////
+	//block_footer->magic	 = HEAP_MAGIC;
+	///////////////////////////////////////////////////////////////////
+	
+	
+	
+	
+	
 	block_footer->header	= block_header;
 
 	// We may need to write a new hole after the allocated block.
