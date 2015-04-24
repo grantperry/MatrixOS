@@ -33,9 +33,11 @@ CFLAGS=-nostdlib -ffreestanding -nostdinc -g -I $(MATRIX_BASE)/include
 LDFLAGS=-T$(LD_SCRIPT)
 ASFLAGS=-felf
 
+CLIB_PREFIX=~/opt/cross/bin
+
 EX_DIR=~/opt/cross/bin
-CC=i686-elf-gcc
-LD=i686-elf-ld
+CC=$(CLIB_PREFIX)/i686-elf-gcc
+LD=$(CLIB_PREFIX)/i686-elf-ld
 
 export MATRIX_BASE CFLAGS LDFLAGS ASFLAGS .s.o CC LD
 

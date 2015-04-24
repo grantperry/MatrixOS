@@ -20,7 +20,7 @@ all:
 	@echo "UnTaring code"
 	@$(EXTF) "cd $(BASEDIR); rm -r $(DIRS); tar -pxf tar.tar"
 	@echo "Compiling code"
-	@$(EXTF) "$PATH='$HOME/opt/cross/bin:$PATH'; cd $(BASEDIR)/src; make"
+	@$(EXTF) "cd $(BASEDIR)/src; make"
 	@echo "Making CD image"
 	@$(EXTF) "cd $(BASEDIR) && make -f Makefile-iso"
 	@echo "Sending back result"
