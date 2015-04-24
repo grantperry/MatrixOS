@@ -1,4 +1,4 @@
-MatrixOS v1.3.0 [![Build Status](https://drone.io/github.com/teenHack42/MatrixOS/status.png)](https://drone.io/github.com/teenHack42/MatrixOS/latest)[![Build Status](https://travis-ci.org/teenHack42/MatrixOS.svg?branch=master)](https://travis-ci.org/teenHack42/MatrixOS)
+MatrixOS v1.3.0
 ========
 ![MatrixOSBoot](https://raw.githubusercontent.com/teenHack42/MatrixOS/master/docs/MatrixOSBootv1.3.0.png)
 
