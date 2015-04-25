@@ -70,7 +70,7 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	initial_esp = initial_stack;
 	mboot_ptr = mboot_point;
 
-	init_serial ( 1, 9 );
+	init_serial ( 1, 9 );//DO NOT DISABLE
 
 	monitor_set_cursor_pos ( 0, 0 );
 	monitor_set_fore_colour ( GREEN );
@@ -90,12 +90,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	setDisplay(0x118);
 	
-	drawRect(20, 40, 200, 400, 0x0088FF33);
+	drawRect(0, 0, 1024, 768, 0x0077FF00);
 	drawRect(25, 45, 190, 390, 0x000000FF);
-
-	//u32int n = (1024 * 550);
-	//serialf("ALLOC: %d\n", n);
-	//u8int *a = (u8int*)kmalloc(n);
 
 	startShell();
 
