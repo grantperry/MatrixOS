@@ -88,10 +88,9 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 
 	//elf("binary.elf");
 
-	setDisplay(0x118);
-	
-	drawRect(0, 0, 1024, 768, 0x0077FF00);
-	drawRect(25, 45, 190, 390, 0x000000FF);
+	//setDisplay(0x118);
+	//drawRect(0, 0, 1024, 768, 0x0077FF00);
+	//drawRect(25, 45, 190, 390, 0x000000FF);
 
 	startShell();
 
