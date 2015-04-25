@@ -22,6 +22,7 @@
 #include <sound.h>
 #include <elf.h>
 #include <VESA/VESA.h>
+#include <drivers/AHCI.h>
 
 #define VER_MAJOR		1
 #define VER_MINOR		3
@@ -91,6 +92,8 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	//setDisplay(0x118);
 	//drawRect(0, 0, 1024, 768, 0x0077FF00);
 	//drawRect(25, 45, 190, 390, 0x000000FF);
+	
+	init_AHCI();
 
 	startShell();
 

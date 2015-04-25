@@ -16,4 +16,4 @@ link:
 	$(CC) -o initrd_gen $(SOURCES)
 
 genrd:
-	./initrd_gen falt.bin flat.bin flat2.bin flat2.bin
+	./initrd_gen 1 1 2 2 3 3

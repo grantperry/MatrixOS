@@ -1,50 +1,78 @@
-#include <PCI.h>
+#include <drivers/pci.h>
 #include <common.h>
-
-PCIDevice * pciDeviceTable;
 
 void checkBus(u8int bus);
 
+u32int getPciConfAddress(u8int bus, u8int slot, u8int func, u8int offset) {
+	u32int address;
+    u32int lbus  = (u32int)bus;
+    u32int lslot = (u32int)slot;
+    u32int lfunc = (u32int)func;
+	address = (u32int)((lbus << 16) | (lslot << 11) |
+					   (lfunc << 8) | (offset & 0xfc) | ((u32int)0x80000000));
+}
+
 u8int pciConfReadByte(u8int bus, u8int slot, u8int func, u8int offset) {
-	outl(CONFIG_ADDRESS, pciGetConfAddr(bus, slot, func, offset));
+	u32int address;
+    u32int lbus  = (u32int)bus;
+    u32int lslot = (u32int)slot;
+    u32int lfunc = (u32int)func;
+    u16int tmp = 0;
+	
+    /* create configuration address as per Figure 1 */
+    address = (u32int)((lbus << 16) | (lslot << 11) |
+						 (lfunc << 8) | (offset & 0xfc) | ((u32int)0x80000000));
+	
+	outl(CONFIG_ADDRESS, address);
 	return (u8int)((inl (CONFIG_DATA) >> ((offset & 2) * 8)) & 0xffff);
 }
 
 u16int pciConfReadWord(u8int bus, u8int slot, u8int func, u8int offset) {
-	outl(CONFIG_ADDRESS, pciGetConfAddr(bus, slot, func, offset));
+	u32int address;
+    u32int lbus  = (u32int)bus;
+    u32int lslot = (u32int)slot;
+    u32int lfunc = (u32int)func;
+    u16int tmp = 0;
+	
+    /* create configuration address as per Figure 1 */
+    address = (u32int)((lbus << 16) | (lslot << 11) |
+						 (lfunc << 8) | (offset & 0xfc) | ((u32int)0x80000000));
+	
+	//serialf("addr: %h\n", address);
+	
+	outl(CONFIG_ADDRESS, address);
 	return (u16int)((inl (CONFIG_DATA) >> ((offset & 2) * 8)) & 0xffff);
 }
 
 u32int pciConfReadLong(u8int bus, u8int slot, u8int func, u8int offset) {
-	outl(CONFIG_ADDRESS, pciGetConfAddr(bus, slot, func, offset));
+	u32int address;
+    u32int lbus  = (u32int)bus;
+    u32int lslot = (u32int)slot;
+    u32int lfunc = (u32int)func;
+    u16int tmp = 0;
+	
+    /* create configuration address as per Figure 1 */
+    address = (u32int)((lbus << 16) | (lslot << 11) |
+						 (lfunc << 8) | (offset & 0xfc) | ((u32int)0x80000000));
+	
+	outl(CONFIG_ADDRESS, address);
 	return inl (CONFIG_DATA);
 }
 
 u16int getVendorID(u8int bus, u8int device, u8int function) {
-	return pciConfReadWord(bus, device, function, VENDOR_ID);
+	return (u16int)pciConfReadWord(bus, device, function, VENDOR_ID);
 }
 
 u16int getDeviceID(u8int bus, u8int device, u8int function) {
-	return pciConfReadWord(bus, device, function, DEVICE_ID);
+	return (u16int)pciConfReadWord(bus, device, function, DEVICE_ID);
 }
 
 u8int getBaseClass(u8int bus, u8int device, u8int function) {
-	return pciConfReadByte(bus, device, function, CLASS_CODE);
+	return (u8int)pciConfReadByte(bus, device, function, CLASS_CODE);
 }
 
 u8int getSubClass(u8int bus, u8int device, u8int function) {
-	return pciConfReadByte(bus, device, function, SUB_CLASS_CODE);
-}
-
-/*
-//	return a pci device
-//	class		= pci class code
-//	subclass	= pci sub-class code
-//	number		= if there are more than one the return the specifyide.
-*/
-PCIDevice * getPCIDevice(u8int class, u8int subclass, u8int number) {
-	
-	
+	return (u8int)pciConfReadByte(bus, device, function, SUB_CLASS_CODE);
 }
 
 u8int getHeaderType(u8int bus, u8int device, u8int function) {
@@ -72,7 +100,8 @@ u8int getSecondaryBus(u8int bus, u8int device, u8int function) {
          secondaryBus = getSecondaryBus(bus, device, function);
          checkBus(secondaryBus);
      }
- }
+	 serialf("venid:%h\n", getVendorID(bus, device, function));
+}
 
 void checkDevice(u8int bus, u8int device) {
      u8int function = 0;
@@ -102,17 +131,9 @@ void checkBus(u8int bus) {
 
 void init_PCI() {
 	serialf("Init PCI\n");
-	PCIDevice *point;
-	pciDeviceTable = (PCIDevice*)kmalloc(sizeof(PCIDevice));
-	point = pciDeviceTable;
 	u8int bus, slot, function;
 	
 	checkBus(0); //check the first bus
 	
 }
 
-
-
-u32int pciGetConfAddr (u8int bus, u8int slot, u8int func, u8int offset) {
-	u32int address = (u32int)((bus << 16) | (slot << 11) | (func << 8) | (offset & 0xfc) | ((u32int)0x80000000));
-}

@@ -3,22 +3,9 @@
 
 #include <common.h>
 
-#define CONFIG_ADDRESS	0xCF8
-#define CONFIG_DATA		0xCFC
-
-void Init_PCI();
-
-u8int readECS_BYTE(u16int);
-
-u16int readECS_WORD(u16int);
-
-u32int readECS_DWORD(u32int);
-
-void writeECS_BYTE(u8int);
-
-void writeECS_WORD(u16int);
-
-void writeECS_DWORD(u32int);
+u8int	pciConfReadByte(u8int bus, u8int slot, u8int func, u8int offset);
+u16int	pciConfReadWord(u8int bus, u8int slot, u8int func, u8int offset);
+u32int	pciConfReadLong(u8int bus, u8int slot, u8int func, u8int offset);
 
 void init_PCI();
 
@@ -49,9 +36,5 @@ typedef struct PCIDevice{
 	
 	struct PCIDevice *next;
 } PCIDevice;
-
-PCI_DEVTABLE getPciDeviceTable(u16int VenId, u16int DevId)
-
-u32int pciGetConfAddr (u8int bus, u8int slot, u8int func, u8int offset);
 
 #endif//PCI_H
