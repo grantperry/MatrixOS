@@ -110,17 +110,13 @@ fs_node_t *vfs_createFile ( fs_node_t *parentNode, char *name, u32int size ) {
 	root_nodes[n].finddir = 0;
 	root_nodes[n].impl = 0;
 
-	printf ( "1\n" );
-
 	root_nodes[n].pointer = ( fs_block_t* ) kmalloc ( sizeof ( fs_block_t ) ); //pointer to first block node.
 	root_nodes[n].pointer->length = size;// size of the block pointed to.
 	root_nodes[n].pointer->pointer = kmalloc ( size*sizeof ( char ) ); //the actuall pointer to the block
 	memset ( root_nodes[n].pointer->pointer, 0x0, size*sizeof ( char ) ); //set the block area to 0's
 	root_nodes[n].pointer->next = 0;//pointer to the next block in the file.
 
-	printf ( "2\n" );
 	addFileToDir ( parentNode, &root_nodes[n] );
-	printf ( "6\n" );
 	return &root_nodes[n];
 
 }
@@ -154,7 +150,6 @@ int addFileToDir ( fs_node_t *dirNode, fs_node_t *fileNode ) {
 
 	dirent.name_len = ( u8int ) lengthOfName;
 	dirent.file_type = fileNode->fstype;
-	printf ( "3\n" );
 
 	//+1 being the \000 NULL termination 0 byte at the end of the string
 	dirent.name = ( char* ) kmalloc ( lengthOfName + 1 );
@@ -162,7 +157,6 @@ int addFileToDir ( fs_node_t *dirNode, fs_node_t *fileNode ) {
 	//copy the name of the file (fileNode->name) to the dirent.name
 	//TODO make fs_node_t use dynamic name sizes
 	memcpy ( dirent.name, fileNode->name, lengthOfName + 1 ); //fileNode->name already had a \000 termination zero
-	printf ( "4\n" );
 	* ( dirent.name + lengthOfName ) = 0; //Just in case add a \000 at the end
 
 	dirNode->dpointer = ( struct dirent* ) kmalloc ( sizeof ( dirent ) );

@@ -57,8 +57,9 @@ file_desc_t *lookup_file_desc ( void *node ) {
 
 				return ( file_desc_t* ) tmp_desc;
 			}
-
-			serialf ( "\n" );
+			if (f_verbose > VB_NONE) {
+				serialf ( "\n" );
+			}
 		}
 	}
 
@@ -107,7 +108,7 @@ u32int f_read ( file_desc_t *file, u32int offset, u32int size, u8int *buffer ) {
 	}
 
 	if ( f_verbose >= VB_ALL ) {
-		serialf ( "[FS] File is not linked to a Filesystem" );
+		serialf ( "[FS] File is not linked to a Filesystem\n" );
 	}
 
 	return 0; //error

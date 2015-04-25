@@ -375,7 +375,7 @@ void free ( void *p, heap_t *heap ) {
 
 	// Sanity checks.
 	ASSERT ( header->magic == HEAP_MAGIC );
-	serialf("FOOTER MAGIC: %h\n", footer->magic);
+	//serialf("FOOTER MAGIC: %h\n", footer->magic);
 	ASSERT ( footer->magic == HEAP_MAGIC );
 
 	// Make us a hole.
