@@ -25,7 +25,7 @@ all:
 	@$(EXTF) "cd $(BASEDIR) && make -f Makefile-iso"
 	@echo "Sending back result"
 	@scp -C $(EXT):~/$(BASEDIR)/MatrixOS.iso ~/$(BASEDIR)
-	@$(EXTF) 'cd ~/MatrixOS && tar -pcf tar.tar src'
+	@$(EXTF) 'cd ~/MatrixOS && tar -pcf tar.tar src initrd'
 	@scp -C $(EXT):~/MatrixOS/tar.tar .
 	@tar -pxf tar.tar
 	@echo "DONE!"
