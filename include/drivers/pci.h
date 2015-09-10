@@ -9,6 +9,8 @@ u32int	pciConfReadLong(u8int bus, u8int slot, u8int func, u8int offset);
 
 void init_PCI();
 
+void printPciAll();
+
 #define	CONFIG_ADDRESS	0xCF8
 #define	CONFIG_DATA		0xCFC
 

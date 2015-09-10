@@ -30,7 +30,7 @@ extern isr_t interrupt_handlers[];
 // initialises the GDT and IDT.
 */
 s8int init_descriptor_tables() {
-	printf ( "Filling Descriptor Tables." );
+	printf ( "Filling Descriptor Tables.\n" );
 	// Initialise the global descriptor table.
 	init_gdt();
 	// Initialise the interrupt descriptor table.
