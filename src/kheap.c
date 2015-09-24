@@ -14,6 +14,11 @@ u32int placement_address = ( u32int )&end;
 extern page_directory_t *kernel_directory;
 heap_t *kheap=0;
 
+/*
+//	sz		= size of object in pointer
+//	align	= align to specified size boundary
+//	phys	= return the physical value of the pointer when in paging mode
+*/
 u32int kmalloc_int ( u32int sz, int align, u32int *phys ) {
 	if ( kheap != 0 ) {
 		void *addr = alloc ( sz, ( u8int ) align, kheap );
@@ -323,18 +328,18 @@ void *alloc ( u32int size, u8int page_align, heap_t *heap ) {
 	block_header->size	  = new_size;
 	// ...And the footer
 	footer_t *block_footer  = ( footer_t * ) ( orig_hole_pos + sizeof ( header_t ) + size );
-	
-	
-	
-	
+
+
+
+
 	///////////////////////////////////ERROR/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	block_footer->magic	 = HEAP_MAGIC;
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	
-	
-	
+
+
+
+
+
 	block_footer->header	= block_header;
 
 	// We may need to write a new hole after the allocated block.
