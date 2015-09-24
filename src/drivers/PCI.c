@@ -154,7 +154,7 @@ void init_PCI() {
 	serialf("Init PCI\n");
 	u8int bus, slot, function;
 	
-	checkBus(0); //check the first bus
+	//checkBus(0); //check the first bus
 	
 }
 

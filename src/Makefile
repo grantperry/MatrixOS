@@ -1,77 +1,43 @@
-# MatrixOS
-# Makefile for MatrixOS
-MATRIX_BASE=~/MatrixOS
+# MatrixOS src file make script.
 
-DIRECTORY := $(sort $(dir $(wildcard ./*/)))
-DIRECTORY := $(filter-out ./,$(DIRECTORY))
-SOURCES := $(sort $(wildcard ./*/))
-SOURCES := $(filter-out ./Makefile,$(SOURCES))
-SOURCES := $(filter-out ./Makefile~,$(SOURCES))
-SOURCES := $(filter-out $(wildcard ./*~),$(SOURCES))
-SOURCES := $(filter-out $(wildcard ./*.orig),$(SOURCES))
-SOURCES := $(filter-out $(DIRECTORY),$(SOURCES))
-SOURCES := $(SOURCES:.c=.o)
-SOURCES := $(SOURCES:.s=.o)
-SOURCES := $(filter-out $(wildcard ./*.h),$(SOURCES))
-SOURCES := $(filter-out ./.h,$(SOURCES))
-SOURCES := $(filter-out $(wildcard ./*.ld),$(SOURCES))
-SOURCES := $(filter-out ./.ld,$(SOURCES))
-SOURCES := $(sort $(SOURCES))
+# Base Dir of Matrix for file location purposes: automatically at user home /MatrixOS
+MATRIX_DIR_HOME=~/MatrixOS
+
+# src directory for uncompiled code
+MATRIX_DIR_SRC=$(MATRIX_DIR_HOME)/src
+
+# bin directory for compiled binaries ready for use
+MATRIX_DIR_BIN=$(MATRIX_DIR_HOME)/bin
+
+# inited location. contains creator and initrd
+MATRIX_DIR_INITRD=$(MATRIX_DIR_HOME)/initrd
+
+# include directory. holds header files for MatrixOS
+MATRIX_DIR_INCLUDE=$(MATRIX_DIR_HOME)/include
 
 
-BUILD_DIR=$(MATRIX_BASE)/build
+.PHONY: all clean test
 
-SUBDIRS := $(sort $(dir $(wildcard */)))
-SUBDIRS := $(filter-out ./,$(SUBDIRS))
+# Just to not leave anything to chance
+WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
+	-Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
+	-Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
+	-Wuninitialized -Wconversion -Wstrict-prototypes
 
-SUBDIRSRC = $(join $(SUBDIRS), $(SUBDIRS:/=_OUT.o))
+# Flags for GCC.
+CFLAGS=-nostdlib -ffreestanding -nostdinc -g -I $(MATRIX_DIR_INCLUDE) $(WARNINGS)
 
-LD_SCRIPT=link.ld
-
-CFLAGS=-nostdlib -ffreestanding -nostdinc -g -I $(MATRIX_BASE)/include
-#-fno-builtin
+# Flags for the linker.
 LDFLAGS=-T$(LD_SCRIPT)
+
+# Flags for NASM
 ASFLAGS=-felf
 
-CLIB_PREFIX=~/opt/cross/bin
 
-EX_DIR=~/opt/cross/bin
-CC=$(CLIB_PREFIX)/i686-elf-gcc
-LD=$(CLIB_PREFIX)/i686-elf-ld
+SRC_FILES := $(shell find . -type f -name "\*.c")
 
-export MATRIX_BASE CFLAGS LDFLAGS ASFLAGS .s.o CC LD
-
-.PHONY: all
-
-all: $(SOURCES) subdirs link
-
-subdirs:
-	@for d in $(SUBDIRS); do\
-		$(MAKE) --no-print-directory -C $$d all # get the first part of the path before the /\
-	done;\
+all: 
 
 
-release: clean all
-
-.PHONY: clean
-clean:
-	@rm -f *.o $(MATRIX_BASE)/bin/MatrixOS.bin
-	@for c in $(DIRECTORY); do\
-		$(MAKE) --no-print-directory -C $$c clean # get the first part of the path before the /\
-	done;\
-
-CODE := $(sort $(wildcard ./*.c))
-
-clean_code: $(CLEAN_CODE_DIRS)
-	@echo "[*] MatrixOS Cleaning code with astyle:" $(CODE)
-	astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets $(CODE)
-	rm -f *.orig
-
-.PHONY: link
-link:
-	@echo "[*] Linking"
-	$(LD) $(LDFLAGS) -o $(MATRIX_BASE)/bin/MatrixOS.bin boot.o $(filter-out ./boot.o, $(SOURCES)) $(SUBDIRSRC)
-
-.PHONY: .s.o
-.s.o:
-	nasm $(ASFLAGS) $<
+$(MATRIX_DIR_BUILD)//%.o: $(shell pwd)/%.c
+    $(CC) $(CFLAGS) $(LDFLAGS) $(SOURCETREE) -c $< -o $@
