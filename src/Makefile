@@ -47,7 +47,7 @@ all: $(SOURCES) subdirs link
 
 subdirs:
 	@for d in $(SUBDIRS); do\
-		$(MAKE) --no-print-directory -C $$d all # get the first part of the path before the /\
+		$(MAKE) --no-print-directory -C $$d all; # get the first part of the path before the /\
 	done;\
 
 
@@ -55,10 +55,11 @@ release: clean all
 
 .PHONY: clean
 clean:
-	@rm -f *.o $(MATRIX_BASE)/bin/MatrixOS.bin
-	@for c in $(DIRECTORY); do\
-		$(MAKE) --no-print-directory -C $$c clean # get the first part of the path before the /\
+	rm -f *.o $(MATRIX_BASE)/bin/MatrixOS.bin
+	for c in $(SUBDIRS); do\
+		$(MAKE) --no-print-directory -C $$c clean;\
 	done;\
+
 
 CODE := $(sort $(wildcard ./*.c))
 

@@ -80,11 +80,13 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	kprintf ( "\n" );
 	monitor_set_fore_colour ( WHITE );
 
-	init();
+	u32int *pt = alloc(0x1000, 1, kheap);
 
-	init_PCI();
+	//init();
 
-	set_f_verbose ( VB_NONE );
+	//init_PCI();
+
+	//set_f_verbose ( VB_NONE );
 
 	//elf("binary.elf");
 
@@ -92,9 +94,9 @@ int kernel_main ( struct multiboot *mboot_point, u32int initial_stack ) {
 	//drawRect(0, 0, 1024, 768, 0x0077FF00);
 	//drawRect(25, 45, 190, 390, 0x000000FF);
 
-	startShell();
+	//startShell();
 
-	switch_to_user_mode();
+	//switch_to_user_mode();
 
 	for ( ;; ) {}
 }

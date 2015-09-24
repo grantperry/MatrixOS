@@ -36,7 +36,7 @@ all: subdirs $(OBJECTS) $(DIRECTORY) $(OUT) link
 
 $(OUT): $(OBJECTS) $(DIRECTORY)
 
-link: 
+link:
 	@echo "[*] Linking" $(shell pwd)
 	@rm -f $(shell pwd)/$(notdir $(shell pwd))_OUT.o
 	@$(LD) -r -o $(shell pwd)/$(notdir $(shell pwd))_OUT.o $(OBJECTS) $(SUBDIRSRC)
@@ -47,7 +47,7 @@ clean:
 	@echo "cleaning directory:"  $(shell pwd)
 	@rm -f *.o
 	@for c in $(firstword $(subst /, ,$(SUBDIRSRC:_OUT.o=))); do\
-		$(MAKE) --no-print-directory -C $$c clean # get the first part of the path before the /\
+		$(MAKE) --no-print-directory -C $$c clean; # get the first part of the path before the /\
 	done;\
 
 CODE := $(sort $(wildcard ./*))
@@ -58,7 +58,7 @@ CODE := $(filter-out ./.h,$(CODE))
 
 clean_code:
 	@echo "[*] MatrixOS Cleaning code with astyle: " $(shell pwd)
-	@astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets 
+	@astyle --style=google --indent=force-tab --indent-cases --break-blocks=all --pad-paren --add-brackets
 
 subdirs:
 	@for d in $(SUBDIRS); do\
