@@ -29,6 +29,9 @@ s8int init_file_system() {
 	printf ( "Initalizing File System." );
 	set_f_verbose ( VB_NONE );
 	initial_file_desc = ( file_desc_t* ) kmalloc ( sizeof ( file_desc_t ) );
+	if (initial_file_desc == 0) {
+		return 1;
+	}
 	strcpy ( initial_file_desc->name, "root" );
 	initial_file_desc->inode = -1;
 	initial_file_desc->next = 0;
